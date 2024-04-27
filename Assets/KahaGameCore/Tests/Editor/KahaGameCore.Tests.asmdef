@@ -1,0 +1,31 @@
+{
+    "name": "KahaGameCore.Tests",
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "KahaGameCore.Common",
+        "KahaGameCore.GameData",
+        "KahaGameCore.Combat.Processor",
+        "KahaGameCore.Combat.Processor.EffectProcessor",
+        "KahaGameCore.Combat",
+        "KahaGameCore.Input"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "NSubstitute.dll",
+        "Castle.Core.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
