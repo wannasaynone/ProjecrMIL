@@ -1,0 +1,17 @@
+{
+    "name": "ProjectMIL.UI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ef82501adac90004689f3ccfd44113d8",
+        "GUID:f91d9863fa14b6b47b7e8ece2df6efc7"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

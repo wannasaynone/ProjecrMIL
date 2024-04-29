@@ -1,0 +1,16 @@
+{
+    "name": "ProjectMIL.Game",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c3b2158b0bdcc9a47a854b2331363931"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
