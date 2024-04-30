@@ -11,7 +11,7 @@ namespace ProjectMIL.Adventure
 
         private void OnAdventureButtonPressed(GameEvent.OnAdventureButtonPressed eventToPublish)
         {
-            Debug.Log("Adventure button pressed");
+            GameEvent.EventBus.Publish(new GameEvent.OnAdventureEventCreated());
         }
     }
 }

@@ -3,11 +3,6 @@ using System.Collections.Generic;
 
 namespace ProjectMIL.GameEvent
 {
-    public class GameEventBase { }
-
-    public class OnAdventureButtonPressed : GameEventBase { }
-
-
     public static class EventBus
     {
         private static readonly Dictionary<Type, List<Action<GameEventBase>>> _eventHandlers = new Dictionary<Type, List<Action<GameEventBase>>>();
