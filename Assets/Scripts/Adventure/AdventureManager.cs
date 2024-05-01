@@ -2,11 +2,6 @@ namespace ProjectMIL.Adventure
 {
     public class AdventureManager
     {
-        public AdventureManager()
-        {
-            GameEvent.EventBus.Subscribe<GameEvent.OnAdventureButtonPressed>(OnAdventureButtonPressed);
-        }
-
         private class LogNormalDistribution
         {
             private System.Random _random;
@@ -33,6 +28,11 @@ namespace ProjectMIL.Adventure
                 // 轉換為對數正態分布
                 return System.Math.Exp(_mu + _sigma * stdNormal);
             }
+        }
+
+        public void Initail()
+        {
+            GameEvent.EventBus.Subscribe<GameEvent.OnAdventureButtonPressed>(OnAdventureButtonPressed);
         }
 
         private void OnAdventureButtonPressed(GameEvent.OnAdventureButtonPressed eventToPublish)

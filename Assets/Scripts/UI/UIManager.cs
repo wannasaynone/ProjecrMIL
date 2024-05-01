@@ -5,7 +5,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private UIBase[] userInterfaces;
 
-    private void Awake()
+    public void Initail()
     {
         for (int i = 0; i < userInterfaces.Length; i++)
         {

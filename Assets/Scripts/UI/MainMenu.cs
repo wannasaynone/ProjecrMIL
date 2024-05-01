@@ -2,12 +2,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using ProjectMIL.GameEvent;
-using System;
 
 namespace ProjectMIL.UI
 {
     public class MainMenu : UIBase
     {
+        [Header("Level and Exp panel")]
+        [SerializeField] private TMPro.TextMeshProUGUI levelText;
+        [SerializeField] private TMPro.TextMeshProUGUI expText;
+        [SerializeField] private Slider expProgressBarFillSlider;
+        [Header("Adventure")]
         [SerializeField] private GameObject adventureRoot;
         [SerializeField] private GameObject adventurePanelRoot;
         [SerializeField] private Image adventureProgressBarFillImage;
@@ -18,6 +22,8 @@ namespace ProjectMIL.UI
 
         private RectTransform adventureProgressBarFillRectTransform;
         private Material adventureProgressBarFillMaterialClone;
+
+        private OnExpValueUpdated onExpValueUpdatedTemp;
 
         ////////////////////////////////////////// Buttons //////////////////////////////////////////
 
@@ -30,13 +36,35 @@ namespace ProjectMIL.UI
 
         public override void Initial()
         {
+            EventBus.Subscribe<OnPlayerInitialed>(OnPlayerInitialed);
             EventBus.Subscribe<OnAdventureEventCreated>(OnAdventureEventCreated);
+            EventBus.Subscribe<OnExpValueUpdated>(OnExpValueUpdated);
+            EventBus.Subscribe<OnAdventureEventResultPanelDisabled>(OnAdventureEventResultPanelDisabled);
+        }
+
+        private void OnPlayerInitialed(OnPlayerInitialed initialed)
+        {
+            levelText.text = initialed.level.ToString();
+            expProgressBarFillSlider.value = (float)initialed.exp / (float)initialed.requireExp;
+            expText.text = initialed.exp + " / " + initialed.requireExp;
         }
 
         private void OnAdventureEventCreated(OnAdventureEventCreated created)
         {
             adventureRoot.SetActive(true);
             KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress());
+        }
+
+        private void OnExpValueUpdated(OnExpValueUpdated updated)
+        {
+            onExpValueUpdatedTemp = updated;
+        }
+
+        private void OnAdventureEventResultPanelDisabled(OnAdventureEventResultPanelDisabled disabled)
+        {
+            levelText.text = onExpValueUpdatedTemp.level.ToString();
+            expProgressBarFillSlider.value = (float)onExpValueUpdatedTemp.newValue / (float)onExpValueUpdatedTemp.requireExp;
+            expText.text = onExpValueUpdatedTemp.newValue + " / " + onExpValueUpdatedTemp.requireExp;
         }
 
         private System.Collections.IEnumerator IEShowAdventureProgress()
@@ -66,9 +94,10 @@ namespace ProjectMIL.UI
 
             yield return new WaitForSeconds(0.1f);
 
+            float randomAdventureProgressBarFillSpeed = UnityEngine.Random.Range(adventureProgressBarFillSpeed * 1f, adventureProgressBarFillSpeed * 3f);
             while (currentWidth < fullAdventureProgressBarWidth)
             {
-                currentWidth += adventureProgressBarFillSpeed * Time.deltaTime;
+                currentWidth += randomAdventureProgressBarFillSpeed * Time.deltaTime;
                 adventureProgressBarFillRectTransform.sizeDelta = new Vector2(currentWidth, adventureProgressBarFillRectTransform.sizeDelta.y);
                 yield return null;
             }

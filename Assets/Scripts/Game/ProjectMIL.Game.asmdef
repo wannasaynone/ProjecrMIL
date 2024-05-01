@@ -2,7 +2,11 @@
     "name": "ProjectMIL.Game",
     "rootNamespace": "",
     "references": [
-        "GUID:c3b2158b0bdcc9a47a854b2331363931"
+        "GUID:c3b2158b0bdcc9a47a854b2331363931",
+        "GUID:a55ee3da733b9e2479887a1a65b221e1",
+        "GUID:ed339a495f13a4d44b03055703f6e1c1",
+        "GUID:7c1d0540b99842b4985cbf497f6a36a6",
+        "GUID:ef82501adac90004689f3ccfd44113d8"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

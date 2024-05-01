@@ -8,8 +8,16 @@ namespace ProjectMIL.UI
     public class InfoPopup : UIBase
     {
         [SerializeField] private GameObject infoPopupRoot;
+        [SerializeField] private TMPro.TextMeshProUGUI titleText;
+        [SerializeField] private TMPro.TextMeshProUGUI descText;
+        [SerializeField] private GameObject particleImageRoot;
         [SerializeField] private UnityEvent onEnabled; // for workaround with ParticleImage
-        [SerializeField] private UnityEvent onInfoPopupEnded; // for workaround with ParticleImage
+        [SerializeField] private UnityEvent onPlayParticleCalled; // for workaround with ParticleImage
+
+        private int nextAddExp;
+        private Color megaWinColor = Color.white;
+        private float megaWinFontSize = 0f;
+        private int curMegaWinNumber = 0;
 
         public override void Initial()
         {
@@ -17,19 +25,84 @@ namespace ProjectMIL.UI
             EventBus.Subscribe<OnAdventureEventCreated>(OnAdventureEventCreated);
         }
 
+        private void OnDisable()
+        {
+            EventBus.Publish(new OnAdventureEventResultPanelDisabled());
+        }
+
         private void OnAdventureProgressBarAnimationEnded(OnAdventureProgressBarAnimationEnded ended)
         {
-            gameObject.SetActive(true);
+            particleImageRoot.SetActive(false);
             onEnabled?.Invoke();
-            KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup());
+
+            titleText.text = "探索了一圈";
+
+            gameObject.SetActive(true);
+            infoPopupRoot.SetActive(false);
+
+            if (nextAddExp <= 100)
+            {
+                KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level1());
+                descText.text = "獲得了 " + nextAddExp + " 點經驗值";
+            }
+            else
+            {
+                KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level3());
+                descText.text = "獲得了 0 點經驗值";
+            }
         }
 
         private void OnAdventureEventCreated(OnAdventureEventCreated onAdventureEventCreated)
         {
-            Debug.Log("InfoPopup: OnAdventureEventCreated " + onAdventureEventCreated.addExp);
+            nextAddExp = onAdventureEventCreated.addExp;
         }
 
-        private System.Collections.IEnumerator IEShowInfoPopup()
+        private System.Collections.IEnumerator IEShowInfoPopup_Level1()
+        {
+            infoPopupRoot.SetActive(true);
+            infoPopupRoot.transform.localScale = Vector3.zero;
+            infoPopupRoot.transform.DOScale(Vector3.one * 1.1f, 0.15f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.15f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one * 0.9f, 0.1f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.1f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one, 0.1f).SetEase(Ease.Linear);
+        }
+
+        private Color GetCurrentColor()
+        {
+            return megaWinColor;
+        }
+
+        private void SetCurrentColor(Color color)
+        {
+            megaWinColor = color;
+        }
+
+        private float GetCurrentFontSize()
+        {
+            return megaWinFontSize;
+        }
+
+        private void SetCurrentFontSize(float fontSize)
+        {
+            megaWinFontSize = fontSize;
+        }
+
+        private int GetCurrentMegaWinNumber()
+        {
+            return curMegaWinNumber;
+        }
+
+        private void SetCurrentMegaWinNumber(int number)
+        {
+            curMegaWinNumber = number;
+        }
+
+        private System.Collections.IEnumerator IEShowInfoPopup_Level3()
         {
             infoPopupRoot.SetActive(true);
             infoPopupRoot.transform.localScale = Vector3.zero;
@@ -37,16 +110,29 @@ namespace ProjectMIL.UI
 
             yield return new WaitForSeconds(0.15f);
 
-            infoPopupRoot.transform.DOShakeRotation(0.3f, 20f, 10, 20f, true, ShakeRandomnessMode.Harmonic);
-            infoPopupRoot.transform.DOScale(Vector3.one * 1.5f, 0.3f).SetEase(Ease.Linear);
+            infoPopupRoot.transform.DOShakeRotation(1f, 20f, 10, 20f, true, ShakeRandomnessMode.Harmonic);
+            infoPopupRoot.transform.DOScale(Vector3.one * 1.75f, 1f).SetEase(Ease.Linear);
 
-            yield return new WaitForSeconds(0.3f);
+            megaWinFontSize = titleText.fontSize;
+            DOTween.To(() => GetCurrentFontSize(), x => SetCurrentFontSize(x), titleText.fontSize * 2f, 1f);
+
+            megaWinColor = Color.white;
+            DOTween.To(() => GetCurrentColor(), x => SetCurrentColor(x), Color.yellow, 1f);
+
+            curMegaWinNumber = 0;
+            DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextAddExp, 1f).OnUpdate(() =>
+            {
+                descText.text = "獲得了 <size=" + megaWinFontSize + ">" + "<color=#" + ColorUtility.ToHtmlStringRGB(megaWinColor) + ">" + curMegaWinNumber + "</size></color>  點經驗值";
+            });
+
+            yield return new WaitForSeconds(1f);
 
             infoPopupRoot.transform.DOScale(Vector3.one * 0.75f, 0.1f).SetEase(Ease.Linear);
 
             yield return new WaitForSeconds(0.1f);
 
-            onInfoPopupEnded?.Invoke();
+            particleImageRoot.SetActive(true);
+            onPlayParticleCalled?.Invoke();
             infoPopupRoot.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.Linear);
         }
     }
