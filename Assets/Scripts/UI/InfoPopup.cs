@@ -14,6 +14,7 @@ namespace ProjectMIL.UI
         public override void Initial()
         {
             EventBus.Subscribe<OnAdventureProgressBarAnimationEnded>(OnAdventureProgressBarAnimationEnded);
+            EventBus.Subscribe<OnAdventureEventCreated>(OnAdventureEventCreated);
         }
 
         private void OnAdventureProgressBarAnimationEnded(OnAdventureProgressBarAnimationEnded ended)
@@ -21,6 +22,11 @@ namespace ProjectMIL.UI
             gameObject.SetActive(true);
             onEnabled?.Invoke();
             KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup());
+        }
+
+        private void OnAdventureEventCreated(OnAdventureEventCreated onAdventureEventCreated)
+        {
+            Debug.Log("InfoPopup: OnAdventureEventCreated " + onAdventureEventCreated.addExp);
         }
 
         private System.Collections.IEnumerator IEShowInfoPopup()
