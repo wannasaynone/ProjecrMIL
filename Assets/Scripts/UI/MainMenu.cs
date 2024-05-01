@@ -6,7 +6,7 @@ using System;
 
 namespace ProjectMIL.UI
 {
-    public class MainMenu : MonoBehaviour
+    public class MainMenu : UIBase
     {
         [SerializeField] private GameObject adventureRoot;
         [SerializeField] private GameObject adventurePanelRoot;
@@ -19,12 +19,16 @@ namespace ProjectMIL.UI
         private RectTransform adventureProgressBarFillRectTransform;
         private Material adventureProgressBarFillMaterialClone;
 
+        ////////////////////////////////////////// Buttons //////////////////////////////////////////
+
         public void Button_OnAdventureButtonPressed()
         {
             EventBus.Publish(new OnAdventureButtonPressed());
         }
 
-        private void OnEnable()
+        ////////////////////////////////////////// Buttons //////////////////////////////////////////
+
+        public override void Initial()
         {
             EventBus.Subscribe<OnAdventureEventCreated>(OnAdventureEventCreated);
         }
@@ -72,6 +76,8 @@ namespace ProjectMIL.UI
             adventureProgressBarFillRectTransform.sizeDelta = new Vector2(fullAdventureProgressBarWidth, adventureProgressBarFillRectTransform.sizeDelta.y);
 
             adventureRoot.SetActive(false);
+
+            EventBus.Publish(new OnAdventureProgressBarAnimationEnded());
         }
 
         private System.Collections.IEnumerator IEShowShineEffect()
