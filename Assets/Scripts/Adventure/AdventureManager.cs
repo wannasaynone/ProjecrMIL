@@ -35,12 +35,35 @@ namespace ProjectMIL.Adventure
             GameEvent.EventBus.Subscribe<GameEvent.OnAdventureButtonPressed>(OnAdventureButtonPressed);
         }
 
+        private int totalCount = 0;
+        private int jackpotCount = 0;
+        private float jackpotRate = 0f;
+
         private void OnAdventureButtonPressed(GameEvent.OnAdventureButtonPressed eventToPublish)
         {
             double mu = 3.79;  // mu 值
             double sigma = 1.32;  // sigma 值
             LogNormalDistribution distribution = new LogNormalDistribution(mu, sigma);
-            GameEvent.EventBus.Publish(new GameEvent.OnAdventureEventCreated() { addExp = System.Convert.ToInt32(distribution.GenerateRandom()) });
+            int addExp = System.Convert.ToInt32(distribution.GenerateRandom());
+
+            totalCount++;
+            if (addExp >= 1000)
+            {
+                jackpotCount++;
+                jackpotRate = 0f;
+            }
+            else if (totalCount >= 8)
+            {
+                jackpotRate += UnityEngine.Random.value;
+                if (jackpotRate >= jackpotCount + 1)
+                {
+                    addExp += 850;
+                    jackpotRate = 0f;
+                    jackpotCount++;
+                }
+            }
+
+            GameEvent.EventBus.Publish(new GameEvent.OnAdventureEventCreated() { addExp = addExp });
         }
     }
 }

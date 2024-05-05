@@ -19,11 +19,16 @@ namespace ProjectMIL.UI
         [SerializeField] private float adventureProgressBarFillSpeed = 100f;
         [SerializeField] private float shineSpeed = 1f;
         [SerializeField] private float shineEndWaitTime = 1f;
+        [Header("Predict")]
+        [SerializeField] private Image characterImage;
+        [SerializeField] private Image predictImage;
+        [SerializeField] private GameObject chargeVisualRoot;
 
         private RectTransform adventureProgressBarFillRectTransform;
         private Material adventureProgressBarFillMaterialClone;
 
         private OnExpValueUpdated onExpValueUpdatedTemp;
+        private OnAdventureEventCreated onAdventureEventCreatedTemp;
 
         ////////////////////////////////////////// Buttons //////////////////////////////////////////
 
@@ -51,6 +56,7 @@ namespace ProjectMIL.UI
 
         private void OnAdventureEventCreated(OnAdventureEventCreated created)
         {
+            onAdventureEventCreatedTemp = created;
             adventureRoot.SetActive(true);
             KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress());
         }
@@ -65,6 +71,16 @@ namespace ProjectMIL.UI
             levelText.text = onExpValueUpdatedTemp.level.ToString();
             expProgressBarFillSlider.value = (float)onExpValueUpdatedTemp.newValue / (float)onExpValueUpdatedTemp.requireExp;
             expText.text = onExpValueUpdatedTemp.newValue + " / " + onExpValueUpdatedTemp.requireExp;
+        }
+
+        private Color GetPredictImageColor()
+        {
+            return predictImage.color;
+        }
+
+        private void SetPredictImageColor(Color color)
+        {
+            predictImage.color = color;
         }
 
         private System.Collections.IEnumerator IEShowAdventureProgress()
@@ -94,11 +110,23 @@ namespace ProjectMIL.UI
 
             yield return new WaitForSeconds(0.1f);
 
-            float randomAdventureProgressBarFillSpeed = UnityEngine.Random.Range(adventureProgressBarFillSpeed * 1f, adventureProgressBarFillSpeed * 3f);
+            float randomAdventureProgressBarFillSpeed = Random.Range(adventureProgressBarFillSpeed * 1f, adventureProgressBarFillSpeed * 3f);
+            float randomStartPredictAnimationTime = Random.Range(0f, 0.6f);
+
+            bool shownPredictAnimation = false;
+
             while (currentWidth < fullAdventureProgressBarWidth)
             {
                 currentWidth += randomAdventureProgressBarFillSpeed * Time.deltaTime;
                 adventureProgressBarFillRectTransform.sizeDelta = new Vector2(currentWidth, adventureProgressBarFillRectTransform.sizeDelta.y);
+
+                if (!shownPredictAnimation && currentWidth >= fullAdventureProgressBarWidth * randomStartPredictAnimationTime && onAdventureEventCreatedTemp.addExp >= 500)
+                {
+                    yield return KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowPredictAnimation());
+                    shownPredictAnimation = true;
+                    randomAdventureProgressBarFillSpeed = adventureProgressBarFillSpeed * 10f;
+                }
+
                 yield return null;
             }
 
@@ -107,6 +135,35 @@ namespace ProjectMIL.UI
             adventureRoot.SetActive(false);
 
             EventBus.Publish(new OnAdventureProgressBarAnimationEnded());
+        }
+
+        private System.Collections.IEnumerator IEShowPredictAnimation()
+        {
+            predictImage.transform.localScale = Vector3.zero;
+            predictImage.color = Color.white;
+            predictImage.gameObject.SetActive(true);
+
+            predictImage.transform.DOScale(Vector3.one * 5.5f, 0.2f).SetEase(Ease.OutBack);
+            DOTween.To(GetPredictImageColor, SetPredictImageColor, Color.red, 0.2f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.2f);
+
+            predictImage.transform.DOScale(Vector3.one * 4f, 0.1f).SetEase(Ease.Linear);
+
+            // TODO: SFX
+
+            yield return new WaitForSeconds(0.5f);
+
+            predictImage.gameObject.SetActive(false);
+            chargeVisualRoot.SetActive(true);
+
+            characterImage.transform.DOScale(Vector3.one * 1.5f, 2f).SetEase(Ease.Linear);
+            characterImage.transform.DOShakePosition(2f, 25f, 10, 90f, false, true);
+
+            yield return new WaitForSeconds(2f);
+
+            chargeVisualRoot.SetActive(false);
+            characterImage.transform.localScale = Vector3.one;
         }
 
         private System.Collections.IEnumerator IEShowShineEffect()

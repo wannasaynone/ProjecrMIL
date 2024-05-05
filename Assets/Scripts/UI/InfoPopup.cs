@@ -40,15 +40,25 @@ namespace ProjectMIL.UI
             gameObject.SetActive(true);
             infoPopupRoot.SetActive(false);
 
-            if (nextAddExp <= 100)
+            if (nextAddExp < 100)
             {
                 KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level1());
                 descText.text = "獲得了 " + nextAddExp + " 點經驗值";
             }
-            else
+            else if (nextAddExp >= 100 && nextAddExp < 500)
+            {
+                KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level2());
+                descText.text = "獲得了 <size=" + descText.fontSize * 1.5f + ">" + nextAddExp + "</size> 點經驗值";
+            }
+            else if (nextAddExp >= 500 && nextAddExp < 1000)
             {
                 KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level3());
-                descText.text = "獲得了 0 點經驗值";
+                descText.text = "獲得了 " + nextAddExp + " 點經驗值";
+            }
+            else
+            {
+                KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level4());
+                descText.text = "獲得了 " + nextAddExp + " 點經驗值";
             }
         }
 
@@ -70,6 +80,83 @@ namespace ProjectMIL.UI
             yield return new WaitForSeconds(0.1f);
 
             infoPopupRoot.transform.DOScale(Vector3.one, 0.1f).SetEase(Ease.Linear);
+        }
+
+        private System.Collections.IEnumerator IEShowInfoPopup_Level2()
+        {
+            infoPopupRoot.SetActive(true);
+            infoPopupRoot.transform.localScale = Vector3.zero;
+            infoPopupRoot.transform.DOScale(Vector3.one * 1.25f, 0.15f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.15f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one * 0.75f, 0.1f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.1f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one, 0.1f).SetEase(Ease.Linear);
+        }
+
+        private System.Collections.IEnumerator IEShowInfoPopup_Level3()
+        {
+            infoPopupRoot.SetActive(true);
+            infoPopupRoot.transform.localScale = Vector3.zero;
+            infoPopupRoot.transform.DOScale(Vector3.one * 1.3f, 0.15f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.15f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one * 1.5f, 1f).SetEase(Ease.Linear);
+
+            megaWinFontSize = titleText.fontSize;
+            DOTween.To(() => GetCurrentFontSize(), x => SetCurrentFontSize(x), titleText.fontSize * 2f, 1f);
+
+            curMegaWinNumber = 0;
+            DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextAddExp, 1f).OnUpdate(() =>
+            {
+                descText.text = "獲得了 <size=" + megaWinFontSize + ">" + curMegaWinNumber + "</size> 點經驗值";
+            });
+
+            yield return new WaitForSeconds(1f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one * 0.75f, 0.1f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.1f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.Linear);
+        }
+
+        private System.Collections.IEnumerator IEShowInfoPopup_Level4()
+        {
+            infoPopupRoot.SetActive(true);
+            infoPopupRoot.transform.localScale = Vector3.zero;
+            infoPopupRoot.transform.DOScale(Vector3.one * 1.3f, 0.15f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.15f);
+
+            infoPopupRoot.transform.DOShakeRotation(1.5f, 20f, 10, 20f, true, ShakeRandomnessMode.Harmonic);
+            infoPopupRoot.transform.DOScale(Vector3.one * 1.75f, 1.5f).SetEase(Ease.Linear);
+
+            megaWinFontSize = titleText.fontSize;
+            DOTween.To(() => GetCurrentFontSize(), x => SetCurrentFontSize(x), titleText.fontSize * 2f, 1.5f);
+
+            megaWinColor = Color.white;
+            DOTween.To(() => GetCurrentColor(), x => SetCurrentColor(x), Color.yellow, 1.5f);
+
+            curMegaWinNumber = 0;
+            DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextAddExp, 1.5f).OnUpdate(() =>
+            {
+                descText.text = "獲得了 <size=" + megaWinFontSize + ">" + "<color=#" + ColorUtility.ToHtmlStringRGB(megaWinColor) + ">" + curMegaWinNumber + "</size></color>  點經驗值";
+            });
+
+            yield return new WaitForSeconds(1.5f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one * 0.75f, 0.1f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.1f);
+
+            particleImageRoot.SetActive(true);
+            onPlayParticleCalled?.Invoke();
+            infoPopupRoot.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.Linear);
         }
 
         private Color GetCurrentColor()
@@ -100,40 +187,6 @@ namespace ProjectMIL.UI
         private void SetCurrentMegaWinNumber(int number)
         {
             curMegaWinNumber = number;
-        }
-
-        private System.Collections.IEnumerator IEShowInfoPopup_Level3()
-        {
-            infoPopupRoot.SetActive(true);
-            infoPopupRoot.transform.localScale = Vector3.zero;
-            infoPopupRoot.transform.DOScale(Vector3.one * 1.3f, 0.15f).SetEase(Ease.Linear);
-
-            yield return new WaitForSeconds(0.15f);
-
-            infoPopupRoot.transform.DOShakeRotation(1f, 20f, 10, 20f, true, ShakeRandomnessMode.Harmonic);
-            infoPopupRoot.transform.DOScale(Vector3.one * 1.75f, 1f).SetEase(Ease.Linear);
-
-            megaWinFontSize = titleText.fontSize;
-            DOTween.To(() => GetCurrentFontSize(), x => SetCurrentFontSize(x), titleText.fontSize * 2f, 1f);
-
-            megaWinColor = Color.white;
-            DOTween.To(() => GetCurrentColor(), x => SetCurrentColor(x), Color.yellow, 1f);
-
-            curMegaWinNumber = 0;
-            DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextAddExp, 1f).OnUpdate(() =>
-            {
-                descText.text = "獲得了 <size=" + megaWinFontSize + ">" + "<color=#" + ColorUtility.ToHtmlStringRGB(megaWinColor) + ">" + curMegaWinNumber + "</size></color>  點經驗值";
-            });
-
-            yield return new WaitForSeconds(1f);
-
-            infoPopupRoot.transform.DOScale(Vector3.one * 0.75f, 0.1f).SetEase(Ease.Linear);
-
-            yield return new WaitForSeconds(0.1f);
-
-            particleImageRoot.SetActive(true);
-            onPlayParticleCalled?.Invoke();
-            infoPopupRoot.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.Linear);
         }
     }
 }

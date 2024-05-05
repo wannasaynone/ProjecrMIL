@@ -419,10 +419,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5768251692973523063, guid: 41d00962c32c4e0499024848afccf644, type: 3}
-      propertyPath: m_FillAmount
-      value: 0.526
-      objectReference: {fileID: 0}
     - target: {fileID: 7084186707566206846, guid: 41d00962c32c4e0499024848afccf644, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -466,6 +462,14 @@ PrefabInstance:
     - target: {fileID: 7862158023194888458, guid: 41d00962c32c4e0499024848afccf644, type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7871033037416258810, guid: 41d00962c32c4e0499024848afccf644, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 519420031}
+    - target: {fileID: 7871033037416258810, guid: 41d00962c32c4e0499024848afccf644, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

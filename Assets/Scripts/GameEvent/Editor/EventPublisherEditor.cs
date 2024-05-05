@@ -14,7 +14,7 @@ namespace ProjectMIL.GameEvent.Editor
             GetWindow<EventPublisherEditor>("Game Event Publisher");
         }
 
-        void OnGUI()
+        private void OnGUI()
         {
             GUILayout.Label("Publish Game Events", EditorStyles.boldLabel);
 
@@ -29,12 +29,37 @@ namespace ProjectMIL.GameEvent.Editor
                 {
                     // 使用反射來創建對應類的實例並發送事件
                     var instance = Activator.CreateInstance(type);
-                    typeof(GameEvent.EventBus)
+                    typeof(EventBus)
                         .GetMethod("Publish")
                         .MakeGenericMethod(type)
                         .Invoke(null, new object[] { instance });
                 }
             }
+
+            HorizontalLine();
+
+            if (GUILayout.Button("Publish On Adventure Event get 500 exp"))
+            {
+                EventBus.Publish(new OnAdventureEventCreated() { addExp = 500 });
+            }
+        }
+
+        private static void HorizontalLine()
+        {
+            GUIStyle horizontalLine;
+            horizontalLine = new GUIStyle();
+            horizontalLine.normal.background = EditorGUIUtility.whiteTexture;
+            horizontalLine.margin = new RectOffset(0, 0, 4, 4);
+            horizontalLine.fixedHeight = 1;
+
+            GUILayout.Space(10);
+
+            var c = GUI.color;
+            GUI.color = Color.gray;
+            GUILayout.Box(GUIContent.none, horizontalLine);
+            GUI.color = c;
+
+            GUILayout.Space(10);
         }
     }
 }
