@@ -121,6 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   userInterfaces:
   - {fileID: 1591179386295121050}
+  - {fileID: 8025676933215681127}
   - {fileID: 3110560979516481477}
 --- !u!1001 &2933292761458508401
 PrefabInstance:
@@ -876,15 +877,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: EventPopup_GetGold
       objectReference: {fileID: 0}
-    - target: {fileID: 781305166494941118, guid: 6957cc0711e2e054390bcf4e360c844b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6957cc0711e2e054390bcf4e360c844b, type: 3}
+--- !u!114 &8025676933215681127 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1819566956747030407, guid: 6957cc0711e2e054390bcf4e360c844b, type: 3}
+  m_PrefabInstance: {fileID: 8511952999695517152}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aa450887035a00479221f025251bead, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &9004746035552565920 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 781305166494940992, guid: 6957cc0711e2e054390bcf4e360c844b, type: 3}
