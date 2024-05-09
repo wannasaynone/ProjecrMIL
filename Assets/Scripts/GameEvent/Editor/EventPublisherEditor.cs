@@ -42,6 +42,11 @@ namespace ProjectMIL.GameEvent.Editor
             {
                 EventBus.Publish(new OnAdventureEventCreated() { addExp = 500 });
             }
+
+            if (GUILayout.Button("Publish On Adventure Event get 1000 exp"))
+            {
+                EventBus.Publish(new OnAdventureEventCreated() { addExp = 1000 });
+            }
         }
 
         private static void HorizontalLine()

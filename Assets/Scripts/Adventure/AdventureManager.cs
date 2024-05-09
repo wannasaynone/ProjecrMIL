@@ -52,12 +52,12 @@ namespace ProjectMIL.Adventure
                 jackpotCount++;
                 jackpotRate = 0f;
             }
-            else if (totalCount >= 8)
+            else if (totalCount >= 8 + jackpotCount * 20 && jackpotCount < 3 && addExp <= 100)
             {
                 jackpotRate += UnityEngine.Random.value;
                 if (jackpotRate >= jackpotCount + 1)
                 {
-                    addExp += 850;
+                    addExp += 1000;
                     jackpotRate = 0f;
                     jackpotCount++;
                 }

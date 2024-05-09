@@ -113,18 +113,26 @@ namespace ProjectMIL.UI
             float randomAdventureProgressBarFillSpeed = Random.Range(adventureProgressBarFillSpeed * 1f, adventureProgressBarFillSpeed * 3f);
             float randomStartPredictAnimationTime = Random.Range(0f, 0.6f);
 
-            bool shownPredictAnimation = false;
+            bool isPredictAnimationShown = false;
+            bool random = Random.Range(0, 100) <= 5;
 
             while (currentWidth < fullAdventureProgressBarWidth)
             {
                 currentWidth += randomAdventureProgressBarFillSpeed * Time.deltaTime;
                 adventureProgressBarFillRectTransform.sizeDelta = new Vector2(currentWidth, adventureProgressBarFillRectTransform.sizeDelta.y);
 
-                if (!shownPredictAnimation && currentWidth >= fullAdventureProgressBarWidth * randomStartPredictAnimationTime && onAdventureEventCreatedTemp.addExp >= 500)
+                if (!isPredictAnimationShown && currentWidth >= fullAdventureProgressBarWidth * randomStartPredictAnimationTime && onAdventureEventCreatedTemp.addExp >= 1000)
                 {
-                    yield return KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowPredictAnimation());
-                    shownPredictAnimation = true;
+                    yield return KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowPredictAnimation_Level2());
+                    isPredictAnimationShown = true;
                     randomAdventureProgressBarFillSpeed = adventureProgressBarFillSpeed * 10f;
+                }
+                else if (!isPredictAnimationShown && currentWidth >= fullAdventureProgressBarWidth * randomStartPredictAnimationTime &&
+                        ((onAdventureEventCreatedTemp.addExp < 1000 && onAdventureEventCreatedTemp.addExp >= 500) || random))
+                {
+                    yield return KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowPredictAnimation_Level1());
+                    isPredictAnimationShown = true;
+                    randomAdventureProgressBarFillSpeed = adventureProgressBarFillSpeed * 5f;
                 }
 
                 yield return null;
@@ -134,10 +142,33 @@ namespace ProjectMIL.UI
 
             adventureRoot.SetActive(false);
 
+            chargeVisualRoot.SetActive(false);
+            characterImage.transform.localScale = Vector3.one;
+
             EventBus.Publish(new OnAdventureProgressBarAnimationEnded());
         }
 
-        private System.Collections.IEnumerator IEShowPredictAnimation()
+        private System.Collections.IEnumerator IEShowPredictAnimation_Level1()
+        {
+            predictImage.transform.localScale = Vector3.zero;
+            predictImage.color = Color.white;
+            predictImage.gameObject.SetActive(true);
+
+            predictImage.transform.DOScale(Vector3.one * 5.5f, 0.2f).SetEase(Ease.OutBack);
+            DOTween.To(GetPredictImageColor, SetPredictImageColor, Color.red, 0.2f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.2f);
+
+            predictImage.transform.DOScale(Vector3.one * 4f, 0.1f).SetEase(Ease.Linear);
+
+            // TODO: SFX
+
+            yield return new WaitForSeconds(0.5f);
+
+            predictImage.gameObject.SetActive(false);
+        }
+
+        private System.Collections.IEnumerator IEShowPredictAnimation_Level2()
         {
             predictImage.transform.localScale = Vector3.zero;
             predictImage.color = Color.white;
@@ -163,7 +194,6 @@ namespace ProjectMIL.UI
             yield return new WaitForSeconds(2f);
 
             chargeVisualRoot.SetActive(false);
-            characterImage.transform.localScale = Vector3.one;
         }
 
         private System.Collections.IEnumerator IEShowShineEffect()

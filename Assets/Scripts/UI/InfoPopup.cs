@@ -86,11 +86,27 @@ namespace ProjectMIL.UI
         {
             infoPopupRoot.SetActive(true);
             infoPopupRoot.transform.localScale = Vector3.zero;
-            infoPopupRoot.transform.DOScale(Vector3.one * 1.25f, 0.15f).SetEase(Ease.Linear);
+            infoPopupRoot.transform.DOScale(Vector3.one * 1.25f, 0.1f).SetEase(Ease.Linear);
 
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.1f);
 
             infoPopupRoot.transform.DOScale(Vector3.one * 0.75f, 0.1f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.1f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one * 1.15f, 0.1f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.1f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one * 0.85f, 0.1f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.1f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one * 1.05f, 0.1f).SetEase(Ease.Linear);
+
+            yield return new WaitForSeconds(0.1f);
+
+            infoPopupRoot.transform.DOScale(Vector3.one * 0.95f, 0.1f).SetEase(Ease.Linear);
 
             yield return new WaitForSeconds(0.1f);
 
