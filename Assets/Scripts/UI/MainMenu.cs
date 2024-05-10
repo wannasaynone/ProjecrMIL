@@ -28,7 +28,7 @@ namespace ProjectMIL.UI
         private Material adventureProgressBarFillMaterialClone;
 
         private OnExpValueUpdated onExpValueUpdatedTemp;
-        private OnAdventureEventCreated onAdventureEventCreatedTemp;
+        private int referenceValue;
 
         ////////////////////////////////////////// Buttons //////////////////////////////////////////
 
@@ -42,9 +42,17 @@ namespace ProjectMIL.UI
         public override void Initial()
         {
             EventBus.Subscribe<OnPlayerInitialed>(OnPlayerInitialed);
-            EventBus.Subscribe<OnAdventureEventCreated>(OnAdventureEventCreated);
+            EventBus.Subscribe<OnAdventureEventCreated_Exp>(OnAdventureEventCreated_Exp);
+            EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated_Gold);
             EventBus.Subscribe<OnExpValueUpdated>(OnExpValueUpdated);
             EventBus.Subscribe<OnAdventureEventResultPanelDisabled>(OnAdventureEventResultPanelDisabled);
+        }
+
+        private void OnAdventureEventCreated_Gold(OnAdventureEventCreated_Gold created)
+        {
+            referenceValue = created.addGold;
+            adventureRoot.SetActive(true);
+            KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress());
         }
 
         private void OnPlayerInitialed(OnPlayerInitialed initialed)
@@ -54,9 +62,9 @@ namespace ProjectMIL.UI
             expText.text = initialed.exp + " / " + initialed.requireExp;
         }
 
-        private void OnAdventureEventCreated(OnAdventureEventCreated created)
+        private void OnAdventureEventCreated_Exp(OnAdventureEventCreated_Exp created)
         {
-            onAdventureEventCreatedTemp = created;
+            referenceValue = created.addExp;
             adventureRoot.SetActive(true);
             KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress());
         }
@@ -68,9 +76,15 @@ namespace ProjectMIL.UI
 
         private void OnAdventureEventResultPanelDisabled(OnAdventureEventResultPanelDisabled disabled)
         {
-            levelText.text = onExpValueUpdatedTemp.level.ToString();
-            expProgressBarFillSlider.value = (float)onExpValueUpdatedTemp.newValue / (float)onExpValueUpdatedTemp.requireExp;
-            expText.text = onExpValueUpdatedTemp.newValue + " / " + onExpValueUpdatedTemp.requireExp;
+            if (onExpValueUpdatedTemp != null)
+            {
+                levelText.text = onExpValueUpdatedTemp.level.ToString();
+                expProgressBarFillSlider.value = (float)onExpValueUpdatedTemp.newValue / (float)onExpValueUpdatedTemp.requireExp;
+                expText.text = onExpValueUpdatedTemp.newValue + " / " + onExpValueUpdatedTemp.requireExp;
+                onExpValueUpdatedTemp = null;
+            }
+
+
         }
 
         private Color GetPredictImageColor()
@@ -121,14 +135,14 @@ namespace ProjectMIL.UI
                 currentWidth += randomAdventureProgressBarFillSpeed * Time.deltaTime;
                 adventureProgressBarFillRectTransform.sizeDelta = new Vector2(currentWidth, adventureProgressBarFillRectTransform.sizeDelta.y);
 
-                if (!isPredictAnimationShown && currentWidth >= fullAdventureProgressBarWidth * randomStartPredictAnimationTime && onAdventureEventCreatedTemp.addExp >= 1000)
+                if (!isPredictAnimationShown && currentWidth >= fullAdventureProgressBarWidth * randomStartPredictAnimationTime && referenceValue >= 1000)
                 {
                     yield return KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowPredictAnimation_Level2());
                     isPredictAnimationShown = true;
                     randomAdventureProgressBarFillSpeed = adventureProgressBarFillSpeed * 10f;
                 }
                 else if (!isPredictAnimationShown && currentWidth >= fullAdventureProgressBarWidth * randomStartPredictAnimationTime &&
-                        ((onAdventureEventCreatedTemp.addExp < 1000 && onAdventureEventCreatedTemp.addExp >= 500) || random))
+                        ((referenceValue < 1000 && referenceValue >= 500) || random))
                 {
                     yield return KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowPredictAnimation_Level1());
                     isPredictAnimationShown = true;

@@ -1578,7 +1578,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 781305166494940992}
-  - component: {fileID: 1819566956747030407}
+  - component: {fileID: 8489155412358191205}
   m_Layer: 0
   m_Name: EventPopup_GetGold
   m_TagString: Untagged
@@ -1607,7 +1607,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1819566956747030407
+--- !u!114 &8489155412358191205
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1616,7 +1616,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 781305166494941118}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0aa450887035a00479221f025251bead, type: 3}
+  m_Script: {fileID: 11500000, guid: 7249b7117c966fb4d8da8d8d1f4dcb12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   infoPopupRoot: {fileID: 781305165934634099}

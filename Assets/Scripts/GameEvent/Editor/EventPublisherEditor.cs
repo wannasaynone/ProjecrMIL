@@ -40,12 +40,22 @@ namespace ProjectMIL.GameEvent.Editor
 
             if (GUILayout.Button("Publish On Adventure Event get 500 exp"))
             {
-                EventBus.Publish(new OnAdventureEventCreated() { addExp = 500 });
+                EventBus.Publish(new OnAdventureEventCreated_Exp()
+                {
+                    addExp = 500,
+                    title = "測試 500 經驗",
+                    description = "獲得了 {0} 點經驗值"
+                });
             }
 
             if (GUILayout.Button("Publish On Adventure Event get 1000 exp"))
             {
-                EventBus.Publish(new OnAdventureEventCreated() { addExp = 1000 });
+                EventBus.Publish(new OnAdventureEventCreated_Exp()
+                {
+                    addExp = 1000,
+                    title = "測試 1000 經驗",
+                    description = "獲得了 {0} 點經驗值"
+                });
             }
         }
 

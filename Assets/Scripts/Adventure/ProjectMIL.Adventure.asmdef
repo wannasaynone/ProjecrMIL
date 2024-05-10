@@ -2,7 +2,9 @@
     "name": "ProjectMIL.Adventure",
     "rootNamespace": "",
     "references": [
-        "GUID:ef82501adac90004689f3ccfd44113d8"
+        "GUID:ef82501adac90004689f3ccfd44113d8",
+        "GUID:ed339a495f13a4d44b03055703f6e1c1",
+        "GUID:7c1d0540b99842b4985cbf497f6a36a6"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

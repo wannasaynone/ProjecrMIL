@@ -11,23 +11,26 @@ namespace ProjectMIL.Game
         }
 
         private SaveData saveData;
-        private ExpData[] expDatas;
+        private readonly ExpData[] expDatas;
 
         public void Initail()
         {
             saveData = new SaveData
             {
                 level = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_LEVEL", 1), // for now, we will use PlayerPrefs to save the level value
-                exp = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_EXP", 0) // for now, we will use PlayerPrefs to save the exp value
+                exp = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_EXP", 0), // for now, we will use PlayerPrefs to save the exp value
+                gold = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_GOLD", 0) // for now, we will use PlayerPrefs to save the gold value
             };
 
-            EventBus.Subscribe<OnAdventureEventCreated>(OnAdventureEventCreated);
+            EventBus.Subscribe<OnAdventureEventCreated_Exp>(OnAdventureEventCreated_Exp);
+            EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated_Gold);
 
             EventBus.Publish(new OnPlayerInitialed
             {
                 level = saveData.level,
                 exp = saveData.exp,
-                requireExp = GetRequireWithCurrentLevel()
+                requireExp = GetRequireWithCurrentLevel(),
+                gold = saveData.gold
             });
         }
 
@@ -44,7 +47,7 @@ namespace ProjectMIL.Game
             return 0;
         }
 
-        private void OnAdventureEventCreated(OnAdventureEventCreated created)
+        private void OnAdventureEventCreated_Exp(OnAdventureEventCreated_Exp created)
         {
             int oldValue = saveData.exp;
             saveData.exp += created.addExp;
@@ -62,6 +65,17 @@ namespace ProjectMIL.Game
                 newValue = saveData.exp,
                 level = saveData.level,
                 requireExp = GetRequireWithCurrentLevel()
+            });
+        }
+
+        private void OnAdventureEventCreated_Gold(OnAdventureEventCreated_Gold created)
+        {
+            saveData.gold += created.addGold;
+            EventBus.Publish(new OnGoldValueUpdated
+            {
+                oldValue = saveData.gold - created.addGold,
+                addValue = created.addGold,
+                newValue = saveData.gold
             });
         }
     }

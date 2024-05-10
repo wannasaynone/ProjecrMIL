@@ -5,7 +5,7 @@ using ProjectMIL.GameEvent;
 
 namespace ProjectMIL.UI
 {
-    public class InfoPopup : UIBase
+    public class EventPopup_GetExp : UIBase
     {
         [SerializeField] private GameObject infoPopupRoot;
         [SerializeField] private TMPro.TextMeshProUGUI titleText;
@@ -14,7 +14,7 @@ namespace ProjectMIL.UI
         [SerializeField] private UnityEvent onEnabled; // for workaround with ParticleImage
         [SerializeField] private UnityEvent onPlayParticleCalled; // for workaround with ParticleImage
 
-        private int nextAddExp;
+        private OnAdventureEventCreated_Exp nextCreatedAdvEvent;
         private Color megaWinColor = Color.white;
         private float megaWinFontSize = 0f;
         private int curMegaWinNumber = 0;
@@ -22,49 +22,65 @@ namespace ProjectMIL.UI
         public override void Initial()
         {
             EventBus.Subscribe<OnAdventureProgressBarAnimationEnded>(OnAdventureProgressBarAnimationEnded);
-            EventBus.Subscribe<OnAdventureEventCreated>(OnAdventureEventCreated);
+            EventBus.Subscribe<OnAdventureEventCreated_Exp>(OnAdventureEventCreated);
         }
 
         private void OnDisable()
         {
+            nextCreatedAdvEvent = null;
             EventBus.Publish(new OnAdventureEventResultPanelDisabled());
         }
 
         private void OnAdventureProgressBarAnimationEnded(OnAdventureProgressBarAnimationEnded ended)
         {
+            if (nextCreatedAdvEvent == null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(nextCreatedAdvEvent.title))
+            {
+                nextCreatedAdvEvent.title = "MISSING TITLE";
+            }
+
+            if (string.IsNullOrEmpty(nextCreatedAdvEvent.description))
+            {
+                nextCreatedAdvEvent.description = "MISSING DESCRIPTION";
+            }
+
             particleImageRoot.SetActive(false);
             onEnabled?.Invoke();
 
-            titleText.text = "探索了一圈";
+            titleText.text = nextCreatedAdvEvent.title;
 
             gameObject.SetActive(true);
             infoPopupRoot.SetActive(false);
 
-            if (nextAddExp < 100)
+            if (nextCreatedAdvEvent.addExp < 100)
             {
                 KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level1());
-                descText.text = "獲得了 " + nextAddExp + " 點經驗值";
+                descText.text = string.Format(nextCreatedAdvEvent.description, nextCreatedAdvEvent.addExp);
             }
-            else if (nextAddExp >= 100 && nextAddExp < 500)
+            else if (nextCreatedAdvEvent.addExp >= 100 && nextCreatedAdvEvent.addExp < 500)
             {
                 KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level2());
-                descText.text = "獲得了 <size=" + descText.fontSize * 1.5f + ">" + nextAddExp + "</size> 點經驗值";
+                descText.text = string.Format(nextCreatedAdvEvent.description, "<size=" + descText.fontSize * 1.5f + ">" + nextCreatedAdvEvent.addExp + "</size>");
             }
-            else if (nextAddExp >= 500 && nextAddExp < 1000)
+            else if (nextCreatedAdvEvent.addExp >= 500 && nextCreatedAdvEvent.addExp < 1000)
             {
                 KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level3());
-                descText.text = "獲得了 " + nextAddExp + " 點經驗值";
+                descText.text = string.Format(nextCreatedAdvEvent.description, nextCreatedAdvEvent.addExp);
             }
             else
             {
                 KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level4());
-                descText.text = "獲得了 " + nextAddExp + " 點經驗值";
+                descText.text = string.Format(nextCreatedAdvEvent.description, nextCreatedAdvEvent.addExp);
             }
         }
 
-        private void OnAdventureEventCreated(OnAdventureEventCreated onAdventureEventCreated)
+        private void OnAdventureEventCreated(OnAdventureEventCreated_Exp onAdventureEventCreated)
         {
-            nextAddExp = onAdventureEventCreated.addExp;
+            nextCreatedAdvEvent = onAdventureEventCreated;
         }
 
         private System.Collections.IEnumerator IEShowInfoPopup_Level1()
@@ -127,9 +143,10 @@ namespace ProjectMIL.UI
             DOTween.To(() => GetCurrentFontSize(), x => SetCurrentFontSize(x), titleText.fontSize * 2f, 1f);
 
             curMegaWinNumber = 0;
-            DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextAddExp, 1f).OnUpdate(() =>
+            Debug.Log("nextCreatedAdvEvent: " + nextCreatedAdvEvent.description);
+            DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextCreatedAdvEvent.addExp, 1f).OnUpdate(() =>
             {
-                descText.text = "獲得了 <size=" + megaWinFontSize + ">" + curMegaWinNumber + "</size> 點經驗值";
+                descText.text = string.Format(nextCreatedAdvEvent.description, "<size=" + megaWinFontSize + ">" + curMegaWinNumber + "</size>");
             });
 
             yield return new WaitForSeconds(1f);
@@ -159,9 +176,9 @@ namespace ProjectMIL.UI
             DOTween.To(() => GetCurrentColor(), x => SetCurrentColor(x), Color.yellow, 1.5f);
 
             curMegaWinNumber = 0;
-            DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextAddExp, 1.5f).OnUpdate(() =>
+            DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextCreatedAdvEvent.addExp, 1.5f).OnUpdate(() =>
             {
-                descText.text = "獲得了 <size=" + megaWinFontSize + ">" + "<color=#" + ColorUtility.ToHtmlStringRGB(megaWinColor) + ">" + curMegaWinNumber + "</size></color>  點經驗值";
+                descText.text = string.Format(nextCreatedAdvEvent.description, "<size=" + megaWinFontSize + "><color=#" + ColorUtility.ToHtmlStringRGB(megaWinColor) + ">" + curMegaWinNumber + "</size></color>");
             });
 
             yield return new WaitForSeconds(1.5f);

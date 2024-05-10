@@ -13,15 +13,15 @@ namespace ProjectMIL.Game
 
         private void Awake()
         {
-            adventureManager = new Adventure.AdventureManager();
-            adventureManager.Initail();
-
-            uiManager.Initail();
-
             gameStaticDataManager = new GameStaticDataManager();
             gameStaticDataDeserializer = new GameStaticDataDeserializer();
-
             gameStaticDataManager.Add<Data.ExpData>(gameStaticDataDeserializer.Read<Data.ExpData[]>(Resources.Load<TextAsset>("Data/ExpData").text));
+            gameStaticDataManager.Add<Data.ContextData>(gameStaticDataDeserializer.Read<Data.ContextData[]>(Resources.Load<TextAsset>("Data/ContextData").text));
+
+            adventureManager = new Adventure.AdventureManager();
+            adventureManager.Initial(gameStaticDataManager);
+
+            uiManager.Initail();
 
             player = new Player(gameStaticDataManager.GetAllGameData<Data.ExpData>());
             player.Initail();
