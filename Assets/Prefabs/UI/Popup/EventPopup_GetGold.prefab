@@ -1427,15 +1427,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Ok
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1f43260051340e243bf6d763f8cc6779, type: 2}
-  m_sharedMaterial: {fileID: -9135584000101665201, guid: 1f43260051340e243bf6d763f8cc6779, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d535865b3fa18c741aeb4bc17a70af1a, type: 2}
+  m_sharedMaterial: {fileID: -9135584000101665201, guid: d535865b3fa18c741aeb4bc17a70af1a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1795,15 +1795,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u503C"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1f43260051340e243bf6d763f8cc6779, type: 2}
-  m_sharedMaterial: {fileID: -9135584000101665201, guid: 1f43260051340e243bf6d763f8cc6779, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d535865b3fa18c741aeb4bc17a70af1a, type: 2}
+  m_sharedMaterial: {fileID: -9135584000101665201, guid: d535865b3fa18c741aeb4bc17a70af1a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2004,15 +2004,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Gold Clover
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1f43260051340e243bf6d763f8cc6779, type: 2}
-  m_sharedMaterial: {fileID: -9135584000101665201, guid: 1f43260051340e243bf6d763f8cc6779, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d535865b3fa18c741aeb4bc17a70af1a, type: 2}
+  m_sharedMaterial: {fileID: -9135584000101665201, guid: d535865b3fa18c741aeb4bc17a70af1a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

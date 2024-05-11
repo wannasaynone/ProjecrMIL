@@ -145,7 +145,7 @@ namespace ProjectMIL.UI
             curMegaWinNumber = 0;
             DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextCreatedAdvEvent.addGold, 1f).OnUpdate(() =>
             {
-                descText.text = "獲得了 <size=" + megaWinFontSize + ">" + curMegaWinNumber + "</size> 點經驗值";
+                descText.text = string.Format(nextCreatedAdvEvent.description, "<size=" + megaWinFontSize + ">" + curMegaWinNumber + "</size>");
             });
 
             yield return new WaitForSeconds(1f);
@@ -177,7 +177,7 @@ namespace ProjectMIL.UI
             curMegaWinNumber = 0;
             DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextCreatedAdvEvent.addGold, 1.5f).OnUpdate(() =>
             {
-                descText.text = "獲得了 <size=" + megaWinFontSize + ">" + "<color=#" + ColorUtility.ToHtmlStringRGB(megaWinColor) + ">" + curMegaWinNumber + "</size></color>  點經驗值";
+                descText.text = string.Format(nextCreatedAdvEvent.description, "<size=" + megaWinFontSize + "><color=#" + ColorUtility.ToHtmlStringRGB(megaWinColor) + ">" + curMegaWinNumber + "</size></color>");
             });
 
             yield return new WaitForSeconds(1.5f);
