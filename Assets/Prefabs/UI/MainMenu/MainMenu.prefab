@@ -7309,7 +7309,7 @@ MonoBehaviour:
   adventurePanelRoot: {fileID: 1096408985702893421}
   adventureProgressBarFillImage: {fileID: 4863090304060801034}
   fullAdventureProgressBarWidth: 700
-  adventureProgressBarFillSpeed: 250
+  adventureProgressBarFillSpeed: 400
   shineSpeed: 1
   shineEndWaitTime: 1
   characterImage: {fileID: 6759870186512702931}

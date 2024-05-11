@@ -102,31 +102,23 @@ namespace ProjectMIL.UI
         {
             infoPopupRoot.SetActive(true);
             infoPopupRoot.transform.localScale = Vector3.zero;
-            infoPopupRoot.transform.DOScale(Vector3.one * 1.25f, 0.1f).SetEase(Ease.Linear);
 
-            yield return new WaitForSeconds(0.1f);
+            float addSize = 0.25f;
+            float bounceTime = 0.1f;
 
-            infoPopupRoot.transform.DOScale(Vector3.one * 0.75f, 0.1f).SetEase(Ease.Linear);
+            for (int i = 0; i <= 5; i++)
+            {
+                infoPopupRoot.transform.DOScale(Vector3.one * (1f + addSize), bounceTime).SetEase(Ease.Linear);
 
-            yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.1f);
 
-            infoPopupRoot.transform.DOScale(Vector3.one * 1.15f, 0.1f).SetEase(Ease.Linear);
+                infoPopupRoot.transform.DOScale(Vector3.one * (1f - addSize), bounceTime).SetEase(Ease.Linear);
 
-            yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.1f);
 
-            infoPopupRoot.transform.DOScale(Vector3.one * 0.85f, 0.1f).SetEase(Ease.Linear);
-
-            yield return new WaitForSeconds(0.1f);
-
-            infoPopupRoot.transform.DOScale(Vector3.one * 1.05f, 0.1f).SetEase(Ease.Linear);
-
-            yield return new WaitForSeconds(0.1f);
-
-            infoPopupRoot.transform.DOScale(Vector3.one * 0.95f, 0.1f).SetEase(Ease.Linear);
-
-            yield return new WaitForSeconds(0.1f);
-
-            infoPopupRoot.transform.DOScale(Vector3.one, 0.1f).SetEase(Ease.Linear);
+                addSize -= 0.05f;
+                bounceTime += 0.05f;
+            }
         }
 
         private System.Collections.IEnumerator IEShowInfoPopup_Level3()
