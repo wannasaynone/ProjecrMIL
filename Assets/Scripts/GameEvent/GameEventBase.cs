@@ -1,6 +1,10 @@
 namespace ProjectMIL.GameEvent
 {
     public class GameEventBase { }
+    public class OnBottomBarButtonPressed : GameEventBase
+    {
+        public int buttonIndex;
+    }
     public class OnAdventureButtonPressed : GameEventBase { }
     public class OnAdventureEventCreated_Exp : GameEventBase
     {

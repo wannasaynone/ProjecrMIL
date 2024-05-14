@@ -1,4 +1,5 @@
 using DG.Tweening;
+using ProjectMIL.GameEvent;
 using UnityEngine;
 
 namespace ProjectMIL.UI
@@ -44,6 +45,7 @@ namespace ProjectMIL.UI
             {
                 selectFrameTransform.DOMoveX(buttons[selectedIndex].transform.position.x, 0.15f).SetEase(Ease.Linear);
             });
+            EventBus.Publish(new OnBottomBarButtonPressed { buttonIndex = selectedIndex });
         }
     }
 }
