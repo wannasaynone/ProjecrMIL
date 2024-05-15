@@ -26,6 +26,12 @@ namespace ProjectMIL.Game
 
             uiManager.Initail();
 
+            Element.UserInterfaceContextSetter[] userInterfaceContextSetters = FindObjectsOfType<Element.UserInterfaceContextSetter>(true);
+            foreach (Element.UserInterfaceContextSetter userInterfaceContextSetter in userInterfaceContextSetters)
+            {
+                userInterfaceContextSetter.SetUp(contextHandler);
+            }
+
             player = new Player(gameStaticDataManager.GetAllGameData<Data.ExpData>());
             player.Initail();
         }

@@ -12,12 +12,12 @@ namespace ProjectMIL.Game.Element
 
         public void SetUp(ContextHandler contextHandler)
         {
-            if (contextHandler == null)
+            if (contextText == null)
             {
                 contextText = GetComponent<TMPro.TextMeshProUGUI>();
                 if (contextText == null)
                 {
-                    Debug.LogError("Context Text is not found. Game Object: " + gameObject.name);
+                    Debug.LogError("TextMeshProUGUI Text is not found in UserInterfaceContextSetter. Game Object: " + gameObject.name);
                     return;
                 }
             }

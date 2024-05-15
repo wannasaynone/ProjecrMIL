@@ -4,8 +4,8 @@
     "references": [
         "ProjectMIL.Data",
         "ProjectMIL.Utlity",
-        "ProjectMIL.Game.Element",
-        "KahaGameCore.GameData"
+        "KahaGameCore.GameData",
+        "ProjectMIL.Element"
     ],
     "includePlatforms": [
         "Editor"
