@@ -24,6 +24,7 @@ namespace ProjectMIL.Game
 
             EventBus.Subscribe<OnAdventureEventCreated_Exp>(OnAdventureEventCreated_Exp);
             EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated_Gold);
+            EventBus.Subscribe<OnTryLevelUpCalled>(OnTryLevelUpCalled);
 
             EventBus.Publish(new OnPlayerInitialed
             {
@@ -52,18 +53,38 @@ namespace ProjectMIL.Game
             int oldValue = saveData.exp;
             saveData.exp += created.addExp;
 
-            while (saveData.exp >= GetRequireWithCurrentLevel())
-            {
-                saveData.exp -= GetRequireWithCurrentLevel();
-                saveData.level++;
-            }
-
             EventBus.Publish(new OnExpValueUpdated
             {
                 oldValue = oldValue,
                 addValue = created.addExp,
                 newValue = saveData.exp,
                 level = saveData.level,
+                requireExp = GetRequireWithCurrentLevel()
+            });
+        }
+
+        private void OnTryLevelUpCalled(OnTryLevelUpCalled e)
+        {
+            int oldLevel = saveData.level;
+
+            for (int i = 0; i < e.tryAddLevel; i++)
+            {
+                if (saveData.exp >= GetRequireWithCurrentLevel())
+                {
+                    saveData.exp -= GetRequireWithCurrentLevel();
+                    saveData.level++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            EventBus.Publish(new OnLevelUpdated
+            {
+                oldLevel = oldLevel,
+                currentLevel = saveData.level,
+                currentExp = saveData.exp,
                 requireExp = GetRequireWithCurrentLevel()
             });
         }

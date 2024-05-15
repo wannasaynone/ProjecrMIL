@@ -57,6 +57,14 @@ namespace ProjectMIL.GameEvent.Editor
                     description = "獲得了 {0} 點經驗值"
                 });
             }
+
+            if (GUILayout.Button("Publish Try Level Up"))
+            {
+                EventBus.Publish(new OnTryLevelUpCalled()
+                {
+                    tryAddLevel = 1
+                });
+            }
         }
 
         private static void HorizontalLine()

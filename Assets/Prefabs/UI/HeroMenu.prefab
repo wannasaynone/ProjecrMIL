@@ -1307,6 +1307,7 @@ GameObject:
   - component: {fileID: 3531697782987081506}
   - component: {fileID: 3531697782987081507}
   - component: {fileID: 3531697782987081508}
+  - component: {fileID: 8156318985615228196}
   m_Layer: 0
   m_Name: HeroMenu
   m_TagString: Untagged
@@ -1389,6 +1390,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
+--- !u!114 &8156318985615228196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3531697782987081509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6fa9549490cb86408ce9ed39488e487, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelText: {fileID: 3531697782985766273}
+  expText: {fileID: 3531697783689619960}
+  expSlider: {fileID: 3531697785101311830}
+  levelUpHintRoot: {fileID: 3531697783631623695}
+  levelUpButtonRoot: {fileID: 5162634734775027309}
+  hpText: {fileID: 3531697785064593711}
+  defenseText: {fileID: 3531697784341850529}
+  attackText: {fileID: 3531697784147109407}
+  speedText: {fileID: 3145785720644823786}
+  criticalText: {fileID: 4858313663452412935}
+  criticalResistanceText: {fileID: 3673617227551264610}
+  effectivenessText: {fileID: 3531697783865144831}
+  effectivenessResistanceText: {fileID: 8382792313029205657}
 --- !u!1 &3531697783161096245
 GameObject:
   m_ObjectHideFlags: 0

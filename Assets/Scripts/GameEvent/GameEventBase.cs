@@ -24,6 +24,14 @@ namespace ProjectMIL.GameEvent
         public int requireExp;
         public int exp;
         public int gold;
+        public int maxHP;
+        public int defense;
+        public int attack;
+        public int speed;
+        public int critical;
+        public int criticalResistance;
+        public int effectiveness;
+        public int effectivenessResistance;
     }
     public class OnExpValueUpdated : GameEventBase
     {
@@ -41,4 +49,15 @@ namespace ProjectMIL.GameEvent
     }
     public class OnAdventureProgressBarAnimationEnded : GameEventBase { }
     public class OnAdventureEventResultPanelDisabled : GameEventBase { }
+    public class OnTryLevelUpCalled : GameEventBase
+    {
+        public int tryAddLevel;
+    }
+    public class OnLevelUpdated : GameEventBase
+    {
+        public int oldLevel;
+        public int currentLevel;
+        public int currentExp;
+        public int requireExp;
+    }
 }
