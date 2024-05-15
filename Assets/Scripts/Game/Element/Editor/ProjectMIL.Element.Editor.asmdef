@@ -1,11 +1,15 @@
 {
-    "name": "ProjectMIL.Adventure",
+    "name": "ProjectMIL.Element.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:ef82501adac90004689f3ccfd44113d8",
-        "GUID:2ebf39e6f5b7c5844a0feb71db0c8030"
+        "ProjectMIL.Data",
+        "ProjectMIL.Utlity",
+        "ProjectMIL.Game.Element",
+        "KahaGameCore.GameData"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

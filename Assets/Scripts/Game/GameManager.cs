@@ -7,6 +7,7 @@ namespace ProjectMIL.Game
     {
         [SerializeField] private UIManager uiManager;
         private Adventure.AdventureManager adventureManager;
+        private Utlity.ContextHandler contextHandler;
         private GameStaticDataManager gameStaticDataManager;
         private GameStaticDataDeserializer gameStaticDataDeserializer;
         private Player player;
@@ -18,8 +19,10 @@ namespace ProjectMIL.Game
             gameStaticDataManager.Add<Data.ExpData>(gameStaticDataDeserializer.Read<Data.ExpData[]>(Resources.Load<TextAsset>("Data/ExpData").text));
             gameStaticDataManager.Add<Data.ContextData>(gameStaticDataDeserializer.Read<Data.ContextData[]>(Resources.Load<TextAsset>("Data/ContextData").text));
 
+            contextHandler = new Utlity.ContextHandler(gameStaticDataManager);
+
             adventureManager = new Adventure.AdventureManager();
-            adventureManager.Initial(gameStaticDataManager);
+            adventureManager.Initial(contextHandler);
 
             uiManager.Initail();
 

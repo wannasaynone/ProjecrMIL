@@ -30,11 +30,11 @@ namespace ProjectMIL.Adventure
             }
         }
 
-        private KahaGameCore.GameData.Implemented.GameStaticDataManager gameStaticDataManager;
+        private Utlity.ContextHandler contextHandler;
 
-        public void Initial(KahaGameCore.GameData.Implemented.GameStaticDataManager gameStaticDataManager)
+        public void Initial(Utlity.ContextHandler contextHandler)
         {
-            this.gameStaticDataManager = gameStaticDataManager;
+            this.contextHandler = contextHandler;
             GameEvent.EventBus.Subscribe<GameEvent.OnAdventureButtonPressed>(OnAdventureButtonPressed);
         }
 
@@ -81,8 +81,8 @@ namespace ProjectMIL.Adventure
             GameEvent.EventBus.Publish(new GameEvent.OnAdventureEventCreated_Exp()
             {
                 addExp = addExp,
-                title = gameStaticDataManager.GetGameData<Data.ContextData>(10000).zh_tw,
-                description = gameStaticDataManager.GetGameData<Data.ContextData>(10001).zh_tw
+                title = contextHandler.GetContext(10000),
+                description = contextHandler.GetContext(10001)
             });
         }
 
@@ -113,8 +113,8 @@ namespace ProjectMIL.Adventure
             GameEvent.EventBus.Publish(new GameEvent.OnAdventureEventCreated_Gold()
             {
                 addGold = addGold,
-                title = gameStaticDataManager.GetGameData<Data.ContextData>(10002).zh_tw,
-                description = gameStaticDataManager.GetGameData<Data.ContextData>(10003).zh_tw
+                title = contextHandler.GetContext(10002),
+                description = contextHandler.GetContext(10003)
             });
         }
     }
