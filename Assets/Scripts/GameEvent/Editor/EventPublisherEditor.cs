@@ -3,6 +3,7 @@ using UnityEditor;
 using System;
 using System.Linq;
 using System.Reflection;
+using UnityEngine.AI;
 
 namespace ProjectMIL.GameEvent.Editor
 {
@@ -63,6 +64,17 @@ namespace ProjectMIL.GameEvent.Editor
                 EventBus.Publish(new OnTryLevelUpCalled()
                 {
                     tryAddLevel = 1
+                });
+            }
+
+            if (GUILayout.Button("Publish Test Level 13 -> 14"))
+            {
+                EventBus.Publish(new OnLevelUpdated()
+                {
+                    oldLevel = 13,
+                    currentLevel = 14,
+                    currentExp = 0,
+                    requireExp = 0
                 });
             }
         }

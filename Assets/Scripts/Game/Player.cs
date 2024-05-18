@@ -19,7 +19,15 @@ namespace ProjectMIL.Game
             {
                 level = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_LEVEL", 1), // for now, we will use PlayerPrefs to save the level value
                 exp = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_EXP", 0), // for now, we will use PlayerPrefs to save the exp value
-                gold = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_GOLD", 0) // for now, we will use PlayerPrefs to save the gold value
+                gold = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_GOLD", 0), // for now, we will use PlayerPrefs to save the gold value
+                attack = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_ATTACK", 100), // for now, we will use PlayerPrefs to save the attack value
+                defense = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_DEFENSE", 100), // for now, we will use PlayerPrefs to save the defense value
+                maxHP = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_MAXHP", 100), // for now, we will use PlayerPrefs to save the maxHP value
+                speed = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_SPEED", 100), // for now, we will use PlayerPrefs to save the speed value
+                critical = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_CRITICAL", 0), // for now, we will use PlayerPrefs to save the critical value
+                criticalResistance = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_CRITICALRESISTANCE", 0), // for now, we will use PlayerPrefs to save the criticalResistance value
+                effectiveness = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_EFFECTIVENESS", 0), // for now, we will use PlayerPrefs to save the effectiveness value
+                effectivenessResistance = UnityEngine.PlayerPrefs.GetInt("PLYAYER_SAVE_EFFECTIVENESSRESISTANCE", 0), // for now, we will use PlayerPrefs to save the effectivenessResistance value
             };
 
             EventBus.Subscribe<OnAdventureEventCreated_Exp>(OnAdventureEventCreated_Exp);
@@ -31,7 +39,15 @@ namespace ProjectMIL.Game
                 level = saveData.level,
                 exp = saveData.exp,
                 requireExp = GetRequireWithCurrentLevel(),
-                gold = saveData.gold
+                gold = saveData.gold,
+                attack = saveData.attack,
+                defense = saveData.defense,
+                maxHP = saveData.maxHP,
+                speed = saveData.speed,
+                critical = saveData.critical,
+                criticalResistance = saveData.criticalResistance,
+                effectiveness = saveData.effectiveness,
+                effectivenessResistance = saveData.effectivenessResistance
             });
         }
 
@@ -80,13 +96,16 @@ namespace ProjectMIL.Game
                 }
             }
 
-            EventBus.Publish(new OnLevelUpdated
+            if (oldLevel != saveData.level)
             {
-                oldLevel = oldLevel,
-                currentLevel = saveData.level,
-                currentExp = saveData.exp,
-                requireExp = GetRequireWithCurrentLevel()
-            });
+                EventBus.Publish(new OnLevelUpdated
+                {
+                    oldLevel = oldLevel,
+                    currentLevel = saveData.level,
+                    currentExp = saveData.exp,
+                    requireExp = GetRequireWithCurrentLevel()
+                });
+            }
         }
 
         private void OnAdventureEventCreated_Gold(OnAdventureEventCreated_Gold created)
