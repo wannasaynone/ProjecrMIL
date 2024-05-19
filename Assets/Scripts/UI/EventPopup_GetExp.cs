@@ -135,7 +135,7 @@ namespace ProjectMIL.UI
             DOTween.To(() => GetCurrentFontSize(), x => SetCurrentFontSize(x), titleText.fontSize * 2f, 1f);
 
             curMegaWinNumber = 0;
-            Debug.Log("nextCreatedAdvEvent: " + nextCreatedAdvEvent.description);
+
             DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextCreatedAdvEvent.addExp, 1f).OnUpdate(() =>
             {
                 descText.text = string.Format(nextCreatedAdvEvent.description, "<size=" + megaWinFontSize + ">" + curMegaWinNumber + "</size>");

@@ -5,6 +5,10 @@ namespace ProjectMIL.GameEvent
     {
         public int buttonIndex;
     }
+    public class OnForceButtomBarButtonEnable : GameEventBase
+    {
+        public int buttonIndex;
+    }
     public class OnAdventureButtonPressed : GameEventBase { }
     public class OnAdventureEventCreated_Exp : GameEventBase
     {
@@ -18,7 +22,7 @@ namespace ProjectMIL.GameEvent
         public string description;
         public int addGold;
     }
-    public class OnPlayerInitialed : GameEventBase
+    public class OnPlayerValueUpdated : GameEventBase
     {
         public int level;
         public int requireExp;

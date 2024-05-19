@@ -23,12 +23,12 @@ namespace ProjectMIL.UI
 
         public override void Initial()
         {
-            EventBus.Subscribe<OnPlayerInitialed>(OnPlayerInitialed);
+            EventBus.Subscribe<OnPlayerValueUpdated>(OnPlayerValueUpdated);
             EventBus.Subscribe<OnExpValueUpdated>(OnExpValueUpdated);
             EventBus.Subscribe<OnLevelUpdated>(OnLevelUpdated);
         }
 
-        private void OnPlayerInitialed(OnPlayerInitialed e)
+        private void OnPlayerValueUpdated(OnPlayerValueUpdated e)
         {
             levelText.text = e.level.ToString();
             expText.text = e.exp.ToString() + "/" + e.requireExp.ToString();
@@ -60,6 +60,11 @@ namespace ProjectMIL.UI
             expText.text = e.currentExp.ToString() + "/" + e.requireExp.ToString();
             levelUpButtonRoot.SetActive(e.currentExp >= e.requireExp);
             levelUpHintRoot.SetActive(e.currentExp >= e.requireExp);
+        }
+
+        public void Button_LevelUp()
+        {
+            EventBus.Publish(new OnTryLevelUpCalled { tryAddLevel = 1 });
         }
     }
 }

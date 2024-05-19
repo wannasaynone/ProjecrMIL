@@ -14,7 +14,13 @@ namespace ProjectMIL.UI
 
         public override void Initial()
         {
+            EventBus.Subscribe<OnForceButtomBarButtonEnable>(OnForceButtomBarButtonEnable);
             EnableButton(defaultButton);
+        }
+
+        private void OnForceButtomBarButtonEnable(OnForceButtomBarButtonEnable e)
+        {
+            EnableButton(buttons[e.buttonIndex]);
         }
 
         public void EnableButton(BottomBarButton selectedButton)

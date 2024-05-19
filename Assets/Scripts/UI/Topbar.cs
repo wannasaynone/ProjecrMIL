@@ -10,12 +10,12 @@ namespace ProjectMIL.UI
 
         public override void Initial()
         {
-            EventBus.Subscribe<OnPlayerInitialed>(OnPlayerInitialed);
+            EventBus.Subscribe<OnPlayerValueUpdated>(OnPlayerInitialed);
             EventBus.Subscribe<OnGoldValueUpdated>(OnGoldValueUpdated);
             EventBus.Subscribe<OnAdventureEventResultPanelDisabled>(OnAdventureEventResultPanelDisabled);
         }
 
-        private void OnPlayerInitialed(OnPlayerInitialed initialed)
+        private void OnPlayerInitialed(OnPlayerValueUpdated initialed)
         {
             goldText.text = initialed.gold.ToString();
         }

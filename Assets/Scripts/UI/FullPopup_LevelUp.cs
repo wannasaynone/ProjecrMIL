@@ -17,6 +17,7 @@ namespace ProjectMIL.UI
         [SerializeField] private Transform[] starRoots;
         [SerializeField] private GameObject levelUpRewardRoot;
         [SerializeField] private GameObject tapToContinueRoot;
+        [SerializeField] private UnityEvent onEnabled; // for workaround with ParticleImage
         [SerializeField] private UnityEvent onParticleCalled; // for workaround with ParticleImage
         [SerializeField] private Button rootButton;
 
@@ -29,6 +30,7 @@ namespace ProjectMIL.UI
 
         private void OnLevelUpdated(OnLevelUpdated e)
         {
+            onEnabled.Invoke();
             rootButton.interactable = false;
             gameObject.SetActive(true);
             backLightRoot.gameObject.SetActive(false);

@@ -6,6 +6,7 @@ namespace ProjectMIL.Game
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private UIManager uiManager;
+        [SerializeField] private Data.GameConfig gameConfig;
         private Adventure.AdventureManager adventureManager;
         private Utlity.ContextHandler contextHandler;
         private GameStaticDataManager gameStaticDataManager;
@@ -32,7 +33,7 @@ namespace ProjectMIL.Game
                 userInterfaceContextSetter.SetUp(contextHandler);
             }
 
-            player = new Player(gameStaticDataManager.GetAllGameData<Data.ExpData>());
+            player = new Player(gameStaticDataManager.GetAllGameData<Data.ExpData>(), gameConfig);
             player.Initail();
         }
     }

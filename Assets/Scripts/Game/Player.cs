@@ -1,17 +1,20 @@
 using ProjectMIL.Data;
 using ProjectMIL.GameEvent;
+using UnityEngine;
 
 namespace ProjectMIL.Game
 {
     public class Player
     {
-        public Player(ExpData[] expDatas)
+        public Player(ExpData[] expDatas, GameConfig gameConfig)
         {
             this.expDatas = expDatas;
+            this.gameConfig = gameConfig;
         }
 
         private SaveData saveData;
         private readonly ExpData[] expDatas;
+        private readonly GameConfig gameConfig;
 
         public void Initail()
         {
@@ -34,7 +37,7 @@ namespace ProjectMIL.Game
             EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated_Gold);
             EventBus.Subscribe<OnTryLevelUpCalled>(OnTryLevelUpCalled);
 
-            EventBus.Publish(new OnPlayerInitialed
+            EventBus.Publish(new OnPlayerValueUpdated
             {
                 level = saveData.level,
                 exp = saveData.exp,
@@ -88,7 +91,7 @@ namespace ProjectMIL.Game
                 if (saveData.exp >= GetRequireWithCurrentLevel())
                 {
                     saveData.exp -= GetRequireWithCurrentLevel();
-                    saveData.level++;
+                    ForceLevelUp(1);
                 }
                 else
                 {
@@ -106,6 +109,77 @@ namespace ProjectMIL.Game
                     requireExp = GetRequireWithCurrentLevel()
                 });
             }
+        }
+
+        private void ForceLevelUp(int addLevel)
+        {
+            saveData.level += addLevel;
+            int addPoints = gameConfig.AddStatusValuePerLevel * addLevel;
+
+            // 建立一個欄位數組
+            int[] fields =
+            {
+                saveData.maxHP,
+                saveData.defense,
+                saveData.attack,
+                saveData.speed,
+                saveData.critical,
+                saveData.criticalResistance,
+                saveData.effectiveness,
+                saveData.effectivenessResistance
+            };
+
+            // 隨機分配
+            while (addPoints > 0)
+            {
+                int randomIndex = Random.Range(0, fields.Length);
+                AddStatus(ref addPoints, ref fields[randomIndex]);
+            }
+
+            // 更新 saveData 的欄位
+            saveData.maxHP = fields[0];
+            saveData.defense = fields[1];
+            saveData.attack = fields[2];
+            saveData.speed = fields[3];
+            saveData.critical = fields[4];
+            saveData.criticalResistance = fields[5];
+            saveData.effectiveness = fields[6];
+            saveData.effectivenessResistance = fields[7];
+
+            EventBus.Publish(new OnPlayerValueUpdated
+            {
+                level = saveData.level,
+                exp = saveData.exp,
+                requireExp = GetRequireWithCurrentLevel(),
+                gold = saveData.gold,
+                attack = saveData.attack,
+                defense = saveData.defense,
+                maxHP = saveData.maxHP,
+                speed = saveData.speed,
+                critical = saveData.critical,
+                criticalResistance = saveData.criticalResistance,
+                effectiveness = saveData.effectiveness,
+                effectivenessResistance = saveData.effectivenessResistance
+            });
+        }
+
+        private void AddStatus(ref int remainingAddStatusPoint, ref int targetValueField) // return remaining point
+        {
+            if (remainingAddStatusPoint <= 0)
+            {
+                return;
+            }
+
+            int temp = Random.Range(1, remainingAddStatusPoint + 1);
+            float maxValue = (float)gameConfig.AddStatusValuePerLevel / 8f; // have 8 fields
+
+            if (temp > maxValue)
+            {
+                temp = (int)maxValue + Random.Range(0, 4);
+            }
+
+            targetValueField += temp;
+            remainingAddStatusPoint -= temp;
         }
 
         private void OnAdventureEventCreated_Gold(OnAdventureEventCreated_Gold created)
