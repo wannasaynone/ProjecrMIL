@@ -120,7 +120,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4354908401059777299}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4270049709538948726}
+        m_TargetAssemblyTypeName: ProjectMIL.Combat.CombatButtonGroup, ProjectMIL.Combat
+        m_MethodName: Button_OnAttackButtonPressed
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: ComboAttack02
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &790804345887170074
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,7 +604,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1632368838601753419}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4270049709538948726}
+        m_TargetAssemblyTypeName: ProjectMIL.Combat.CombatButtonGroup, ProjectMIL.Combat
+        m_MethodName: Button_OnAttackButtonPressed
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: ComboAttack03
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4404270961509680013
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,7 +737,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8083427548041826088}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4270049709538948726}
+        m_TargetAssemblyTypeName: ProjectMIL.Combat.CombatButtonGroup, ProjectMIL.Combat
+        m_MethodName: Button_OnAttackButtonPressed
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: ComboAttack01
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5615849278599856547
 GameObject:
   m_ObjectHideFlags: 0
@@ -724,6 +760,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8902049895204934850}
   - component: {fileID: 6814255662427968008}
+  - component: {fileID: 4270049709538948726}
   m_Layer: 5
   m_Name: CombatButtonGroup
   m_TagString: Untagged
@@ -779,6 +816,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &4270049709538948726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5615849278599856547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b2eb0b4b02ba85438deb49a9386f1ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7299772215807925214
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using ProjectMIL.GameEvent;
 using UnityEngine;
 
-public class CombatButtonGroup : MonoBehaviour
+namespace ProjectMIL.Combat
 {
-    // Start is called before the first frame update
-    void Start()
+    public class CombatButtonGroup : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public void Button_OnAttackButtonPressed(string attackName)
+        {
+            EventBus.Publish(new OnAttackButtonPressed { attackName = attackName });
+        }
     }
 }

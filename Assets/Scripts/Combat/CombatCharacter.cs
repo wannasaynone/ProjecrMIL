@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ProjectMIL.GameEvent;
 using UnityEngine;
 
 namespace ProjectMIL.Combat
@@ -8,25 +9,22 @@ namespace ProjectMIL.Combat
     {
         [SerializeField] private Animator playerCharacterAnimator;
 
-        private int attackIndex = 1;
-
         private void Start()
         {
             playerCharacterAnimator.Play("Idle");
+            EventBus.Subscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
+        }
+
+        private void OnAttackButtonPressed(OnAttackButtonPressed e)
+        {
+            if (playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.9f)
+                return;
+
+            playerCharacterAnimator.Play(e.attackName, 0, 0f);
         }
 
         private void Update()
         {
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-                playerCharacterAnimator.Play("ComboAttack0" + attackIndex);
-                attackIndex++;
-                if (attackIndex > 4)
-                {
-                    attackIndex = 1;
-                }
-            }
-
             if (playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("ComboAttack04")
                 && playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
             {

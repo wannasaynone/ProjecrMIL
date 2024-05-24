@@ -64,4 +64,8 @@ namespace ProjectMIL.GameEvent
         public int currentExp;
         public int requireExp;
     }
+    public class OnAttackButtonPressed : GameEventBase
+    {
+        public string attackName;
+    }
 }

@@ -1,7 +1,9 @@
 {
     "name": "ProjectMIL.Combat",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:ef82501adac90004689f3ccfd44113d8"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
