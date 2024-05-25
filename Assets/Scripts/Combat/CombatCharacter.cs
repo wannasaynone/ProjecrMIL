@@ -15,10 +15,23 @@ namespace ProjectMIL.Combat
             EventBus.Subscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
         }
 
+        private int comboCount = 0;
+
         private void OnAttackButtonPressed(OnAttackButtonPressed e)
         {
             if (playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.9f)
                 return;
+
+            // if ((comboCount == 0 && e.attackName == "ComboAttack01")
+            //     || (comboCount == 1 && e.attackName == "ComboAttack02")
+            //     || (comboCount == 2 && e.attackName == "ComboAttack03"))
+            // {
+            //     comboCount++;
+            // }
+            // else
+            // {
+            //     comboCount = 0;
+            // }
 
             playerCharacterAnimator.Play(e.attackName, 0, 0f);
         }
@@ -26,21 +39,19 @@ namespace ProjectMIL.Combat
         private void Update()
         {
             if (playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("ComboAttack04")
-                && playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
+                && playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
             {
-                playerCharacterAnimator.Play("IdleTransition");
-                transform.position += 0.55f * Vector3.right;
+                transform.position += new Vector3(1f, 0, 0);
+                playerCharacterAnimator.Play("Idle");
             }
 
-            if (playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("IdleTransition"))
-            {
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(0, 0, 0), 0.01f);
-                if (Vector3.Distance(transform.position, new Vector3(0, 0, 0)) < 0.01f)
-                {
-                    transform.position = new Vector3(0, 0, 0);
-                    playerCharacterAnimator.Play("Idle");
-                }
-            }
+            // if (playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("ComboAttack03")
+            //     && playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f
+            //     && comboCount == 3)
+            // {
+            //     playerCharacterAnimator.Play("ComboAttack04", 0, 0f);
+            //     comboCount = 0;
+            // }
         }
     }
 }
