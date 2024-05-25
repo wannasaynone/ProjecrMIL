@@ -1,4 +1,5 @@
 using KahaGameCore.GameData.Implemented;
+using ProjectMIL.GameEvent;
 using UnityEngine;
 
 namespace ProjectMIL.Game
@@ -6,6 +7,7 @@ namespace ProjectMIL.Game
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private UIManager uiManager;
+        [SerializeField] private Combat.CombatManager combatManager;
         [SerializeField] private Data.GameConfig gameConfig;
         private Adventure.AdventureManager adventureManager;
         private Utlity.ContextHandler contextHandler;
@@ -35,6 +37,14 @@ namespace ProjectMIL.Game
 
             player = new Player(gameStaticDataManager.GetAllGameData<Data.ExpData>(), gameConfig);
             player.Initail();
+
+            EventBus.Subscribe<OnCombatStartCalled>(OnCombatStartCalled);
+        }
+
+        private void OnCombatStartCalled(OnCombatStartCalled e)
+        {
+            uiManager.gameObject.SetActive(false);
+            combatManager.StartCombat();
         }
     }
 }

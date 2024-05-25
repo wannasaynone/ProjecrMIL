@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace ProjectMIL.Combat
@@ -14,9 +13,10 @@ namespace ProjectMIL.Combat
 
         private int currentIndex = 0;
 
-        private void OnEnable()
+        public void StartCombat()
         {
             ResetAll();
+            gameObject.SetActive(true);
         }
 
         private void ResetAll()

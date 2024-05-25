@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using ProjectMIL.GameEvent;
 using UnityEngine;
 
 namespace ProjectMIL.Combat
 {
-    public class CombatCharacter : MonoBehaviour
+    public class CombatActor : MonoBehaviour
     {
         [SerializeField] private Animator playerCharacterAnimator;
 

@@ -68,4 +68,5 @@ namespace ProjectMIL.GameEvent
     {
         public string attackName;
     }
+    public class OnCombatStartCalled : GameEventBase { }
 }
