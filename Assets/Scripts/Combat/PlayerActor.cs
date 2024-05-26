@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using ProjectMIL.GameEvent;
 using UnityEngine;
 
@@ -6,8 +7,20 @@ namespace ProjectMIL.Combat
 {
     public class PlayerActor : CombatActor
     {
+        [System.Serializable]
+        private class AttackInfo
+        {
+            public string attackName;
+            public float attackStartNormalizedTime;
+            public float attackRange;
+        }
+
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private GameObject speedLineEffectRoot;
+        [SerializeField] private AttackInfo[] attackInfos;
+
+        private bool isAttacked = false;
+        private string currentAttackName;
 
         public override void Initialize()
         {
@@ -20,6 +33,9 @@ namespace ProjectMIL.Combat
         {
             if (!IsPlaying("Idle") && GetNormalizedTime() < 0.9f)
                 return;
+
+            isAttacked = false;
+            currentAttackName = e.attackName;
 
             CombatUnit enemyUnit = CombatUnitContainer.GetCloestUnitByCamp(CombatUnit.Camp.Enemy, transform.position);
             if (enemyUnit == null)
@@ -56,6 +72,28 @@ namespace ProjectMIL.Combat
             {
                 transform.position += new Vector3(1f, 0, 0);
                 PlayAnimation("Idle");
+            }
+
+            if (IsPlaying("Idle"))
+                return;
+
+            if (isAttacked)
+                return;
+
+            for (int attackInfoIndex = 0; attackInfoIndex < attackInfos.Length; attackInfoIndex++)
+            {
+                if (currentAttackName == attackInfos[attackInfoIndex].attackName && GetNormalizedTime() >= attackInfos[attackInfoIndex].attackStartNormalizedTime)
+                {
+                    List<CombatUnit> enemyUnits = CombatUnitContainer.GetAllUnitInRange(CombatUnit.Camp.Enemy, transform.position, 2f);
+
+                    for (int enemyUnitIndex = 0; enemyUnitIndex < enemyUnits.Count; enemyUnitIndex++)
+                    {
+                        CombatUnit enemyUnit = enemyUnits[enemyUnitIndex];
+                        Debug.Log("Attack: " + attackInfos[attackInfoIndex].attackName + " to " + enemyUnit.Actor.name);
+                    }
+                    isAttacked = true;
+                    break;
+                }
             }
         }
     }

@@ -50,6 +50,16 @@ MonoBehaviour:
   defaultStateName: Idle
   spriteRenderer: {fileID: 6307126387568804599}
   speedLineEffectRoot: {fileID: 2188739593708584291}
+  attackInfos:
+  - attackName: ComboAttack01
+    attackStartNormalizedTime: 0.6
+    attackRange: 2
+  - attackName: ComboAttack02
+    attackStartNormalizedTime: 0.5
+    attackRange: 2
+  - attackName: ComboAttack03
+    attackStartNormalizedTime: 0.1
+    attackRange: 2
 --- !u!1 &6724892233910046940
 GameObject:
   m_ObjectHideFlags: 0

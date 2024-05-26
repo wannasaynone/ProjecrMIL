@@ -16,11 +16,12 @@ namespace ProjectMIL.Combat
 
         public void StartCombat()
         {
-            ResetAll();
+            CombatUnitContainer.ClearAll();
+            ResetAllCombatStageSetting();
             gameObject.SetActive(true);
         }
 
-        private void ResetAll()
+        private void ResetAllCombatStageSetting()
         {
             cameraRoot.position = new Vector3(0, 0, -10);
             background01.position = new Vector3(0, 0, 0);
