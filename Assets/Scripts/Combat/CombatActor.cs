@@ -1,55 +1,57 @@
+using System;
+using System.Collections;
+using System.Threading;
 using ProjectMIL.GameEvent;
 using UnityEngine;
 
 namespace ProjectMIL.Combat
 {
-    public class CombatActor : MonoBehaviour
+    public abstract class CombatActor : MonoBehaviour
     {
-        [SerializeField] private Animator playerCharacterAnimator;
+        [SerializeField] private Animator characterAnimator;
+        [SerializeField] private string defaultStateName = "Idle";
 
         private void Start()
         {
-            playerCharacterAnimator.Play("Idle");
-            EventBus.Subscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
+            characterAnimator.Play(defaultStateName, 0, 0f);
         }
 
-        private int comboCount = 0;
-
-        private void OnAttackButtonPressed(OnAttackButtonPressed e)
+        protected void PlayAnimation(string animationName)
         {
-            if (playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.9f)
-                return;
-
-            // if ((comboCount == 0 && e.attackName == "ComboAttack01")
-            //     || (comboCount == 1 && e.attackName == "ComboAttack02")
-            //     || (comboCount == 2 && e.attackName == "ComboAttack03"))
-            // {
-            //     comboCount++;
-            // }
-            // else
-            // {
-            //     comboCount = 0;
-            // }
-
-            playerCharacterAnimator.Play(e.attackName, 0, 0f);
+            characterAnimator.Play(animationName, 0, 0f);
         }
 
-        private void Update()
+        protected void PlayAnimationAndStop(string animationName, float stopAtNormalizedTime)
         {
-            if (playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("ComboAttack04")
-                && playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+            characterAnimator.Play(animationName, 0, 0f);
+            StartCoroutine(IEStopAnimation(animationName, stopAtNormalizedTime));
+        }
+
+        private IEnumerator IEStopAnimation(string animationName, float stopAtNormalizedTime)
+        {
+            while (IsPlaying(animationName) && GetNormalizedTime() < stopAtNormalizedTime)
             {
-                transform.position += new Vector3(1f, 0, 0);
-                playerCharacterAnimator.Play("Idle");
+                yield return null;
             }
 
-            // if (playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("ComboAttack03")
-            //     && playerCharacterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f
-            //     && comboCount == 3)
-            // {
-            //     playerCharacterAnimator.Play("ComboAttack04", 0, 0f);
-            //     comboCount = 0;
-            // }
+            characterAnimator.speed = 0;
         }
+
+        protected void ResumeAnimation()
+        {
+            characterAnimator.speed = 1;
+        }
+
+        protected bool IsPlaying(string stateName)
+        {
+            return characterAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
+        }
+
+        protected float GetNormalizedTime()
+        {
+            return characterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        }
+
+        public abstract void Initialize();
     }
 }
