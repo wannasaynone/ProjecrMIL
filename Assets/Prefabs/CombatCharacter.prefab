@@ -251,11 +251,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 656854991045789148, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
       propertyPath: m_LocalScale.x
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 656854991045789148, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
       propertyPath: m_LocalScale.y
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 656854991045789148, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
       propertyPath: m_LocalScale.z
@@ -267,7 +267,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 656854991045789148, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 656854991045789148, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
       propertyPath: m_LocalPosition.z
@@ -303,7 +303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 656854991045789148, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 656854991045789150, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
       propertyPath: m_Name
@@ -312,6 +312,22 @@ PrefabInstance:
     - target: {fileID: 656854991045789150, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 656854991045789151, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 656854991045789151, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 656854991045789151, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 656854991045789151, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 656854991045789151, guid: 12404fcbd04e1e149a463f219a4d6290, type: 3}
       propertyPath: m_SortingOrder
