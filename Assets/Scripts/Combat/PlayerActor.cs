@@ -84,7 +84,7 @@ namespace ProjectMIL.Combat
             {
                 if (currentAttackName == attackInfos[attackInfoIndex].attackName && GetNormalizedTime() >= attackInfos[attackInfoIndex].attackStartNormalizedTime)
                 {
-                    List<CombatUnit> enemyUnits = CombatUnitContainer.GetAllUnitInRange(CombatUnit.Camp.Enemy, transform.position, 2f);
+                    List<CombatUnit> enemyUnits = CombatUnitContainer.GetAllUnitInRange(CombatUnit.Camp.Enemy, transform.position, attackInfos[attackInfoIndex].attackRange);
 
                     for (int enemyUnitIndex = 0; enemyUnitIndex < enemyUnits.Count; enemyUnitIndex++)
                     {
