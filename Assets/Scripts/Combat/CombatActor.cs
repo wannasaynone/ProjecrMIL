@@ -1,7 +1,4 @@
-using System;
 using System.Collections;
-using System.Threading;
-using ProjectMIL.GameEvent;
 using UnityEngine;
 
 namespace ProjectMIL.Combat
@@ -10,6 +7,21 @@ namespace ProjectMIL.Combat
     {
         [SerializeField] private Animator characterAnimator;
         [SerializeField] private string defaultStateName = "Idle";
+
+        public class ActorInfo
+        {
+            public enum Camp
+            {
+                Player,
+                Enemy
+            }
+            public readonly Camp camp;
+            public ActorInfo(Camp camp)
+            {
+                this.camp = camp;
+            }
+        }
+        public ActorInfo Info { get; private set; }
 
         private void Start()
         {
@@ -57,6 +69,12 @@ namespace ProjectMIL.Combat
             return characterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
         }
 
-        public abstract void Initialize();
+        public void Initialize(ActorInfo actorInfo)
+        {
+            Info = actorInfo;
+            OnInitialized();
+        }
+
+        protected abstract void OnInitialized();
     }
 }

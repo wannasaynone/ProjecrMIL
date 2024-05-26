@@ -69,4 +69,9 @@ namespace ProjectMIL.GameEvent
         public string attackName;
     }
     public class OnCombatStartCalled : GameEventBase { }
+    public class OnStartToHit : GameEventBase
+    {
+        public int attackerActorInstanceID;
+        public int targetActorInstanceID;
+    }
 }

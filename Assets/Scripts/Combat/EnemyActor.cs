@@ -6,7 +6,7 @@ namespace ProjectMIL.Combat
 {
     public class EnemyActor : CombatActor
     {
-        public override void Initialize()
+        protected override void OnInitialized()
         {
 
         }

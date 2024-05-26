@@ -22,11 +22,10 @@ namespace ProjectMIL.Combat
         private bool isAttacked = false;
         private string currentAttackName;
 
-        public override void Initialize()
+        protected override void OnInitialized()
         {
             EventBus.Subscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
             spriteRenderer.material = new Material(spriteRenderer.material);
-
         }
 
         private void OnAttackButtonPressed(OnAttackButtonPressed e)
@@ -37,25 +36,25 @@ namespace ProjectMIL.Combat
             isAttacked = false;
             currentAttackName = e.attackName;
 
-            CombatUnit enemyUnit = CombatUnitContainer.GetCloestUnitByCamp(CombatUnit.Camp.Enemy, transform.position);
-            if (enemyUnit == null)
+            CombatActor enemyActor = CombatActorContainer.GetCloestUnitByCamp(ActorInfo.Camp.Enemy, transform.position);
+            if (enemyActor == null)
             {
                 PlayAnimation(e.attackName, 2f);
             }
             else
             {
                 PlayAnimationAndStop(e.attackName, 0.01f, 2f);
-                StartCoroutine(IEDashToEnemy(enemyUnit));
+                StartCoroutine(IEDashToEnemy(enemyActor));
             }
         }
 
-        private IEnumerator IEDashToEnemy(CombatUnit enemyUnit)
+        private IEnumerator IEDashToEnemy(CombatActor enemyActor)
         {
             float motionBlur = 0f;
-            while (Vector3.Distance(transform.position, enemyUnit.Actor.transform.position) > 2f)
+            while (Vector3.Distance(transform.position, enemyActor.transform.position) > 2f)
             {
                 float moveSpeed = 25f * Time.deltaTime;
-                transform.position = Vector3.MoveTowards(transform.position, enemyUnit.Actor.transform.position, moveSpeed);
+                transform.position = Vector3.MoveTowards(transform.position, enemyActor.transform.position, moveSpeed);
                 motionBlur = Mathf.Lerp(motionBlur, 1f, moveSpeed);
                 spriteRenderer.material.SetFloat("_MotionBlurDist", motionBlur);
                 speedLineEffectRoot.SetActive(true);
@@ -84,12 +83,16 @@ namespace ProjectMIL.Combat
             {
                 if (currentAttackName == attackInfos[attackInfoIndex].attackName && GetNormalizedTime() >= attackInfos[attackInfoIndex].attackStartNormalizedTime)
                 {
-                    List<CombatUnit> enemyUnits = CombatUnitContainer.GetAllUnitInRange(CombatUnit.Camp.Enemy, transform.position, attackInfos[attackInfoIndex].attackRange);
+                    List<CombatActor> enemyUnits = CombatActorContainer.GetAllUnitInRange(ActorInfo.Camp.Enemy, transform.position, attackInfos[attackInfoIndex].attackRange);
 
-                    for (int enemyUnitIndex = 0; enemyUnitIndex < enemyUnits.Count; enemyUnitIndex++)
+                    for (int enemyActorIndex = 0; enemyActorIndex < enemyUnits.Count; enemyActorIndex++)
                     {
-                        CombatUnit enemyUnit = enemyUnits[enemyUnitIndex];
-                        Debug.Log("Attack: " + attackInfos[attackInfoIndex].attackName + " to " + enemyUnit.Actor.name);
+                        CombatActor enemyActor = enemyUnits[enemyActorIndex];
+                        EventBus.Publish(new OnStartToHit
+                        {
+                            attackerActorInstanceID = GetInstanceID(),
+                            targetActorInstanceID = enemyActor.GetInstanceID()
+                        });
                     }
                     isAttacked = true;
                     break;

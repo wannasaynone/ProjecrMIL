@@ -16,7 +16,7 @@ namespace ProjectMIL.Combat
 
         public void StartCombat()
         {
-            CombatUnitContainer.ClearAll();
+            CombatActorContainer.ClearAll();
             ResetAllCombatStageSetting();
             gameObject.SetActive(true);
         }
@@ -28,26 +28,26 @@ namespace ProjectMIL.Combat
             background02.position = new Vector3(7.34f, 0, 0);
             currentMapIndex = 0;
 
-            CombatUnit playerUnit = new CombatUnit(Instantiate(playerPrefab), CombatUnit.Camp.Player);
-            playerUnit.Actor.transform.position = new Vector3(-2f, -1f, 0);
-            playerUnit.Actor.Initialize();
-            CombatUnitContainer.AddUnit(playerUnit);
+            CombatActor playerActor = Instantiate(playerPrefab);
+            playerActor.transform.position = new Vector3(-2f, -1f, 0);
+            playerActor.Initialize(new CombatActor.ActorInfo(CombatActor.ActorInfo.Camp.Player));
+            CombatActorContainer.AddActor(playerActor);
 
-            CombatUnit enemyUnit = new CombatUnit(Instantiate(enemyPrefab), CombatUnit.Camp.Enemy);
-            enemyUnit.Actor.transform.position = new Vector3(2f, -1f, 0);
-            enemyUnit.Actor.Initialize();
-            CombatUnitContainer.AddUnit(enemyUnit);
+            CombatActor enemyActor = Instantiate(enemyPrefab);
+            enemyActor.transform.position = new Vector3(2f, -1f, 0);
+            enemyActor.Initialize(new CombatActor.ActorInfo(CombatActor.ActorInfo.Camp.Enemy));
+            CombatActorContainer.AddActor(enemyActor);
         }
 
         private void Update()
         {
-            CombatUnit playerUnit = CombatUnitContainer.GetAnyUnitByCamp(CombatUnit.Camp.Player);
-            if (playerUnit == null)
+            CombatActor playerActor = CombatActorContainer.GetAnyUnitByCamp(CombatActor.ActorInfo.Camp.Player);
+            if (playerActor == null)
             {
                 return;
             }
 
-            cameraRoot.transform.position = Vector3.MoveTowards(cameraRoot.transform.position, playerUnit.Actor.transform.position + cameraOffset, 10f * Time.deltaTime);
+            cameraRoot.transform.position = Vector3.MoveTowards(cameraRoot.transform.position, playerActor.transform.position + cameraOffset, 10f * Time.deltaTime);
             if (cameraRoot.position.x >= 7.34f * (currentMapIndex + 1))
             {
                 switch (currentMapIndex % 2)
