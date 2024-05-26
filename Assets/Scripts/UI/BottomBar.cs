@@ -12,7 +12,7 @@ namespace ProjectMIL.UI
 
         private int enabledButtonIndex = -1;
 
-        public override void Initial()
+        public override void Initialize()
         {
             EventBus.Subscribe<OnForceButtomBarButtonEnable>(OnForceButtomBarButtonEnable);
             EnableButton(defaultButton);

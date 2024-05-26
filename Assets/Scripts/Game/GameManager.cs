@@ -25,9 +25,9 @@ namespace ProjectMIL.Game
             contextHandler = new Utlity.ContextHandler(gameStaticDataManager);
 
             adventureManager = new Adventure.AdventureManager();
-            adventureManager.Initial(contextHandler);
+            adventureManager.Initialize(contextHandler);
 
-            uiManager.Initail();
+            uiManager.Initialize();
 
             Element.UserInterfaceContextSetter[] userInterfaceContextSetters = FindObjectsOfType<Element.UserInterfaceContextSetter>(true);
             foreach (Element.UserInterfaceContextSetter userInterfaceContextSetter in userInterfaceContextSetters)

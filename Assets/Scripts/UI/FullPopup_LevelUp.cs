@@ -23,7 +23,7 @@ namespace ProjectMIL.UI
 
         private OnLevelUpdated tempEvent;
 
-        public override void Initial()
+        public override void Initialize()
         {
             EventBus.Subscribe<OnLevelUpdated>(OnLevelUpdated);
         }

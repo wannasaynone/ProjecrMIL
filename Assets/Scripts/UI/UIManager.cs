@@ -8,12 +8,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private UIBase[] userInterfaces;
     [SerializeField] private RectTransform mainUIGridRoot;
 
-    public void Initail()
+    public void Initialize()
     {
         EventBus.Subscribe<OnBottomBarButtonPressed>(OnBottomBarButtonPressed);
         for (int i = 0; i < userInterfaces.Length; i++)
         {
-            userInterfaces[i].Initial();
+            userInterfaces[i].Initialize();
         }
     }
 

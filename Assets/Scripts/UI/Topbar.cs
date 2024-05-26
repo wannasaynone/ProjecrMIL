@@ -8,7 +8,7 @@ namespace ProjectMIL.UI
 
         private OnGoldValueUpdated onGoldValueUpdatedTemp;
 
-        public override void Initial()
+        public override void Initialize()
         {
             EventBus.Subscribe<OnPlayerValueUpdated>(OnPlayerInitialed);
             EventBus.Subscribe<OnGoldValueUpdated>(OnGoldValueUpdated);

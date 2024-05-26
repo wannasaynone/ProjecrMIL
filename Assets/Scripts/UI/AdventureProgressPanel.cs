@@ -24,7 +24,7 @@ namespace ProjectMIL.UI
         private RectTransform adventureProgressBarFillRectTransform;
         private Material adventureProgressBarFillMaterialClone;
 
-        public override void Initial()
+        public override void Initialize()
         {
             EventBus.Subscribe<OnAdventureEventCreated_Exp>(OnAdventureEventCreated_Exp);
             EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated_Gold);

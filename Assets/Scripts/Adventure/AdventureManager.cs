@@ -32,7 +32,7 @@ namespace ProjectMIL.Adventure
 
         private Utlity.ContextHandler contextHandler;
 
-        public void Initial(Utlity.ContextHandler contextHandler)
+        public void Initialize(Utlity.ContextHandler contextHandler)
         {
             this.contextHandler = contextHandler;
             GameEvent.EventBus.Subscribe<GameEvent.OnAdventureButtonPressed>(OnAdventureButtonPressed);

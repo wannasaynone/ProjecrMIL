@@ -19,7 +19,7 @@ namespace ProjectMIL.UI
         private float megaWinFontSize = 0f;
         private int curMegaWinNumber = 0;
 
-        public override void Initial()
+        public override void Initialize()
         {
             EventBus.Subscribe<OnAdventureProgressBarAnimationEnded>(OnAdventureProgressBarAnimationEnded);
             EventBus.Subscribe<OnAdventureEventCreated_Exp>(OnAdventureEventCreated);
