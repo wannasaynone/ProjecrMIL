@@ -46,7 +46,7 @@ namespace ProjectMIL.Combat
                 return;
             }
 
-            cameraRoot.transform.position = Vector3.MoveTowards(cameraRoot.transform.position, playerUnit.Actor.transform.position + cameraOffset, Time.deltaTime);
+            cameraRoot.transform.position = Vector3.MoveTowards(cameraRoot.transform.position, playerUnit.Actor.transform.position + cameraOffset, 10f * Time.deltaTime);
             if (cameraRoot.position.x >= 7.34f * (currentMapIndex + 1))
             {
                 switch (currentMapIndex % 2)

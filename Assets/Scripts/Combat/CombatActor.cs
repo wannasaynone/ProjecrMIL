@@ -16,13 +16,15 @@ namespace ProjectMIL.Combat
             characterAnimator.Play(defaultStateName, 0, 0f);
         }
 
-        protected void PlayAnimation(string animationName)
+        protected void PlayAnimation(string animationName, float speed = 1f)
         {
+            characterAnimator.speed = speed;
             characterAnimator.Play(animationName, 0, 0f);
         }
 
-        protected void PlayAnimationAndStop(string animationName, float stopAtNormalizedTime)
+        protected void PlayAnimationAndStop(string animationName, float stopAtNormalizedTime, float speed = 1f)
         {
+            characterAnimator.speed = speed;
             characterAnimator.Play(animationName, 0, 0f);
             StartCoroutine(IEStopAnimation(animationName, stopAtNormalizedTime));
         }
@@ -34,12 +36,15 @@ namespace ProjectMIL.Combat
                 yield return null;
             }
 
+            orignalSpeed = characterAnimator.speed;
             characterAnimator.speed = 0;
         }
 
+        private float orignalSpeed = 1f;
+
         protected void ResumeAnimation()
         {
-            characterAnimator.speed = 1;
+            characterAnimator.speed = orignalSpeed;
         }
 
         protected bool IsPlaying(string stateName)

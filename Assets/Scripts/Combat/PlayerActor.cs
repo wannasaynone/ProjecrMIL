@@ -13,6 +13,7 @@ namespace ProjectMIL.Combat
         {
             EventBus.Subscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
             spriteRenderer.material = new Material(spriteRenderer.material);
+
         }
 
         private void OnAttackButtonPressed(OnAttackButtonPressed e)
@@ -20,16 +21,14 @@ namespace ProjectMIL.Combat
             if (!IsPlaying("Idle") && GetNormalizedTime() < 0.9f)
                 return;
 
-            // TODO: how to get stop distance?
-
             CombatUnit enemyUnit = CombatUnitContainer.GetCloestUnitByCamp(CombatUnit.Camp.Enemy, transform.position);
             if (enemyUnit == null)
             {
-                PlayAnimation(e.attackName);
+                PlayAnimation(e.attackName, 2f);
             }
             else
             {
-                PlayAnimationAndStop(e.attackName, 0.01f);
+                PlayAnimationAndStop(e.attackName, 0.01f, 2f);
                 StartCoroutine(IEDashToEnemy(enemyUnit));
             }
         }
@@ -39,8 +38,9 @@ namespace ProjectMIL.Combat
             float motionBlur = 0f;
             while (Vector3.Distance(transform.position, enemyUnit.Actor.transform.position) > 2f)
             {
-                transform.position = Vector3.MoveTowards(transform.position, enemyUnit.Actor.transform.position, Time.deltaTime);
-                motionBlur = Mathf.Lerp(motionBlur, 1f, Time.deltaTime);
+                float moveSpeed = 25f * Time.deltaTime;
+                transform.position = Vector3.MoveTowards(transform.position, enemyUnit.Actor.transform.position, moveSpeed);
+                motionBlur = Mathf.Lerp(motionBlur, 1f, moveSpeed);
                 spriteRenderer.material.SetFloat("_MotionBlurDist", motionBlur);
                 speedLineEffectRoot.SetActive(true);
                 yield return null;
