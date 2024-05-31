@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using UnityEngine.AI;
+using JsonFx.Json;
 
 namespace ProjectMIL.GameEvent.Editor
 {
@@ -76,6 +77,23 @@ namespace ProjectMIL.GameEvent.Editor
                     currentExp = 0,
                     requireExp = 0
                 });
+            }
+
+            if (GUILayout.Button("Test Json"))
+            {
+                string json = JsonWriter.Serialize(new OnLevelUpdated()
+                {
+                    oldLevel = 13,
+                    currentLevel = 14,
+                    currentExp = 0,
+                    requireExp = 0
+                });
+
+                Debug.Log(json);
+
+                string doubleJson = JsonWriter.Serialize(json);
+
+                Debug.Log(doubleJson);
             }
         }
 
