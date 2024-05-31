@@ -51,7 +51,18 @@ namespace ProjectMIL.Combat
         private IEnumerator IEDashToEnemy(CombatActor enemyActor)
         {
             float motionBlur = 0f;
-            while (Vector3.Distance(transform.position, enemyActor.transform.position) > 2f)
+
+            float stopRange = 2f;
+            for (int attackInfoIndex = 0; attackInfoIndex < attackInfos.Length; attackInfoIndex++)
+            {
+                if (currentAttackName == attackInfos[attackInfoIndex].attackName)
+                {
+                    stopRange = attackInfos[attackInfoIndex].attackRange;
+                    break;
+                }
+            }
+
+            while (Vector3.Distance(transform.position, enemyActor.transform.position) > stopRange)
             {
                 float moveSpeed = 25f * Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, enemyActor.transform.position, moveSpeed);
@@ -72,7 +83,10 @@ namespace ProjectMIL.Combat
                 transform.position += new Vector3(1f, 0, 0);
                 PlayAnimation("Idle");
             }
+        }
 
+        private void LateUpdate() // for detecting animation time
+        {
             if (IsPlaying("Idle"))
                 return;
 
@@ -91,7 +105,8 @@ namespace ProjectMIL.Combat
                         EventBus.Publish(new OnStartToHit
                         {
                             attackerActorInstanceID = GetInstanceID(),
-                            targetActorInstanceID = enemyActor.GetInstanceID()
+                            targetActorInstanceID = enemyActor.GetInstanceID(),
+                            hitPosition = (enemyActor.transform.position + transform.position) / 2f + new Vector3(Random.Range(-0.3f, 0.3f), 1f + Random.Range(-0.2f, 0.2f), -5f)
                         });
                     }
                     isAttacked = true;

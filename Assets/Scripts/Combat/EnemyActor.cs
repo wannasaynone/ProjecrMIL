@@ -9,6 +9,8 @@ namespace ProjectMIL.Combat
 {
     public class EnemyActor : CombatActor
     {
+        [SerializeField] private GameObject hitEffectPrefab;
+
         private SpriteRenderer[] spriteRenderers;
 
         protected override void OnInitialized()
@@ -21,7 +23,7 @@ namespace ProjectMIL.Combat
         {
             if (e.targetActorInstanceID == GetInstanceID())
             {
-                StartCoroutine(IEStartToHit());
+                StartCoroutine(IEStartToHit(e));
             }
         }
 
@@ -50,7 +52,7 @@ namespace ProjectMIL.Combat
         }
 
         private bool isShowingHitEffect = false;
-        private IEnumerator IEStartToHit()
+        private IEnumerator IEStartToHit(OnStartToHit e)
         {
             if (isShowingHitEffect)
                 yield break;
@@ -59,6 +61,10 @@ namespace ProjectMIL.Combat
 
             DOTween.To(() => GetColor(), SetColor, Color.red, 0.15f);
             PlayAnimation("3_Debuff_Stun", 1.5f);
+            transform.DOMove(transform.position + Vector3.right * UnityEngine.Random.Range(1f, 3f), 0.15f);
+
+            GameObject cloneHitEffect = Instantiate(hitEffectPrefab, e.hitPosition, Quaternion.identity);
+            Destroy(cloneHitEffect, 1f);
 
             yield return new WaitForSeconds(0.15f);
 

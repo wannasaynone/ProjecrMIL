@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace ProjectMIL.GameEvent
 {
     public class GameEventBase { }
@@ -73,5 +75,6 @@ namespace ProjectMIL.GameEvent
     {
         public int attackerActorInstanceID;
         public int targetActorInstanceID;
+        public Vector3 hitPosition;
     }
 }

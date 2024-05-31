@@ -1,4 +1,6 @@
 
+using DG.Tweening;
+using ProjectMIL.GameEvent;
 using UnityEngine;
 
 namespace ProjectMIL.Combat
@@ -13,6 +15,25 @@ namespace ProjectMIL.Combat
         [SerializeField] private CombatActor enemyPrefab;
 
         private int currentMapIndex = 0;
+        private bool isShaking = false;
+
+        private void Awake()
+        {
+            EventBus.Subscribe<OnStartToHit>(OnStartToHit);
+        }
+
+        private void OnStartToHit(OnStartToHit e)
+        {
+            if (isShaking)
+                return;
+
+            isShaking = true;
+            CombatActor playerActor = CombatActorContainer.GetAnyUnitByCamp(CombatActor.ActorInfo.Camp.Player);
+            cameraRoot.DOMove(playerActor.transform.position + cameraOffset, 0.1f).OnComplete(() =>
+            {
+                cameraRoot.DOShakePosition(0.5f, 0.25f, 10, 90f, false, true).OnComplete(() => isShaking = false);
+            });
+        }
 
         public void StartCombat()
         {
@@ -41,13 +62,6 @@ namespace ProjectMIL.Combat
 
         private void Update()
         {
-            CombatActor playerActor = CombatActorContainer.GetAnyUnitByCamp(CombatActor.ActorInfo.Camp.Player);
-            if (playerActor == null)
-            {
-                return;
-            }
-
-            cameraRoot.transform.position = Vector3.MoveTowards(cameraRoot.transform.position, playerActor.transform.position + cameraOffset, 10f * Time.deltaTime);
             if (cameraRoot.position.x >= 7.34f * (currentMapIndex + 1))
             {
                 switch (currentMapIndex % 2)
@@ -61,6 +75,19 @@ namespace ProjectMIL.Combat
                 }
                 currentMapIndex++;
             }
+
+            CombatActor playerActor = CombatActorContainer.GetAnyUnitByCamp(CombatActor.ActorInfo.Camp.Player);
+            if (playerActor == null)
+            {
+                return;
+            }
+
+            if (isShaking)
+            {
+                return;
+            }
+
+            cameraRoot.transform.position = Vector3.MoveTowards(cameraRoot.transform.position, playerActor.transform.position + cameraOffset, 10f * Time.deltaTime);
         }
     }
 }
