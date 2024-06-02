@@ -7,10 +7,10 @@ namespace ProjectMIL.Combat
     {
         public DamageHandler()
         {
-            EventBus.Subscribe<OnAttackCasted>(OnHitEventRaised);
+            EventBus.Subscribe<OnAttackCasted>(OnAttackEventRaised);
         }
 
-        private void OnHitEventRaised(OnAttackCasted cast)
+        private void OnAttackEventRaised(OnAttackCasted cast)
         {
             CombatActor attacker = CombatActorContainer.GetActorByInstanceID(cast.attackerActorInstanceID);
             CombatActor target = CombatActorContainer.GetActorByInstanceID(cast.targetActorInstanceID);

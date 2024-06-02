@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using ProjectMIL.GameEvent;
 using UnityEngine;
 using DG.Tweening;
@@ -16,16 +14,7 @@ namespace ProjectMIL.Combat
         protected override void OnInitialized()
         {
             spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-            EventBus.Subscribe<OnAttackCasted>(OnAttackerAttacked);
             EventBus.Subscribe<OnDamageCalculated>(OnDamageCalculated);
-        }
-
-        private void OnAttackerAttacked(OnAttackCasted e)
-        {
-            if (e.targetActorInstanceID == GetInstanceID())
-            {
-
-            }
         }
 
         private void OnDamageCalculated(OnDamageCalculated e)
