@@ -103,7 +103,7 @@ namespace ProjectMIL.Combat
                     {
                         CombatActor enemyActor = enemyActors[enemyActorIndex];
 
-                        EventBus.Publish(new OnHit
+                        EventBus.Publish(new OnAttackCasted
                         {
                             attackerActorInstanceID = GetInstanceID(),
                             targetActorInstanceID = enemyActor.GetInstanceID(),

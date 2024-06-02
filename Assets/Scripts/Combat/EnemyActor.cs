@@ -16,15 +16,15 @@ namespace ProjectMIL.Combat
         protected override void OnInitialized()
         {
             spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-            EventBus.Subscribe<OnHit>(OnGotHit);
+            EventBus.Subscribe<OnAttackCasted>(OnAttackerAttacked);
             EventBus.Subscribe<OnDamageCalculated>(OnDamageCalculated);
         }
 
-        private void OnGotHit(OnHit e)
+        private void OnAttackerAttacked(OnAttackCasted e)
         {
             if (e.targetActorInstanceID == GetInstanceID())
             {
-                StartCoroutine(IEGotHit(e));
+
             }
         }
 
@@ -32,7 +32,7 @@ namespace ProjectMIL.Combat
         {
             if (e.targetActorInstanceID == GetInstanceID())
             {
-                Debug.Log("Enemy got " + e.damage + " damage");
+                StartCoroutine(IEGotHit(e));
             }
         }
 
@@ -61,7 +61,7 @@ namespace ProjectMIL.Combat
         }
 
         private bool isShowingHitEffect = false;
-        private IEnumerator IEGotHit(OnHit e)
+        private IEnumerator IEGotHit(OnDamageCalculated e)
         {
             if (isShowingHitEffect)
                 yield break;
@@ -74,6 +74,16 @@ namespace ProjectMIL.Combat
 
             GameObject cloneHitEffect = Instantiate(hitEffectPrefab, e.hitPosition, Quaternion.identity);
             Destroy(cloneHitEffect, 1f);
+
+            EventBus.Publish(new OnGotHit
+            {
+                attackerActorInstanceID = e.attackerActorInstanceID,
+                targetActorInstanceID = e.targetActorInstanceID,
+                hitPosition = e.hitPosition,
+                damage = e.damage
+            });
+
+            Debug.Log("Enemy got " + e.damage + " damage");
 
             yield return new WaitForSeconds(0.15f);
 

@@ -20,10 +20,10 @@ namespace ProjectMIL.Combat
 
         private void Awake()
         {
-            EventBus.Subscribe<OnHit>(OnGotHit);
+            EventBus.Subscribe<OnGotHit>(OnGotHit);
         }
 
-        private void OnGotHit(OnHit e)
+        private void OnGotHit(OnGotHit e)
         {
             if (isShaking)
                 return;

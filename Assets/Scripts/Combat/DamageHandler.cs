@@ -7,16 +7,22 @@ namespace ProjectMIL.Combat
     {
         public DamageHandler()
         {
-            EventBus.Subscribe<OnHit>(OnHitEventRaised);
+            EventBus.Subscribe<OnAttackCasted>(OnHitEventRaised);
         }
 
-        private void OnHitEventRaised(OnHit hit)
+        private void OnHitEventRaised(OnAttackCasted cast)
         {
-            CombatActor attacker = CombatActorContainer.GetActorByInstanceID(hit.attackerActorInstanceID);
-            CombatActor target = CombatActorContainer.GetActorByInstanceID(hit.targetActorInstanceID);
+            CombatActor attacker = CombatActorContainer.GetActorByInstanceID(cast.attackerActorInstanceID);
+            CombatActor target = CombatActorContainer.GetActorByInstanceID(cast.targetActorInstanceID);
 
             if (attacker == null || target == null)
                 return;
+
+            if (UnityEngine.Random.Range(0f, 100f) <= 50f)
+            {
+                UnityEngine.Debug.Log("MISS");
+                return;
+            }
 
             float rawDamage = (float)attacker.Info.Attack * 1f; // TODO: handle multipliers
             float damage = rawDamage * ((float)attacker.Info.Attack / (float)(attacker.Info.Attack + target.Info.Defense));
@@ -31,9 +37,10 @@ namespace ProjectMIL.Combat
 
             EventBus.Publish(new OnDamageCalculated
             {
-                attackerActorInstanceID = hit.attackerActorInstanceID,
-                targetActorInstanceID = hit.targetActorInstanceID,
-                damage = Convert.ToInt32(finalDamage)
+                attackerActorInstanceID = cast.attackerActorInstanceID,
+                targetActorInstanceID = cast.targetActorInstanceID,
+                damage = Convert.ToInt32(finalDamage),
+                hitPosition = cast.hitPosition
             });
         }
     }

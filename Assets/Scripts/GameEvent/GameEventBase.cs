@@ -81,7 +81,7 @@ namespace ProjectMIL.GameEvent
         public int effectiveness;
         public int effectivenessResistance;
     }
-    public class OnHit : GameEventBase
+    public class OnAttackCasted : GameEventBase
     {
         public int attackerActorInstanceID;
         public int targetActorInstanceID;
@@ -92,5 +92,13 @@ namespace ProjectMIL.GameEvent
         public int attackerActorInstanceID;
         public int targetActorInstanceID;
         public int damage;
+        public Vector3 hitPosition;
+    }
+    public class OnGotHit : GameEventBase
+    {
+        public int attackerActorInstanceID;
+        public int targetActorInstanceID;
+        public int damage;
+        public Vector3 hitPosition;
     }
 }
