@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace ProjectMIL.Combat
@@ -27,7 +28,7 @@ namespace ProjectMIL.Combat
         {
             foreach (var actor in actors)
             {
-                if (actor.Info.camp == camp)
+                if (actor.Info.ActorCamp == camp)
                     return actor;
             }
 
@@ -41,7 +42,7 @@ namespace ProjectMIL.Combat
 
             foreach (var actor in actors)
             {
-                if (actor.Info.camp == camp)
+                if (actor.Info.ActorCamp == camp)
                 {
                     float distance = UnityEngine.Vector3.Distance(actor.transform.position, position);
                     if (distance < minDistance)
@@ -55,13 +56,13 @@ namespace ProjectMIL.Combat
             return cloestActor;
         }
 
-        public static List<CombatActor> GetAllUnitInRange(CombatActor.ActorInfo.Camp camp, UnityEngine.Vector3 position, float range)
+        public static List<CombatActor> GetAllActorInRange(CombatActor.ActorInfo.Camp camp, UnityEngine.Vector3 position, float range)
         {
             List<CombatActor> actorsInRange = new List<CombatActor>();
 
             foreach (var actor in actors)
             {
-                if (actor.Info.camp == camp)
+                if (actor.Info.ActorCamp == camp)
                 {
                     float distance = UnityEngine.Vector3.Distance(actor.transform.position, position);
                     if (distance < range)
@@ -72,6 +73,17 @@ namespace ProjectMIL.Combat
             }
 
             return actorsInRange;
+        }
+
+        public static CombatActor GetActorByInstanceID(int attackerActorInstanceID)
+        {
+            for (int i = 0; i < actors.Count; i++)
+            {
+                if (actors[i].GetInstanceID() == attackerActorInstanceID)
+                    return actors[i];
+            }
+
+            return null;
         }
     }
 }

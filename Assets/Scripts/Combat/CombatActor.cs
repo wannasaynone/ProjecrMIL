@@ -15,10 +15,38 @@ namespace ProjectMIL.Combat
                 Player,
                 Enemy
             }
-            public readonly Camp camp;
-            public ActorInfo(Camp camp)
+            public class Templete
             {
-                this.camp = camp;
+                public int maxHP;
+                public int attack;
+                public int defense;
+                public int speed;
+                public int critical;
+                public int criticalResistance;
+                public int effectiveness;
+                public int effectivenessResistance;
+                public Camp camp;
+            }
+            public int MaxHP { get; private set; }
+            public int Attack { get; private set; }
+            public int Defense { get; private set; }
+            public int Speed { get; private set; }
+            public int Critical { get; private set; }
+            public int CriticalResistance { get; private set; }
+            public int Effectiveness { get; private set; }
+            public int EffectivenessResistance { get; private set; }
+            public Camp ActorCamp { get; private set; }
+            public ActorInfo(Templete templete)
+            {
+                MaxHP = templete.maxHP;
+                Attack = templete.attack;
+                Defense = templete.defense;
+                Speed = templete.speed;
+                Critical = templete.critical;
+                CriticalResistance = templete.criticalResistance;
+                Effectiveness = templete.effectiveness;
+                EffectivenessResistance = templete.effectivenessResistance;
+                ActorCamp = templete.camp;
             }
         }
         public ActorInfo Info { get; private set; }

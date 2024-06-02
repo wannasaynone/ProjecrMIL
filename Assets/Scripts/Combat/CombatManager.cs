@@ -16,13 +16,14 @@ namespace ProjectMIL.Combat
 
         private int currentMapIndex = 0;
         private bool isShaking = false;
+        private DamageHandler damageHandler;
 
         private void Awake()
         {
-            EventBus.Subscribe<OnStartToHit>(OnStartToHit);
+            EventBus.Subscribe<OnHit>(OnGotHit);
         }
 
-        private void OnStartToHit(OnStartToHit e)
+        private void OnGotHit(OnHit e)
         {
             if (isShaking)
                 return;
@@ -35,14 +36,14 @@ namespace ProjectMIL.Combat
             });
         }
 
-        public void StartCombat()
+        public void StartCombat(OnCombatStartCalled e)
         {
             CombatActorContainer.ClearAll();
-            ResetAllCombatStageSetting();
+            ResetAllCombatStageSetting(e);
             gameObject.SetActive(true);
         }
 
-        private void ResetAllCombatStageSetting()
+        private void ResetAllCombatStageSetting(OnCombatStartCalled e)
         {
             cameraRoot.position = new Vector3(0, 0, -10);
             background01.position = new Vector3(0, 0, 0);
@@ -51,13 +52,38 @@ namespace ProjectMIL.Combat
 
             CombatActor playerActor = Instantiate(playerPrefab);
             playerActor.transform.position = new Vector3(-2f, -1f, 0);
-            playerActor.Initialize(new CombatActor.ActorInfo(CombatActor.ActorInfo.Camp.Player));
+            playerActor.Initialize(new CombatActor.ActorInfo(new CombatActor.ActorInfo.Templete
+            {
+                maxHP = e.maxHP,
+                attack = e.attack,
+                defense = e.defense,
+                speed = e.speed,
+                critical = e.critical,
+                criticalResistance = e.criticalResistance,
+                effectiveness = e.effectiveness,
+                effectivenessResistance = e.effectivenessResistance,
+                camp = CombatActor.ActorInfo.Camp.Player
+
+            }));
             CombatActorContainer.AddActor(playerActor);
 
             CombatActor enemyActor = Instantiate(enemyPrefab);
             enemyActor.transform.position = new Vector3(2f, -1f, 0);
-            enemyActor.Initialize(new CombatActor.ActorInfo(CombatActor.ActorInfo.Camp.Enemy));
+            enemyActor.Initialize(new CombatActor.ActorInfo(new CombatActor.ActorInfo.Templete
+            {
+                maxHP = 100,
+                attack = 10,
+                defense = 5,
+                speed = 5,
+                critical = 5,
+                criticalResistance = 5,
+                effectiveness = 5,
+                effectivenessResistance = 5,
+                camp = CombatActor.ActorInfo.Camp.Enemy
+            }));
             CombatActorContainer.AddActor(enemyActor);
+
+            damageHandler = new DamageHandler();
         }
 
         private void Update()

@@ -16,14 +16,23 @@ namespace ProjectMIL.Combat
         protected override void OnInitialized()
         {
             spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-            EventBus.Subscribe<OnStartToHit>(OnStartToHit);
+            EventBus.Subscribe<OnHit>(OnGotHit);
+            EventBus.Subscribe<OnDamageCalculated>(OnDamageCalculated);
         }
 
-        private void OnStartToHit(OnStartToHit e)
+        private void OnGotHit(OnHit e)
         {
             if (e.targetActorInstanceID == GetInstanceID())
             {
-                StartCoroutine(IEStartToHit(e));
+                StartCoroutine(IEGotHit(e));
+            }
+        }
+
+        private void OnDamageCalculated(OnDamageCalculated e)
+        {
+            if (e.targetActorInstanceID == GetInstanceID())
+            {
+                Debug.Log("Enemy got " + e.damage + " damage");
             }
         }
 
@@ -52,7 +61,7 @@ namespace ProjectMIL.Combat
         }
 
         private bool isShowingHitEffect = false;
-        private IEnumerator IEStartToHit(OnStartToHit e)
+        private IEnumerator IEGotHit(OnHit e)
         {
             if (isShowingHitEffect)
                 yield break;

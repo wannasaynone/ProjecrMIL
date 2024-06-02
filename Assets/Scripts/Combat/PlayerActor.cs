@@ -43,7 +43,7 @@ namespace ProjectMIL.Combat
             }
             else
             {
-                PlayAnimationAndStop(e.attackName, 0.01f, 2f);
+                PlayAnimationAndStop(e.attackName, 0f, 2f);
                 StartCoroutine(IEDashToEnemy(enemyActor));
             }
         }
@@ -97,12 +97,13 @@ namespace ProjectMIL.Combat
             {
                 if (currentAttackName == attackInfos[attackInfoIndex].attackName && GetNormalizedTime() >= attackInfos[attackInfoIndex].attackStartNormalizedTime)
                 {
-                    List<CombatActor> enemyUnits = CombatActorContainer.GetAllUnitInRange(ActorInfo.Camp.Enemy, transform.position, attackInfos[attackInfoIndex].attackRange);
+                    List<CombatActor> enemyActors = CombatActorContainer.GetAllActorInRange(ActorInfo.Camp.Enemy, transform.position, attackInfos[attackInfoIndex].attackRange);
 
-                    for (int enemyActorIndex = 0; enemyActorIndex < enemyUnits.Count; enemyActorIndex++)
+                    for (int enemyActorIndex = 0; enemyActorIndex < enemyActors.Count; enemyActorIndex++)
                     {
-                        CombatActor enemyActor = enemyUnits[enemyActorIndex];
-                        EventBus.Publish(new OnStartToHit
+                        CombatActor enemyActor = enemyActors[enemyActorIndex];
+
+                        EventBus.Publish(new OnHit
                         {
                             attackerActorInstanceID = GetInstanceID(),
                             targetActorInstanceID = enemyActor.GetInstanceID(),

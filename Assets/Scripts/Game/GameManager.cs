@@ -1,4 +1,5 @@
 using KahaGameCore.GameData.Implemented;
+using ProjectMIL.Data;
 using ProjectMIL.GameEvent;
 using UnityEngine;
 
@@ -44,7 +45,26 @@ namespace ProjectMIL.Game
         private void OnCombatStartCalled(OnCombatStartCalled e)
         {
             uiManager.gameObject.SetActive(false);
-            combatManager.StartCombat();
+            combatManager.StartCombat(e);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                SaveData clone = player.GetSaveDataClone();
+                EventBus.Publish(new OnCombatStartCalled
+                {
+                    maxHP = clone.maxHP,
+                    attack = clone.attack,
+                    defense = clone.defense,
+                    speed = clone.speed,
+                    critical = clone.critical,
+                    criticalResistance = clone.criticalResistance,
+                    effectiveness = clone.effectiveness,
+                    effectivenessResistance = clone.effectivenessResistance
+                });
+            }
         }
     }
 }

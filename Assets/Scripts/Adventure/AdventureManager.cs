@@ -67,7 +67,7 @@ namespace ProjectMIL.Adventure
                 jackpotCount++;
                 jackpotRate = 0f;
             }
-            else if (totalCount >= 5 + jackpotCount * 20 && jackpotCount < 3 && addExp <= 100)
+            else if (totalCount >= 2 + jackpotCount * 20 && jackpotCount < 3 && addExp <= 100)
             {
                 jackpotRate += UnityEngine.Random.value;
                 if (jackpotRate >= jackpotCount + 1)
@@ -99,7 +99,7 @@ namespace ProjectMIL.Adventure
                 jackpotCount++;
                 jackpotRate = 0f;
             }
-            else if (totalCount >= 5 + jackpotCount * 20 && jackpotCount < 3 && addGold <= 100)
+            else if (totalCount >= 2 + jackpotCount * 20 && jackpotCount < 3 && addGold <= 100)
             {
                 jackpotRate += UnityEngine.Random.value;
                 if (jackpotRate >= jackpotCount + 1)

@@ -70,11 +70,27 @@ namespace ProjectMIL.GameEvent
     {
         public string attackName;
     }
-    public class OnCombatStartCalled : GameEventBase { }
-    public class OnStartToHit : GameEventBase
+    public class OnCombatStartCalled : GameEventBase
+    {
+        public int maxHP;
+        public int attack;
+        public int defense;
+        public int speed;
+        public int critical;
+        public int criticalResistance;
+        public int effectiveness;
+        public int effectivenessResistance;
+    }
+    public class OnHit : GameEventBase
     {
         public int attackerActorInstanceID;
         public int targetActorInstanceID;
         public Vector3 hitPosition;
+    }
+    public class OnDamageCalculated : GameEventBase
+    {
+        public int attackerActorInstanceID;
+        public int targetActorInstanceID;
+        public int damage;
     }
 }
