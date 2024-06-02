@@ -10,18 +10,17 @@ namespace ProjectMIL.Combat
         public static void AddActor(CombatActor actor)
         {
             if (actors.Contains(actor))
-                throw new System.Exception("Unit already exists in container");
+                throw new Exception("Unit already exists in container");
 
             actors.Add(actor);
         }
 
-        public static void ClearAll()
+        public static void RemoveActor(CombatActor actor)
         {
-            for (int i = 0; i < actors.Count; i++)
-            {
-                UnityEngine.Object.Destroy(actors[i].gameObject);
-            }
-            actors.Clear();
+            if (!actors.Contains(actor))
+                throw new Exception("Unit does not exist in container");
+
+            actors.Remove(actor);
         }
 
         public static CombatActor GetAnyUnitByCamp(CombatActor.ActorInfo.Camp camp)

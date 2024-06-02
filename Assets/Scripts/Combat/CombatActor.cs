@@ -100,9 +100,18 @@ namespace ProjectMIL.Combat
         public void Initialize(ActorInfo actorInfo)
         {
             Info = actorInfo;
+            CombatActorContainer.AddActor(this);
             OnInitialized();
         }
 
+        public void Dispose()
+        {
+            CombatActorContainer.RemoveActor(this);
+            OnDisposed();
+            Destroy(gameObject);
+        }
+
         protected abstract void OnInitialized();
+        protected abstract void OnDisposed();
     }
 }

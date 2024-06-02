@@ -42,9 +42,9 @@ namespace ProjectMIL.Game
                 level = PlayerPrefs.GetInt("PLYAYER_SAVE_LEVEL", 1), // for now, we will use PlayerPrefs to save the level value
                 exp = PlayerPrefs.GetInt("PLYAYER_SAVE_EXP", 0), // for now, we will use PlayerPrefs to save the exp value
                 gold = PlayerPrefs.GetInt("PLYAYER_SAVE_GOLD", 0), // for now, we will use PlayerPrefs to save the gold value
+                maxHP = PlayerPrefs.GetInt("PLYAYER_SAVE_MAXHP", 100), // for now, we will use PlayerPrefs to save the maxHP value
                 attack = PlayerPrefs.GetInt("PLYAYER_SAVE_ATTACK", 100), // for now, we will use PlayerPrefs to save the attack value
                 defense = PlayerPrefs.GetInt("PLYAYER_SAVE_DEFENSE", 100), // for now, we will use PlayerPrefs to save the defense value
-                maxHP = PlayerPrefs.GetInt("PLYAYER_SAVE_MAXHP", 100), // for now, we will use PlayerPrefs to save the maxHP value
                 speed = PlayerPrefs.GetInt("PLYAYER_SAVE_SPEED", 100), // for now, we will use PlayerPrefs to save the speed value
                 critical = PlayerPrefs.GetInt("PLYAYER_SAVE_CRITICAL", 0), // for now, we will use PlayerPrefs to save the critical value
                 criticalResistance = PlayerPrefs.GetInt("PLYAYER_SAVE_CRITICALRESISTANCE", 0), // for now, we will use PlayerPrefs to save the criticalResistance value
@@ -90,6 +90,7 @@ namespace ProjectMIL.Game
         {
             int oldValue = saveData.exp;
             saveData.exp += created.addExp;
+            SaveCurrent();
 
             EventBus.Publish(new OnExpValueUpdated
             {
@@ -98,6 +99,18 @@ namespace ProjectMIL.Game
                 newValue = saveData.exp,
                 level = saveData.level,
                 requireExp = GetRequireWithCurrentLevel()
+            });
+        }
+
+        private void OnAdventureEventCreated_Gold(OnAdventureEventCreated_Gold created)
+        {
+            saveData.gold += created.addGold;
+            SaveCurrent();
+            EventBus.Publish(new OnGoldValueUpdated
+            {
+                oldValue = saveData.gold - created.addGold,
+                addValue = created.addGold,
+                newValue = saveData.gold
             });
         }
 
@@ -165,6 +178,8 @@ namespace ProjectMIL.Game
             saveData.effectiveness = fields[6];
             saveData.effectivenessResistance = fields[7];
 
+            SaveCurrent();
+
             EventBus.Publish(new OnPlayerValueUpdated
             {
                 level = saveData.level,
@@ -180,6 +195,22 @@ namespace ProjectMIL.Game
                 effectiveness = saveData.effectiveness,
                 effectivenessResistance = saveData.effectivenessResistance
             });
+        }
+
+        private void SaveCurrent()
+        {
+            PlayerPrefs.SetInt("PLYAYER_SAVE_LEVEL", saveData.level);
+            PlayerPrefs.SetInt("PLYAYER_SAVE_EXP", saveData.exp);
+            PlayerPrefs.SetInt("PLYAYER_SAVE_GOLD", saveData.gold);
+            PlayerPrefs.SetInt("PLYAYER_SAVE_MAXHP", saveData.maxHP);
+            PlayerPrefs.SetInt("PLYAYER_SAVE_ATTACK", saveData.attack);
+            PlayerPrefs.SetInt("PLYAYER_SAVE_DEFENSE", saveData.defense);
+            PlayerPrefs.SetInt("PLYAYER_SAVE_SPEED", saveData.speed);
+            PlayerPrefs.SetInt("PLYAYER_SAVE_CRITICAL", saveData.critical);
+            PlayerPrefs.SetInt("PLYAYER_SAVE_CRITICALRESISTANCE", saveData.criticalResistance);
+            PlayerPrefs.SetInt("PLYAYER_SAVE_EFFECTIVENESS", saveData.effectiveness);
+            PlayerPrefs.SetInt("PLYAYER_SAVE_EFFECTIVENESSRESISTANCE", saveData.effectivenessResistance);
+            PlayerPrefs.Save();
         }
 
         private void AddStatus(ref int remainingAddStatusPoint, ref int targetValueField) // return remaining point
@@ -199,17 +230,6 @@ namespace ProjectMIL.Game
 
             targetValueField += temp;
             remainingAddStatusPoint -= temp;
-        }
-
-        private void OnAdventureEventCreated_Gold(OnAdventureEventCreated_Gold created)
-        {
-            saveData.gold += created.addGold;
-            EventBus.Publish(new OnGoldValueUpdated
-            {
-                oldValue = saveData.gold - created.addGold,
-                addValue = created.addGold,
-                newValue = saveData.gold
-            });
         }
     }
 }

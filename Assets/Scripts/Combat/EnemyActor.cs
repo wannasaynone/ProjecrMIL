@@ -17,6 +17,11 @@ namespace ProjectMIL.Combat
             EventBus.Subscribe<OnDamageCalculated>(OnDamageCalculated);
         }
 
+        protected override void OnDisposed()
+        {
+            EventBus.Unsubscribe<OnDamageCalculated>(OnDamageCalculated);
+        }
+
         private void OnDamageCalculated(OnDamageCalculated e)
         {
             if (e.targetActorInstanceID == GetInstanceID())

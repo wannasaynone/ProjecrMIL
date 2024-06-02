@@ -3,11 +3,38 @@ using ProjectMIL.GameEvent;
 
 namespace ProjectMIL.Combat
 {
-    public class DamageHandler
+    public class DamageHandler : IDisposable
     {
+        private bool disposed = false;
+
         public DamageHandler()
         {
             EventBus.Subscribe<OnAttackCasted>(OnAttackEventRaised);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                EventBus.Unsubscribe<OnAttackCasted>(OnAttackEventRaised);
+            }
+
+            disposed = true;
+        }
+
+        ~DamageHandler()
+        {
+            EventBus.Unsubscribe<OnAttackCasted>(OnAttackEventRaised);
+            Dispose(false);
         }
 
         private void OnAttackEventRaised(OnAttackCasted cast)
@@ -17,12 +44,6 @@ namespace ProjectMIL.Combat
 
             if (attacker == null || target == null)
                 return;
-
-            if (UnityEngine.Random.Range(0f, 100f) <= 50f)
-            {
-                UnityEngine.Debug.Log("MISS");
-                return;
-            }
 
             float rawDamage = (float)attacker.Info.Attack * 1f; // TODO: handle multipliers
             float damage = rawDamage * ((float)attacker.Info.Attack / (float)(attacker.Info.Attack + target.Info.Defense));

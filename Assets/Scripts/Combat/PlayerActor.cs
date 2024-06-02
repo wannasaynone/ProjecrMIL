@@ -28,6 +28,11 @@ namespace ProjectMIL.Combat
             spriteRenderer.material = new Material(spriteRenderer.material);
         }
 
+        protected override void OnDisposed()
+        {
+            EventBus.Unsubscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
+        }
+
         private void OnAttackButtonPressed(OnAttackButtonPressed e)
         {
             if (!IsPlaying("Idle") && GetNormalizedTime() < 0.9f)
