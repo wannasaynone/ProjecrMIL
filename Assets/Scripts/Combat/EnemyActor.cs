@@ -8,6 +8,8 @@ namespace ProjectMIL.Combat
     public class EnemyActor : CombatActor
     {
         [SerializeField] private GameObject hitEffectPrefab;
+        [SerializeField] private float attackRange = 2f;
+        [SerializeField] private float moveSpeed = 1f;
 
         private SpriteRenderer[] spriteRenderers;
 
@@ -34,7 +36,7 @@ namespace ProjectMIL.Combat
         {
             foreach (var spriteRenderer in spriteRenderers)
             {
-                if (spriteRenderer.name == "Shadow")
+                if (spriteRenderer.name == "Shadow" || spriteRenderer.name == "Front")
                     continue;
 
                 spriteRenderer.color = color;
@@ -45,7 +47,7 @@ namespace ProjectMIL.Combat
         {
             foreach (var spriteRenderer in spriteRenderers)
             {
-                if (spriteRenderer.name == "Shadow")
+                if (spriteRenderer.name == "Shadow" || spriteRenderer.name == "Front")
                     continue;
 
                 return spriteRenderer.color;
@@ -54,17 +56,17 @@ namespace ProjectMIL.Combat
             return Color.white;
         }
 
-        private bool isShowingHitEffect = false;
+
         private IEnumerator IEGotHit(OnDamageCalculated e)
         {
-            if (isShowingHitEffect)
+            if (aiState == AIState.GotHit)
                 yield break;
 
-            isShowingHitEffect = true;
+            aiState = AIState.GotHit;
 
             DOTween.To(() => GetColor(), SetColor, Color.red, 0.15f);
             PlayAnimation("3_Debuff_Stun", 1.5f);
-            transform.DOMove(transform.position + Vector3.right * UnityEngine.Random.Range(1f, 3f), 0.15f);
+            transform.DOMove(transform.position + Vector3.right * Random.Range(1f, 3f), 0.15f);
 
             GameObject cloneHitEffect = Instantiate(hitEffectPrefab, e.hitPosition, Quaternion.identity);
             Destroy(cloneHitEffect, 1f);
@@ -86,7 +88,73 @@ namespace ProjectMIL.Combat
             yield return new WaitForSeconds(0.15f);
 
             PlayAnimation("0_idle", 1f);
-            isShowingHitEffect = false;
+            aiState = AIState.Idle;
+        }
+
+        private enum AIState
+        {
+            Idle,
+            Attack,
+            Walk,
+            Attaking,
+            GotHit,
+            Dead
+        }
+
+        private AIState aiState = AIState.Idle;
+        private CombatActor playerActor;
+
+        private void Update()
+        {
+            switch (aiState)
+            {
+                case AIState.Idle:
+
+                    playerActor = CombatActorContainer.GetCloestUnitByCamp(ActorInfo.Camp.Player, transform.position);
+                    if (playerActor != null)
+                    {
+                        if (Vector3.Distance(playerActor.transform.position, transform.position) <= attackRange)
+                        {
+                            aiState = AIState.Attack;
+                        }
+                        else
+                        {
+                            PlayAnimation("1_Run");
+                            aiState = AIState.Walk;
+                        }
+                    }
+                    break;
+                case AIState.Walk:
+                    if (playerActor == null)
+                    {
+                        aiState = AIState.Idle;
+                        PlayAnimation("0_idle");
+                        return;
+                    }
+                    transform.position = Vector3.MoveTowards(transform.position, playerActor.transform.position, moveSpeed * Time.deltaTime);
+                    if (Vector3.Distance(playerActor.transform.position, transform.position) <= attackRange)
+                    {
+                        aiState = AIState.Attack;
+                    }
+                    break;
+                case AIState.Attack:
+                    PlayAnimation("2_Attack_Normal");
+                    aiState = AIState.Attaking;
+                    break;
+                case AIState.Attaking:
+
+                    if (IsPlaying("2_Attack_Normal") && GetNormalizedTime() >= 1f)
+                    {
+                        aiState = AIState.Idle;
+                        PlayAnimation("0_idle");
+                    }
+
+                    break;
+                case AIState.GotHit:
+                    break;
+                case AIState.Dead:
+                    break;
+            }
         }
     }
 }
