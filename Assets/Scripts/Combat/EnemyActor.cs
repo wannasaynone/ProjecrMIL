@@ -79,8 +79,6 @@ namespace ProjectMIL.Combat
                 damage = e.damage
             });
 
-            Debug.Log("Enemy got " + e.damage + " damage");
-
             yield return new WaitForSeconds(0.15f);
 
             DOTween.To(() => GetColor(), SetColor, Color.white, 0.15f);
@@ -97,6 +95,7 @@ namespace ProjectMIL.Combat
             Attack,
             Walk,
             Attaking,
+            Attacked,
             GotHit,
             Dead
         }
@@ -142,13 +141,27 @@ namespace ProjectMIL.Combat
                     aiState = AIState.Attaking;
                     break;
                 case AIState.Attaking:
-
+                    if (IsPlaying("2_Attack_Normal") && GetNormalizedTime() >= 0.5f)
+                    {
+                        playerActor = CombatActorContainer.GetCloestUnitByCamp(ActorInfo.Camp.Player, transform.position);
+                        if (playerActor != null && Vector3.Distance(playerActor.transform.position, transform.position) <= attackRange)
+                        {
+                            EventBus.Publish(new OnAttackCasted
+                            {
+                                attackerActorInstanceID = GetInstanceID(),
+                                targetActorInstanceID = playerActor.GetInstanceID(),
+                                hitPosition = (playerActor.transform.position + transform.position) / 2f + new Vector3(Random.Range(-0.3f, 0.3f), 1f + Random.Range(-0.2f, 0.2f), -5f)
+                            });
+                        }
+                        aiState = AIState.Attacked;
+                    }
+                    break;
+                case AIState.Attacked:
                     if (IsPlaying("2_Attack_Normal") && GetNormalizedTime() >= 1f)
                     {
                         aiState = AIState.Idle;
                         PlayAnimation("0_idle");
                     }
-
                     break;
                 case AIState.GotHit:
                     break;

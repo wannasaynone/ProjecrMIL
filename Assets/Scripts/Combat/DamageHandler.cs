@@ -42,7 +42,7 @@ namespace ProjectMIL.Combat
             CombatActor attacker = CombatActorContainer.GetActorByInstanceID(cast.attackerActorInstanceID);
             CombatActor target = CombatActorContainer.GetActorByInstanceID(cast.targetActorInstanceID);
 
-            if (attacker == null || target == null)
+            if (attacker == null || target == null || attacker.Info.ActorCamp == target.Info.ActorCamp)
                 return;
 
             float rawDamage = (float)attacker.Info.Attack * 1f; // TODO: handle multipliers

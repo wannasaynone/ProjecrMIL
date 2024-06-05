@@ -25,7 +25,7 @@ namespace ProjectMIL.Combat
 
         private void OnGotHit(OnGotHit e)
         {
-            if (isShaking)
+            if (isShaking || CombatActorContainer.GetActorByInstanceID(e.targetActorInstanceID).Info.ActorCamp == CombatActor.ActorInfo.Camp.Player)
                 return;
 
             isShaking = true;

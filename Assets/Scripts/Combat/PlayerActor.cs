@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using ProjectMIL.GameEvent;
 using UnityEngine;
 
@@ -21,16 +22,20 @@ namespace ProjectMIL.Combat
 
         private bool isAttacked = false;
         private string currentAttackName;
+        private SpriteRenderer[] spriteRenderers;
 
         protected override void OnInitialized()
         {
+            spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
             EventBus.Subscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
+            EventBus.Subscribe<OnDamageCalculated>(OnDamageCalculated);
             spriteRenderer.material = new Material(spriteRenderer.material);
         }
 
         protected override void OnDisposed()
         {
             EventBus.Unsubscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
+            EventBus.Unsubscribe<OnDamageCalculated>(OnDamageCalculated);
         }
 
         private void OnAttackButtonPressed(OnAttackButtonPressed e)
@@ -53,6 +58,60 @@ namespace ProjectMIL.Combat
             }
         }
 
+        private void OnDamageCalculated(OnDamageCalculated e)
+        {
+            if (e.targetActorInstanceID == GetInstanceID())
+            {
+                StartCoroutine(IEGotHit(e));
+            }
+        }
+
+        private bool isShowingHitEffect = false;
+        private IEnumerator IEGotHit(OnDamageCalculated e)
+        {
+            if (isShowingHitEffect)
+                yield break;
+
+            isShowingHitEffect = true;
+            DOTween.To(() => GetColor(), SetColor, Color.red, 0.15f);
+
+            EventBus.Publish(new OnGotHit
+            {
+                attackerActorInstanceID = e.attackerActorInstanceID,
+                targetActorInstanceID = e.targetActorInstanceID,
+                damage = e.damage,
+                hitPosition = e.hitPosition
+            });
+
+            yield return new WaitForSeconds(0.15f);
+            DOTween.To(() => GetColor(), SetColor, Color.white, 0.15f);
+            isShowingHitEffect = false;
+        }
+
+        private void SetColor(Color color)
+        {
+            foreach (var spriteRenderer in spriteRenderers)
+            {
+                if (spriteRenderer.name == "Shadow" || spriteRenderer.name == "Front")
+                    continue;
+
+                spriteRenderer.color = color;
+            }
+        }
+
+        private Color GetColor()
+        {
+            foreach (var spriteRenderer in spriteRenderers)
+            {
+                if (spriteRenderer.name == "Shadow" || spriteRenderer.name == "Front")
+                    continue;
+
+                return spriteRenderer.color;
+            }
+
+            return Color.white;
+        }
+
         private IEnumerator IEDashToEnemy(CombatActor enemyActor)
         {
             float motionBlur = 0f;
@@ -72,12 +131,10 @@ namespace ProjectMIL.Combat
                 float moveSpeed = 25f * Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, enemyActor.transform.position, moveSpeed);
                 motionBlur = Mathf.Lerp(motionBlur, 1f, moveSpeed);
-                spriteRenderer.material.SetFloat("_MotionBlurDist", motionBlur);
                 speedLineEffectRoot.SetActive(true);
                 yield return null;
             }
             speedLineEffectRoot.SetActive(false);
-            spriteRenderer.material.SetFloat("_MotionBlurDist", 0f);
             ResumeAnimation();
         }
 
