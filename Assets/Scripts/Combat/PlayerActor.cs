@@ -62,12 +62,12 @@ namespace ProjectMIL.Combat
         {
             if (e.targetActorInstanceID == GetInstanceID())
             {
-                StartCoroutine(IEGotHit(e));
+                StartCoroutine(IEApplyDamage(e));
             }
         }
 
         private bool isShowingHitEffect = false;
-        private IEnumerator IEGotHit(OnDamageCalculated e)
+        private IEnumerator IEApplyDamage(OnDamageCalculated e)
         {
             if (isShowingHitEffect)
                 yield break;
@@ -75,7 +75,7 @@ namespace ProjectMIL.Combat
             isShowingHitEffect = true;
             DOTween.To(() => GetColor(), SetColor, Color.red, 0.15f);
 
-            EventBus.Publish(new OnGotHit
+            EventBus.Publish(new OnAnyActorGotHit
             {
                 attackerActorInstanceID = e.attackerActorInstanceID,
                 targetActorInstanceID = e.targetActorInstanceID,

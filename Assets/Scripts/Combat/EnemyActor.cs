@@ -28,7 +28,7 @@ namespace ProjectMIL.Combat
         {
             if (e.targetActorInstanceID == GetInstanceID())
             {
-                StartCoroutine(IEGotHit(e));
+                StartCoroutine(IEApplyDamage(e));
             }
         }
 
@@ -57,7 +57,7 @@ namespace ProjectMIL.Combat
         }
 
 
-        private IEnumerator IEGotHit(OnDamageCalculated e)
+        private IEnumerator IEApplyDamage(OnDamageCalculated e)
         {
             if (aiState == AIState.GotHit)
                 yield break;
@@ -71,7 +71,7 @@ namespace ProjectMIL.Combat
             GameObject cloneHitEffect = Instantiate(hitEffectPrefab, e.hitPosition, Quaternion.identity);
             Destroy(cloneHitEffect, 1f);
 
-            EventBus.Publish(new OnGotHit
+            EventBus.Publish(new OnAnyActorGotHit
             {
                 attackerActorInstanceID = e.attackerActorInstanceID,
                 targetActorInstanceID = e.targetActorInstanceID,

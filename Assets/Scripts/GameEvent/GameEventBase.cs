@@ -94,7 +94,7 @@ namespace ProjectMIL.GameEvent
         public int damage;
         public Vector3 hitPosition;
     }
-    public class OnGotHit : GameEventBase
+    public class OnAnyActorGotHit : GameEventBase
     {
         public int attackerActorInstanceID;
         public int targetActorInstanceID;

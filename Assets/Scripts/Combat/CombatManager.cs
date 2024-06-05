@@ -20,10 +20,10 @@ namespace ProjectMIL.Combat
 
         private void Awake()
         {
-            EventBus.Subscribe<OnGotHit>(OnGotHit);
+            EventBus.Subscribe<OnAnyActorGotHit>(OnGotHit);
         }
 
-        private void OnGotHit(OnGotHit e)
+        private void OnGotHit(OnAnyActorGotHit e)
         {
             if (isShaking || CombatActorContainer.GetActorByInstanceID(e.targetActorInstanceID).Info.ActorCamp == CombatActor.ActorInfo.Camp.Player)
                 return;
