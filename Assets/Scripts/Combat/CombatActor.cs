@@ -28,6 +28,7 @@ namespace ProjectMIL.Combat
                 public Camp camp;
             }
             public int MaxHP { get; private set; }
+            public int currentHP;
             public int Attack { get; private set; }
             public int Defense { get; private set; }
             public int Speed { get; private set; }
@@ -39,6 +40,7 @@ namespace ProjectMIL.Combat
             public ActorInfo(Templete templete)
             {
                 MaxHP = templete.maxHP;
+                currentHP = MaxHP;
                 Attack = templete.attack;
                 Defense = templete.defense;
                 Speed = templete.speed;

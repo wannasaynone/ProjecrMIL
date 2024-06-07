@@ -18,9 +18,11 @@ namespace ProjectMIL.Combat
 
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private GameObject speedLineEffectRoot;
+        [SerializeField] private GameObject guardEffectPrefab;
         [SerializeField] private AttackInfo[] attackInfos;
 
         private bool isAttacked = false;
+        private bool isDead = false;
         private string currentAttackName;
         private SpriteRenderer[] spriteRenderers;
 
@@ -40,7 +42,7 @@ namespace ProjectMIL.Combat
 
         private void OnAttackButtonPressed(OnAttackButtonPressed e)
         {
-            if (!IsPlaying("Idle") && GetNormalizedTime() < 0.9f)
+            if (!IsPlaying("Idle") && GetNormalizedTime() < 0.9f || isDead)
                 return;
 
             isAttacked = false;
@@ -62,6 +64,14 @@ namespace ProjectMIL.Combat
         {
             if (e.targetActorInstanceID == GetInstanceID())
             {
+                if (!IsPlaying("Idle") && GetNormalizedTime() < 1f)
+                {
+                    CombatActor enemyActor = CombatActorContainer.GetActorByInstanceID(e.attackerActorInstanceID);
+                    GameObject guardEffect = Instantiate(guardEffectPrefab, (enemyActor.transform.position + transform.position) / 2f + new Vector3(Random.Range(-0.3f, 0.3f), 1f + Random.Range(-0.2f, 0.2f), -5f), Quaternion.identity);
+                    Destroy(guardEffect, 1f);
+                    return;
+                }
+
                 StartCoroutine(IEApplyDamage(e));
             }
         }
@@ -69,7 +79,7 @@ namespace ProjectMIL.Combat
         private bool isShowingHitEffect = false;
         private IEnumerator IEApplyDamage(OnDamageCalculated e)
         {
-            if (isShowingHitEffect)
+            if (isShowingHitEffect || isDead)
                 yield break;
 
             isShowingHitEffect = true;
@@ -82,6 +92,14 @@ namespace ProjectMIL.Combat
                 damage = e.damage,
                 hitPosition = e.hitPosition
             });
+
+            Info.currentHP -= e.damage;
+            Debug.Log("Player got hit, damage=" + e.damage + " HP: " + Info.currentHP);
+            if (Info.currentHP <= 0)
+            {
+                PlayAnimation("Die");
+                isDead = true;
+            }
 
             yield return new WaitForSeconds(0.15f);
             DOTween.To(() => GetColor(), SetColor, Color.white, 0.15f);

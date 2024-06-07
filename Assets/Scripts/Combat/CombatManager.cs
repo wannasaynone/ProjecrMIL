@@ -25,21 +25,24 @@ namespace ProjectMIL.Combat
 
         private void OnGotHit(OnAnyActorGotHit e)
         {
-            if (isShaking || CombatActorContainer.GetActorByInstanceID(e.targetActorInstanceID).Info.ActorCamp == CombatActor.ActorInfo.Camp.Player)
+            CombatActor playerActor = CombatActorContainer.GetAnyUnitByCamp(CombatActor.ActorInfo.Camp.Player);
+            if (isShaking || (playerActor != null && e.attackerActorInstanceID != playerActor.GetInstanceID()))
                 return;
 
-            isShaking = true;
-            CombatActor playerActor = CombatActorContainer.GetAnyUnitByCamp(CombatActor.ActorInfo.Camp.Player);
-            cameraRoot.DOMove(playerActor.transform.position + cameraOffset, 0.1f).OnComplete(() =>
+            if (playerActor != null)
             {
-                cameraRoot.DOShakePosition(0.5f, 0.25f, 10, 90f, false, true).OnComplete(() => isShaking = false);
-            });
+                isShaking = true;
+                cameraRoot.DOMove(playerActor.transform.position + cameraOffset, 0.1f).OnComplete(() =>
+                {
+                    cameraRoot.DOShakePosition(0.5f, 0.25f, 10, 90f, false, true).OnComplete(() => isShaking = false);
+                });
+            }
         }
 
         public void StartCombat(OnCombatStartCalled e)
         {
             ResetAllCombatStageSetting();
-            currentLevel = new Level(1); // TODO: handle difficulty
+            currentLevel = new Level(0); // TODO: handle difficulty
             currentLevel.Start(e, playerPrefab, enemyPrefab);
             gameObject.SetActive(true);
         }

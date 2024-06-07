@@ -50,6 +50,7 @@ MonoBehaviour:
   defaultStateName: Idle
   spriteRenderer: {fileID: 6307126387568804599}
   speedLineEffectRoot: {fileID: 2188739593708584291}
+  guardEffectPrefab: {fileID: 7837464029678272537, guid: e4cdb6c5f07dee6448f56fd19143de60, type: 3}
   attackInfos:
   - attackName: ComboAttack01
     attackStartNormalizedTime: 0.6

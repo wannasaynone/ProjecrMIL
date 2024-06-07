@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ProjectMIL.GameEvent;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace ProjectMIL.Combat
         private readonly int difficulty;
         private DamageHandler damageHandler;
         private CombatActor clonedPlayerActor;
-        private CombatActor clonedEnemyActor;
+        private readonly List<CombatActor> clonedEnemyActors = new List<CombatActor>();
 
         public Level(int difficulty)
         {
@@ -33,8 +34,22 @@ namespace ProjectMIL.Combat
 
             }));
 
-            clonedEnemyActor = Object.Instantiate(enemyPrefab);
-            clonedEnemyActor.transform.position = new Vector3(2f, -1f, 0);
+            int spawnCount = Random.Range(15, 31);
+            Vector3 lastSpawnPosition = new Vector3(2f, -1f, 0);
+            for (int i = 0; i < spawnCount; i++)
+            {
+                SpawnEnemy(enemyPrefab);
+                ((EnemyActor)clonedEnemyActors[i]).AddSortingGroupSortingOrder(i);
+                clonedEnemyActors[i].transform.position = lastSpawnPosition;
+                lastSpawnPosition.x += Random.Range(0.5f, 2.5f);
+            }
+
+            damageHandler = new DamageHandler();
+        }
+
+        private void SpawnEnemy(CombatActor enemyPrefab)
+        {
+            CombatActor clonedEnemyActor = Object.Instantiate(enemyPrefab);
             clonedEnemyActor.Initialize(new CombatActor.ActorInfo(new CombatActor.ActorInfo.Templete
             {
                 maxHP = 100 + 100 * difficulty,
@@ -47,14 +62,16 @@ namespace ProjectMIL.Combat
                 effectivenessResistance = 10 * (difficulty - 1),
                 camp = CombatActor.ActorInfo.Camp.Enemy
             }));
-
-            damageHandler = new DamageHandler();
+            clonedEnemyActors.Add(clonedEnemyActor);
         }
 
         public void End()
         {
             clonedPlayerActor.Dispose();
-            clonedEnemyActor.Dispose();
+            for (int i = 0; i < clonedEnemyActors.Count; i++)
+            {
+                clonedEnemyActors[i].Dispose();
+            }
             damageHandler.Dispose();
             System.GC.SuppressFinalize(damageHandler);
         }

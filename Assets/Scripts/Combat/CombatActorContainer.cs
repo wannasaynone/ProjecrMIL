@@ -27,7 +27,7 @@ namespace ProjectMIL.Combat
         {
             foreach (var actor in actors)
             {
-                if (actor.Info.ActorCamp == camp)
+                if (actor.Info.ActorCamp == camp && actor.Info.currentHP > 0)
                     return actor;
             }
 
@@ -41,7 +41,7 @@ namespace ProjectMIL.Combat
 
             foreach (var actor in actors)
             {
-                if (actor.Info.ActorCamp == camp)
+                if (actor.Info.ActorCamp == camp && actor.Info.currentHP > 0)
                 {
                     float distance = UnityEngine.Vector3.Distance(actor.transform.position, position);
                     if (distance < minDistance)
@@ -61,7 +61,7 @@ namespace ProjectMIL.Combat
 
             foreach (var actor in actors)
             {
-                if (actor.Info.ActorCamp == camp)
+                if (actor.Info.ActorCamp == camp && actor.Info.currentHP > 0)
                 {
                     float distance = UnityEngine.Vector3.Distance(actor.transform.position, position);
                     if (distance < range)

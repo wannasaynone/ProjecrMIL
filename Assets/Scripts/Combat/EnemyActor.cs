@@ -2,12 +2,14 @@ using System.Collections;
 using ProjectMIL.GameEvent;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Rendering;
 
 namespace ProjectMIL.Combat
 {
     public class EnemyActor : CombatActor
     {
         [SerializeField] private GameObject hitEffectPrefab;
+        [SerializeField] private SortingGroup sortingGroup;
         [SerializeField] private float attackRange = 2f;
         [SerializeField] private float moveSpeed = 1f;
 
@@ -24,9 +26,14 @@ namespace ProjectMIL.Combat
             EventBus.Unsubscribe<OnDamageCalculated>(OnDamageCalculated);
         }
 
+        public void AddSortingGroupSortingOrder(int add)
+        {
+            sortingGroup.sortingOrder += add;
+        }
+
         private void OnDamageCalculated(OnDamageCalculated e)
         {
-            if (e.targetActorInstanceID == GetInstanceID())
+            if (e.targetActorInstanceID == GetInstanceID() && aiState != AIState.Dead)
             {
                 StartCoroutine(IEApplyDamage(e));
             }
@@ -85,8 +92,18 @@ namespace ProjectMIL.Combat
 
             yield return new WaitForSeconds(0.15f);
 
-            PlayAnimation("0_idle", 1f);
-            aiState = AIState.Idle;
+            Info.currentHP -= e.damage;
+
+            if (Info.currentHP <= 0)
+            {
+                aiState = AIState.Dead;
+                PlayAnimation("4_Death");
+            }
+            else
+            {
+                PlayAnimation("0_idle", 1f);
+                aiState = AIState.Idle;
+            }
         }
 
         private enum AIState
@@ -124,7 +141,7 @@ namespace ProjectMIL.Combat
                     }
                     break;
                 case AIState.Walk:
-                    if (playerActor == null)
+                    if (playerActor == null || playerActor.Info.currentHP <= 0)
                     {
                         aiState = AIState.Idle;
                         PlayAnimation("0_idle");
