@@ -12,6 +12,7 @@ namespace ProjectMIL.Combat
         [SerializeField] private SortingGroup sortingGroup;
         [SerializeField] private float attackRange = 2f;
         [SerializeField] private float moveSpeed = 1f;
+        [SerializeField] private DamageNumberObject damageNumberObjectPrefab;
 
         private SpriteRenderer[] spriteRenderers;
 
@@ -85,6 +86,10 @@ namespace ProjectMIL.Combat
                 hitPosition = e.hitPosition,
                 damage = e.damage
             });
+
+            DamageNumberObject damageNumberObject = Instantiate(damageNumberObjectPrefab, e.hitPosition + Vector3.up, Quaternion.identity);
+            damageNumberObject.SetDamage(e.damage);
+            Destroy(damageNumberObject.gameObject, 1f);
 
             yield return new WaitForSeconds(0.15f);
 

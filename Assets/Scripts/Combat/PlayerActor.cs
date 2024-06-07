@@ -18,7 +18,8 @@ namespace ProjectMIL.Combat
 
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private GameObject speedLineEffectRoot;
-        [SerializeField] private GameObject guardEffectPrefab;
+        [SerializeField] private GameObject blockEffectPrefab;
+        [SerializeField] private DamageNumberObject blockObjectPrefab;
         [SerializeField] private AttackInfo[] attackInfos;
 
         private bool isAttacked = false;
@@ -67,8 +68,11 @@ namespace ProjectMIL.Combat
                 if (!IsPlaying("Idle") && GetNormalizedTime() < 1f)
                 {
                     CombatActor enemyActor = CombatActorContainer.GetActorByInstanceID(e.attackerActorInstanceID);
-                    GameObject guardEffect = Instantiate(guardEffectPrefab, (enemyActor.transform.position + transform.position) / 2f + new Vector3(Random.Range(-0.3f, 0.3f), 1f + Random.Range(-0.2f, 0.2f), -5f), Quaternion.identity);
-                    Destroy(guardEffect, 1f);
+                    GameObject blockEffect = Instantiate(blockEffectPrefab, (enemyActor.transform.position + transform.position) / 2f + new Vector3(Random.Range(-0.3f, 0.3f), 1f + Random.Range(-0.2f, 0.2f), -5f), Quaternion.identity);
+                    Destroy(blockEffect, 1f);
+                    DamageNumberObject blockObject = Instantiate(blockObjectPrefab, blockEffect.transform.position + Vector3.up, Quaternion.identity);
+                    blockObject.SetText("BLOCKED!");
+                    Destroy(blockObject.gameObject, 1f);
                     return;
                 }
 

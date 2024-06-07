@@ -50,7 +50,8 @@ MonoBehaviour:
   defaultStateName: Idle
   spriteRenderer: {fileID: 6307126387568804599}
   speedLineEffectRoot: {fileID: 2188739593708584291}
-  guardEffectPrefab: {fileID: 7837464029678272537, guid: e4cdb6c5f07dee6448f56fd19143de60, type: 3}
+  blockEffectPrefab: {fileID: 7837464029678272537, guid: e4cdb6c5f07dee6448f56fd19143de60, type: 3}
+  blockObjectPrefab: {fileID: 6360946427065655025, guid: 36390d4091de7e147a794dcf072710eb, type: 3}
   attackInfos:
   - attackName: ComboAttack01
     attackStartNormalizedTime: 0.6
@@ -219,7 +220,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 100
   m_Sprite: {fileID: 21300000, guid: 66c32ec536cce5d4d89bd64a0e6be3c7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
