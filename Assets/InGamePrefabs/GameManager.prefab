@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: aa2d4494470a9483683549883fcfce0d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -338,7 +338,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3589860721749486280
 RectTransform:
   m_ObjectHideFlags: 0
@@ -684,9 +684,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3589860721749486280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 100, y: -80}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7015633896661383779
@@ -809,10 +809,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41ef02284fd98b44c9000d26b513feee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraRoot: {fileID: 8068948287646753199}
-  cameraOffset: {x: 2, y: 1, z: -10}
-  background01: {fileID: 5085577368625873632}
-  background02: {fileID: 2981892552390336172}
+  combatCameraController: {fileID: 7733158776277610547}
   playerPrefab: {fileID: 3820100228987981160, guid: 6ba21afd1d08b1a45861b056a9648c01, type: 3}
   enemyPrefab: {fileID: 496604230556293272, guid: aa0faef3ebea1a442b5c14e0ff413c6d, type: 3}
 --- !u!1 &3838766599579400839
@@ -887,7 +884,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: fab06e0be9375cc4d823efa71629885c, type: 3}
   m_Color: {r: 0.3843597, g: 0.79939, b: 0.99371064, a: 1}
   m_FlipX: 0
@@ -1197,9 +1194,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3589860721749486280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 260, y: -80}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5507045532444620260
@@ -1465,7 +1462,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: aa2d4494470a9483683549883fcfce0d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1677,9 +1674,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3589860721749486280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 420, y: -80}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &899008902860567587
@@ -1867,7 +1864,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: fab06e0be9375cc4d823efa71629885c, type: 3}
   m_Color: {r: 0.3843597, g: 0.79939, b: 0.99371064, a: 1}
   m_FlipX: 0
@@ -1890,6 +1887,7 @@ GameObject:
   - component: {fileID: 8068948287646753199}
   - component: {fileID: 4959024369644863843}
   - component: {fileID: 6574617615803714098}
+  - component: {fileID: 7733158776277610547}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -1971,6 +1969,21 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8465541949222939577}
   m_Enabled: 1
+--- !u!114 &7733158776277610547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8465541949222939577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff32fdebd4f756240ab9e4c3a05553cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraOffset: {x: 2, y: 1, z: -10}
+  background01: {fileID: 5085577368625873632}
+  background02: {fileID: 2981892552390336172}
 --- !u!1001 &7595449733484111356
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -105,6 +105,7 @@ namespace ProjectMIL.Combat
 
             DamageNumberObject damageNumberObject = Instantiate(damageNumberObjectPrefab, e.hitPosition + Vector3.up, Quaternion.identity);
             damageNumberObject.SetDamage(e.damage);
+            damageNumberObject.ShowAnimation(DamageNumberObject.AnimationType.UpFade);
             Destroy(damageNumberObject.gameObject, 1f);
 
             yield return new WaitForSeconds(0.15f);

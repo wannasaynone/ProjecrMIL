@@ -52,6 +52,7 @@ MonoBehaviour:
   speedLineEffectRoot: {fileID: 2188739593708584291}
   blockEffectPrefab: {fileID: 7837464029678272537, guid: e4cdb6c5f07dee6448f56fd19143de60, type: 3}
   blockObjectPrefab: {fileID: 6360946427065655025, guid: 36390d4091de7e147a794dcf072710eb, type: 3}
+  damageNumberObjectPrefab: {fileID: 3995567873264244200, guid: 66a2e5d7303593140b6bc3227c6efe71, type: 3}
   attackInfos:
   - attackName: ComboAttack01
     attackStartNormalizedTime: 0.6

@@ -20,6 +20,7 @@ namespace ProjectMIL.Combat
         [SerializeField] private GameObject speedLineEffectRoot;
         [SerializeField] private GameObject blockEffectPrefab;
         [SerializeField] private DamageNumberObject blockObjectPrefab;
+        [SerializeField] private DamageNumberObject damageNumberObjectPrefab;
         [SerializeField] private AttackInfo[] attackInfos;
 
         private bool isAttacked = false;
@@ -72,6 +73,7 @@ namespace ProjectMIL.Combat
                     Destroy(blockEffect, 1f);
                     DamageNumberObject blockObject = Instantiate(blockObjectPrefab, blockEffect.transform.position + Vector3.up, Quaternion.identity);
                     blockObject.SetText("BLOCKED!");
+                    blockObject.ShowAnimation(DamageNumberObject.AnimationType.UpFade);
                     Destroy(blockObject.gameObject, 1f);
 
                     EventBus.Publish(new OnAnyActorGotBlocked
@@ -106,6 +108,9 @@ namespace ProjectMIL.Combat
             });
 
             Info.currentHP -= e.damage;
+            DamageNumberObject damageNumberObject = Instantiate(damageNumberObjectPrefab, transform.position - Vector3.forward * 5f + Vector3.up, Quaternion.identity);
+            damageNumberObject.SetDamage(e.damage);
+            damageNumberObject.ShowAnimation(DamageNumberObject.AnimationType.Fall);
 
             if (Info.currentHP <= 0)
             {
