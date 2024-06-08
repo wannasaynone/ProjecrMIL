@@ -58,6 +58,11 @@ namespace ProjectMIL.Combat
             characterAnimator.Play(defaultStateName, 0, 0f);
         }
 
+        protected Transform GetAnimatorRoot()
+        {
+            return characterAnimator.transform;
+        }
+
         protected void PlayAnimation(string animationName, float speed = 1f)
         {
             characterAnimator.speed = speed;
@@ -78,6 +83,11 @@ namespace ProjectMIL.Combat
                 yield return null;
             }
 
+            PauseAnimation();
+        }
+
+        protected void PauseAnimation()
+        {
             orignalSpeed = characterAnimator.speed;
             characterAnimator.speed = 0;
         }

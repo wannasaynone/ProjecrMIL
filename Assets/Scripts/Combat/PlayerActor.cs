@@ -17,29 +17,50 @@ namespace ProjectMIL.Combat
         }
 
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private Material waveMaterial;
         [SerializeField] private GameObject speedLineEffectRoot;
         [SerializeField] private GameObject blockEffectPrefab;
         [SerializeField] private DamageNumberObject blockObjectPrefab;
         [SerializeField] private DamageNumberObject damageNumberObjectPrefab;
+        [SerializeField] private SpriteRenderer blackSpriteRenderer;
+        [SerializeField] private GameObject chargeEffectRoot;
+        [SerializeField] private GameObject chargeDoneEffect;
+        [SerializeField] private SpriteRenderer chargeDoneSpriteRenderer;
+        [SerializeField] private ParticleSystem attack04Effect;
         [SerializeField] private AttackInfo[] attackInfos;
 
         private bool isAttacked = false;
         private bool isDead = false;
         private string currentAttackName;
+        private string nextAttackName;
         private SpriteRenderer[] spriteRenderers;
+        private AttackCommandHandler attackCommandHandler;
 
         protected override void OnInitialized()
         {
             spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+
             EventBus.Subscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
             EventBus.Subscribe<OnDamageCalculated>(OnDamageCalculated);
+            EventBus.Subscribe<OnAttackCommandAllMatched>(OnAttackCommandAllMatched);
+
             spriteRenderer.material = new Material(spriteRenderer.material);
+            string[] attackNames = new string[attackInfos.Length];
+            for (int i = 0; i < attackInfos.Length; i++)
+            {
+                attackNames[i] = attackInfos[i].attackName;
+            }
+            attackCommandHandler = new AttackCommandHandler(attackNames, "ComboAttack04");
+            attackCommandHandler.StartListening();
         }
 
         protected override void OnDisposed()
         {
             EventBus.Unsubscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
             EventBus.Unsubscribe<OnDamageCalculated>(OnDamageCalculated);
+            EventBus.Unsubscribe<OnAttackCommandAllMatched>(OnAttackCommandAllMatched);
+            attackCommandHandler.StopListening();
+            attackCommandHandler = null;
         }
 
         private void OnAttackButtonPressed(OnAttackButtonPressed e)
@@ -88,6 +109,11 @@ namespace ProjectMIL.Combat
 
                 StartCoroutine(IEApplyDamage(e));
             }
+        }
+
+        private void OnAttackCommandAllMatched(OnAttackCommandAllMatched e)
+        {
+            nextAttackName = e.returnAttackName;
         }
 
         private bool isShowingHitEffect = false;
@@ -179,16 +205,125 @@ namespace ProjectMIL.Combat
             {
                 transform.position += new Vector3(1f, 0, 0);
                 PlayAnimation("Idle");
+                DOTween.To(GetBlackSpriteAlpha, SetBlackSpriteAlpha, 0f, 0.2f).OnComplete(() =>
+                {
+                    blackSpriteRenderer.gameObject.SetActive(false);
+                });
             }
+        }
+
+        private float GetBlackSpriteAlpha()
+        {
+            return blackSpriteRenderer.color.a;
+        }
+
+        private void SetBlackSpriteAlpha(float alpha)
+        {
+            blackSpriteRenderer.color = new Color(0f, 0f, 0f, alpha);
+        }
+
+        private SpriteRenderer cloneChargeDoneSpriteRenderer;
+
+        private float GetCloneChargeDoneSpriteRendererAlpha()
+        {
+            return cloneChargeDoneSpriteRenderer.color.a;
+        }
+
+        private void SetCloneChargeDoneSpriteRendererAlpha(float alpha)
+        {
+            cloneChargeDoneSpriteRenderer.color = new Color(1f, 1f, 1f, alpha);
+        }
+
+        private IEnumerator IECastAttack04()
+        {
+            chargeEffectRoot.SetActive(true);
+
+            yield return new WaitForSeconds(1f);
+
+            chargeDoneSpriteRenderer.sprite = spriteRenderer.sprite;
+            cloneChargeDoneSpriteRenderer = Instantiate(chargeDoneSpriteRenderer);
+            cloneChargeDoneSpriteRenderer.transform.position = chargeDoneSpriteRenderer.transform.position;
+            cloneChargeDoneSpriteRenderer.transform.localScale = chargeDoneSpriteRenderer.transform.localScale;
+            cloneChargeDoneSpriteRenderer.transform.rotation = chargeDoneSpriteRenderer.transform.rotation;
+            cloneChargeDoneSpriteRenderer.gameObject.SetActive(true);
+            chargeDoneEffect.SetActive(true);
+
+            cloneChargeDoneSpriteRenderer.transform.DOScale(Vector3.one * 3f, 0.15f).SetEase(Ease.Linear);
+            DOTween.To(GetCloneChargeDoneSpriteRendererAlpha, SetCloneChargeDoneSpriteRendererAlpha, 0f, 0.15f).SetEase(Ease.Linear);
+
+            Material orginalMaterial = spriteRenderer.material;
+            spriteRenderer.material = waveMaterial;
+
+            yield return new WaitForSeconds(1.5f);
+
+            spriteRenderer.material = orginalMaterial;
+
+            Destroy(cloneChargeDoneSpriteRenderer.gameObject);
+            chargeDoneEffect.SetActive(false);
+
+            ResumeAnimation();
+
+            while (GetNormalizedTime() < 0.33f)
+            {
+                yield return null;
+            }
+
+            isAttacked = true;
+
+            attack04Effect.Play();
+            chargeEffectRoot.SetActive(false);
+
+            List<CombatActor> enemyActors = CombatActorContainer.GetAllActorInRange(ActorInfo.Camp.Enemy, transform.position, float.MaxValue - 1f);
+
+            for (int enemyActorIndex = 0; enemyActorIndex < enemyActors.Count; enemyActorIndex++)
+            {
+                EnemyActor enemyActor = enemyActors[enemyActorIndex] as EnemyActor;
+
+                EventBus.Publish(new OnAttackCasted
+                {
+                    attackerActorInstanceID = GetInstanceID(),
+                    targetActorInstanceID = enemyActor.GetInstanceID(),
+                    hitPosition = enemyActor.transform.position - Vector3.right * 0.2f
+                });
+            }
+
+            Time.timeScale = 0.25f;
+
+            yield return new WaitForSecondsRealtime(1f);
+
+            Time.timeScale = 1f;
         }
 
         private void LateUpdate() // for detecting animation time
         {
-            if (IsPlaying("Idle"))
+            if (IsPlaying("Idle") || isDead)
                 return;
 
             if (isAttacked)
+            {
+                if (!string.IsNullOrEmpty(nextAttackName) && GetNormalizedTime() >= 0.9f)
+                {
+                    blackSpriteRenderer.color = new Color(0f, 0f, 0f, 0f);
+                    blackSpriteRenderer.gameObject.SetActive(true);
+                    DOTween.To(GetBlackSpriteAlpha, SetBlackSpriteAlpha, 0.8f, 0.2f);
+                    currentAttackName = nextAttackName;
+                    nextAttackName = null;
+                    isAttacked = false;
+                    PlayAnimationAndStop(currentAttackName, 0.01f, 2f);
+
+                    List<CombatActor> enemyActors = CombatActorContainer.GetAllActorInRange(ActorInfo.Camp.Enemy, transform.position, float.MaxValue - 1f);
+
+                    for (int enemyActorIndex = 0; enemyActorIndex < enemyActors.Count; enemyActorIndex++)
+                    {
+                        EnemyActor enemyActor = enemyActors[enemyActorIndex] as EnemyActor;
+                        enemyActor.Pause();
+                    }
+
+                    StartCoroutine(IECastAttack04());
+                }
+
                 return;
+            }
 
             for (int attackInfoIndex = 0; attackInfoIndex < attackInfos.Length; attackInfoIndex++)
             {

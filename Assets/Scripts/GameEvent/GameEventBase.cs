@@ -72,6 +72,7 @@ namespace ProjectMIL.GameEvent
     }
     public class OnCombatStartCalled : GameEventBase
     {
+        public int difficulty;
         public int maxHP;
         public int attack;
         public int defense;
@@ -106,5 +107,18 @@ namespace ProjectMIL.GameEvent
         public int blockCasterActorInstanceID;
         public int gotBlockedActorInstanceID;
         public Vector3 hitPosition;
+    }
+    public class OnAttackCommandsCreated : GameEventBase
+    {
+        public string[] attackCommands;
+    }
+    public class OnAttackCommandAllMatched : GameEventBase
+    {
+        public string returnAttackName;
+    }
+    public class OnAttackCommandFailed : GameEventBase { }
+    public class OnAttackCommandMatchedWithIndex : GameEventBase
+    {
+        public int index;
     }
 }

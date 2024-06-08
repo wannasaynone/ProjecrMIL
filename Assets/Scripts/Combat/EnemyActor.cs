@@ -26,6 +26,7 @@ namespace ProjectMIL.Combat
         protected override void OnDisposed()
         {
             EventBus.Unsubscribe<OnDamageCalculated>(OnDamageCalculated);
+            EventBus.Unsubscribe<OnAnyActorGotBlocked>(OnAnyActorGotBlocked);
         }
 
         public void AddSortingGroupSortingOrder(int add)
@@ -33,24 +34,38 @@ namespace ProjectMIL.Combat
             sortingGroup.sortingOrder += add;
         }
 
+        public void Pause()
+        {
+            aiState = AIState.Pause;
+            PauseAnimation();
+        }
+
         private void OnAnyActorGotBlocked(OnAnyActorGotBlocked e)
         {
-            if (e.gotBlockedActorInstanceID == GetInstanceID() && aiState != AIState.Dead)
+            if (e.gotBlockedActorInstanceID == GetInstanceID() && IsCanMove())
             {
                 aiState = AIState.GotHit;
 
                 PlayAnimation("3_Debuff_Stun", 1.5f);
                 transform.DOMove(transform.position + Vector3.right * Random.Range(1f, 3f), 0.15f).OnComplete(() =>
                 {
-                    aiState = AIState.Idle;
-                    PlayAnimation("0_idle", 1f);
+                    if (IsCanMove())
+                    {
+                        aiState = AIState.Idle;
+                        PlayAnimation("0_idle", 1f);
+                    }
                 });
             }
         }
 
+        private bool IsCanMove()
+        {
+            return aiState != AIState.Dead && aiState != AIState.Pause;
+        }
+
         private void OnDamageCalculated(OnDamageCalculated e)
         {
-            if (e.targetActorInstanceID == GetInstanceID() && aiState != AIState.Dead)
+            if (e.targetActorInstanceID == GetInstanceID())
             {
                 StartCoroutine(IEApplyDamage(e));
             }
@@ -121,7 +136,7 @@ namespace ProjectMIL.Combat
                 aiState = AIState.Dead;
                 PlayAnimation("4_Death");
             }
-            else
+            else if (IsCanMove())
             {
                 PlayAnimation("0_idle", 1f);
                 aiState = AIState.Idle;
@@ -136,7 +151,8 @@ namespace ProjectMIL.Combat
             Attaking,
             Attacked,
             GotHit,
-            Dead
+            Dead,
+            Pause
         }
 
         private AIState aiState = AIState.Idle;
@@ -205,6 +221,8 @@ namespace ProjectMIL.Combat
                 case AIState.GotHit:
                     break;
                 case AIState.Dead:
+                    break;
+                case AIState.Pause:
                     break;
             }
         }
