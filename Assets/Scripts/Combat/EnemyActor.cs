@@ -20,6 +20,7 @@ namespace ProjectMIL.Combat
         {
             spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
             EventBus.Subscribe<OnDamageCalculated>(OnDamageCalculated);
+            EventBus.Subscribe<OnAnyActorGotBlocked>(OnAnyActorGotBlocked);
         }
 
         protected override void OnDisposed()
@@ -30,6 +31,21 @@ namespace ProjectMIL.Combat
         public void AddSortingGroupSortingOrder(int add)
         {
             sortingGroup.sortingOrder += add;
+        }
+
+        private void OnAnyActorGotBlocked(OnAnyActorGotBlocked e)
+        {
+            if (e.gotBlockedActorInstanceID == GetInstanceID() && aiState != AIState.Dead)
+            {
+                aiState = AIState.GotHit;
+
+                PlayAnimation("3_Debuff_Stun", 1.5f);
+                transform.DOMove(transform.position + Vector3.right * Random.Range(1f, 3f), 0.15f).OnComplete(() =>
+                {
+                    aiState = AIState.Idle;
+                    PlayAnimation("0_idle", 1f);
+                });
+            }
         }
 
         private void OnDamageCalculated(OnDamageCalculated e)

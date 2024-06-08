@@ -914,7 +914,7 @@ MonoBehaviour:
   sortingGroup: {fileID: 2501290603421451208}
   attackRange: 2
   moveSpeed: 2
-  damageNumberObjectPrefab: {fileID: 3995567873264244200, guid: 66a2e5d7303593140b6bc3227c6efe71, type: 3}
+  damageNumberObjectPrefab: {fileID: 7556272921773265827, guid: 1c12d525270b00c48843045625881150, type: 3}
 --- !u!1 &2978245250971474914
 GameObject:
   m_ObjectHideFlags: 0

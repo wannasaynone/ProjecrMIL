@@ -101,4 +101,10 @@ namespace ProjectMIL.GameEvent
         public int damage;
         public Vector3 hitPosition;
     }
+    public class OnAnyActorGotBlocked : GameEventBase
+    {
+        public int blockCasterActorInstanceID;
+        public int gotBlockedActorInstanceID;
+        public Vector3 hitPosition;
+    }
 }

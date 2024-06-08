@@ -73,6 +73,14 @@ namespace ProjectMIL.Combat
                     DamageNumberObject blockObject = Instantiate(blockObjectPrefab, blockEffect.transform.position + Vector3.up, Quaternion.identity);
                     blockObject.SetText("BLOCKED!");
                     Destroy(blockObject.gameObject, 1f);
+
+                    EventBus.Publish(new OnAnyActorGotBlocked
+                    {
+                        blockCasterActorInstanceID = GetInstanceID(),
+                        gotBlockedActorInstanceID = e.attackerActorInstanceID,
+                        hitPosition = e.hitPosition
+                    });
+
                     return;
                 }
 
@@ -98,7 +106,7 @@ namespace ProjectMIL.Combat
             });
 
             Info.currentHP -= e.damage;
-            Debug.Log("Player got hit, damage=" + e.damage + " HP: " + Info.currentHP);
+
             if (Info.currentHP <= 0)
             {
                 PlayAnimation("Die");
