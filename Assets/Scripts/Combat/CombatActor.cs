@@ -78,6 +78,11 @@ namespace ProjectMIL.Combat
 
         private IEnumerator IEStopAnimation(string animationName, float stopAtNormalizedTime)
         {
+            while (!IsPlaying(animationName))
+            {
+                yield return null;
+            }
+
             while (IsPlaying(animationName) && GetNormalizedTime() < stopAtNormalizedTime)
             {
                 yield return null;

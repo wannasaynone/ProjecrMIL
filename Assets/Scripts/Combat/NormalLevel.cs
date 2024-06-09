@@ -4,36 +4,18 @@ using UnityEngine;
 
 namespace ProjectMIL.Combat
 {
-    public class Level
+    public class NormalLevel : LevelBase
     {
-        private readonly int difficulty;
-        private DamageHandler damageHandler;
-        private CombatActor clonedPlayerActor;
+        private readonly CombatActor enemyPrefab;
         private readonly List<CombatActor> clonedEnemyActors = new List<CombatActor>();
 
-        public Level(int difficulty)
+        public NormalLevel(int difficulty, CombatActor enemyPrefab) : base(difficulty)
         {
-            this.difficulty = difficulty;
+            this.enemyPrefab = enemyPrefab;
         }
 
-        public void Start(OnCombatStartCalled e, CombatActor playerPrefab, CombatActor enemyPrefab)
+        protected override void OnStarted()
         {
-            clonedPlayerActor = Object.Instantiate(playerPrefab);
-            clonedPlayerActor.transform.position = new Vector3(-2f, -1f, 0);
-            clonedPlayerActor.Initialize(new CombatActor.ActorInfo(new CombatActor.ActorInfo.Templete
-            {
-                maxHP = e.maxHP,
-                attack = e.attack,
-                defense = e.defense,
-                speed = e.speed,
-                critical = e.critical,
-                criticalResistance = e.criticalResistance,
-                effectiveness = e.effectiveness,
-                effectivenessResistance = e.effectivenessResistance,
-                camp = CombatActor.ActorInfo.Camp.Player
-
-            }));
-
             int spawnCount = Random.Range(15, 31);
             Vector3 lastSpawnPosition = new Vector3(2f, -1f, 0);
             for (int i = 0; i < spawnCount; i++)
@@ -43,8 +25,6 @@ namespace ProjectMIL.Combat
                 clonedEnemyActors[i].transform.position = lastSpawnPosition;
                 lastSpawnPosition.x += Random.Range(0.5f, 2.5f);
             }
-
-            damageHandler = new DamageHandler();
         }
 
         private void SpawnEnemy(CombatActor enemyPrefab)
@@ -66,15 +46,12 @@ namespace ProjectMIL.Combat
             clonedEnemyActors.Add(clonedEnemyActor);
         }
 
-        public void End()
+        protected override void OnStartToEnd()
         {
-            clonedPlayerActor.Dispose();
             for (int i = 0; i < clonedEnemyActors.Count; i++)
             {
                 clonedEnemyActors[i].Dispose();
             }
-            damageHandler.Dispose();
-            System.GC.SuppressFinalize(damageHandler);
         }
     }
 }

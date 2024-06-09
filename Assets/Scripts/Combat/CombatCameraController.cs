@@ -29,7 +29,7 @@ namespace ProjectMIL.Combat
 
         private void OnGotHit(OnAnyActorGotHit e)
         {
-            CombatActor playerActor = CombatActorContainer.GetAnyUnitByCamp(CombatActor.ActorInfo.Camp.Player);
+            CombatActor playerActor = CombatActorContainer.GetAnyActorByCamp(CombatActor.ActorInfo.Camp.Player);
             if (isShaking || (playerActor != null && e.attackerActorInstanceID != playerActor.GetInstanceID()))
                 return;
 
@@ -59,7 +59,7 @@ namespace ProjectMIL.Combat
                 currentMapIndex++;
             }
 
-            CombatActor playerActor = CombatActorContainer.GetAnyUnitByCamp(CombatActor.ActorInfo.Camp.Player);
+            CombatActor playerActor = CombatActorContainer.GetAnyActorByCamp(CombatActor.ActorInfo.Camp.Player);
             if (playerActor == null)
             {
                 return;

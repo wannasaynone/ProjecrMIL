@@ -10,14 +10,16 @@ namespace ProjectMIL.Combat
         [SerializeField] private AttackCommandHintPanel attackCommandHintPanel;
         [SerializeField] private CombatActor playerPrefab;
         [SerializeField] private CombatActor enemyPrefab;
+        [SerializeField] private CombatActor bossPrefab;
 
-        private Level currentLevel;
+        private LevelBase currentLevel;
 
         public void StartCombat(OnCombatStartCalled e)
         {
             combatCameraController.ResetAllCombatStageSetting();
-            currentLevel = new Level(e.difficulty);
-            currentLevel.Start(e, playerPrefab, enemyPrefab);
+            // currentLevel = new NormalLevel(e.difficulty, enemyPrefab);
+            currentLevel = new BossLevel(e.difficulty, bossPrefab);
+            currentLevel.Start(e, playerPrefab);
             gameObject.SetActive(true);
             attackCommandHintPanel.StartListening();
         }

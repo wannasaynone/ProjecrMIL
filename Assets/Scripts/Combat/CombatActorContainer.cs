@@ -23,7 +23,7 @@ namespace ProjectMIL.Combat
             actors.Remove(actor);
         }
 
-        public static CombatActor GetAnyUnitByCamp(CombatActor.ActorInfo.Camp camp)
+        public static CombatActor GetAnyActorByCamp(CombatActor.ActorInfo.Camp camp)
         {
             foreach (var actor in actors)
             {

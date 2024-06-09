@@ -65,7 +65,7 @@ namespace ProjectMIL.Combat
 
         private void OnAttackButtonPressed(OnAttackButtonPressed e)
         {
-            if (!IsPlaying("Idle") && GetNormalizedTime() < 0.9f || isDead)
+            if ((!IsPlaying("Idle") && GetNormalizedTime() < 0.9f) || isDead)
                 return;
 
             isAttacked = false;
@@ -175,8 +175,6 @@ namespace ProjectMIL.Combat
 
         private IEnumerator IEDashToEnemy(CombatActor enemyActor)
         {
-            float motionBlur = 0f;
-
             float stopRange = 2f;
             for (int attackInfoIndex = 0; attackInfoIndex < attackInfos.Length; attackInfoIndex++)
             {
@@ -191,10 +189,10 @@ namespace ProjectMIL.Combat
             {
                 float moveSpeed = 25f * Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, enemyActor.transform.position, moveSpeed);
-                motionBlur = Mathf.Lerp(motionBlur, 1f, moveSpeed);
                 speedLineEffectRoot.SetActive(true);
                 yield return null;
             }
+
             speedLineEffectRoot.SetActive(false);
             ResumeAnimation();
         }
