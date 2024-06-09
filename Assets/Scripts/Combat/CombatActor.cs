@@ -7,6 +7,24 @@ namespace ProjectMIL.Combat
     {
         [SerializeField] private Animator characterAnimator;
         [SerializeField] private string defaultStateName = "Idle";
+        [SerializeField] private float width = 1f;
+
+        public float GetBound()
+        {
+            if (Info == null)
+                return transform.position.x;
+
+            if (Info.ActorCamp == ActorInfo.Camp.Player)
+                return transform.position.x + width / 2;
+            else
+                return transform.position.x - width / 2;
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(new Vector3(GetBound(), transform.position.y + 0.5f, 0), new Vector3(transform.position.x, transform.position.y + 0.5f, 0));
+        }
 
         public class ActorInfo
         {

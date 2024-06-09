@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace ProjectMIL.Combat
 {
@@ -63,7 +64,7 @@ namespace ProjectMIL.Combat
             {
                 if (actor.Info.ActorCamp == camp && actor.Info.currentHP > 0)
                 {
-                    float distance = UnityEngine.Vector3.Distance(actor.transform.position, position);
+                    float distance = Mathf.Abs(actor.GetBound() - position.x);
                     if (distance < range)
                     {
                         actorsInRange.Add(actor);

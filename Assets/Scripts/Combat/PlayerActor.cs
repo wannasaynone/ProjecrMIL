@@ -207,7 +207,7 @@ namespace ProjectMIL.Combat
                 }
             }
 
-            while (Vector3.Distance(transform.position, enemyActor.transform.position) > stopRange)
+            while (Mathf.Abs(transform.position.x - enemyActor.GetBound()) > stopRange) // enemy will always be on the right side
             {
                 float moveSpeed = 25f * Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, enemyActor.transform.position, moveSpeed);
@@ -353,7 +353,7 @@ namespace ProjectMIL.Combat
             {
                 if (currentAttackName == attackInfos[attackInfoIndex].attackName && GetNormalizedTime() >= attackInfos[attackInfoIndex].attackStartNormalizedTime)
                 {
-                    List<CombatActor> enemyActors = CombatActorContainer.GetAllActorInRange(ActorInfo.Camp.Enemy, transform.position, attackInfos[attackInfoIndex].attackRange);
+                    List<CombatActor> enemyActors = CombatActorContainer.GetAllActorInRange(ActorInfo.Camp.Enemy, new Vector3(GetBound(), transform.position.y, 0f), attackInfos[attackInfoIndex].attackRange);
 
                     for (int enemyActorIndex = 0; enemyActorIndex < enemyActors.Count; enemyActorIndex++)
                     {

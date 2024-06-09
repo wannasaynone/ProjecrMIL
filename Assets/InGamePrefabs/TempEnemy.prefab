@@ -910,9 +910,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 4154020440319825078}
   defaultStateName: 0_idle
+  width: 1
   hitEffectPrefab: {fileID: 6090550120764576271, guid: 45581c8b3fab6aa468aadbd02da5a4e0, type: 3}
   sortingGroup: {fileID: 2501290603421451208}
-  attackRange: 2
+  attackRange: 0.7
   moveSpeed: 2
   damageNumberObjectPrefab: {fileID: 7556272921773265827, guid: 1c12d525270b00c48843045625881150, type: 3}
 --- !u!1 &2978245250971474914

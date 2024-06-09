@@ -54,9 +54,9 @@ namespace ProjectMIL.Combat
             }
         }
 
-        private IEnumerator IEDashToEnemy(CombatActor playerActor)
+        private IEnumerator IEDashToPlayer(CombatActor playerActor)
         {
-            while (Vector3.Distance(transform.position, playerActor.transform.position) > attackRange)
+            while (Mathf.Abs(playerActor.GetBound() - GetBound()) > attackRange)
             {
                 float moveSpeed = 5f * Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, playerActor.transform.position, moveSpeed);
@@ -126,7 +126,7 @@ namespace ProjectMIL.Combat
             }
             else
             {
-                transform.DOMove(transform.position + Vector3.right * Random.Range(0.3f, 0.7f), 0.15f);
+                transform.DOMove(transform.position + Vector3.right * Random.Range(0.15f, 0.3f), 0.15f);
             }
 
             yield return new WaitForSeconds(0.15f);
@@ -165,7 +165,7 @@ namespace ProjectMIL.Combat
                     {
                         currentState = BossState.PrepareAttack;
                         PlayAnimation("2_Attack_Normal");
-                        StartCoroutine(IEDashToEnemy(playerActor));
+                        StartCoroutine(IEDashToPlayer(playerActor));
                         timer = 1f;
                     }
                     break;
@@ -176,7 +176,7 @@ namespace ProjectMIL.Combat
                         PauseAnimation();
                     }
 
-                    if (timer > 0f || Vector3.Distance(transform.position, playerActor.transform.position) > attackRange)
+                    if (timer > 0f || Mathf.Abs(playerActor.GetBound() - GetBound()) > attackRange)
                     {
                         timer -= Time.deltaTime;
                         if (timer <= 0f)
@@ -193,7 +193,7 @@ namespace ProjectMIL.Combat
                         PauseAnimation();
                         timer = 1f;
 
-                        if (Vector3.Distance(transform.position, playerActor.transform.position) <= attackRange)
+                        if (Mathf.Abs(playerActor.GetBound() - GetBound()) <= attackRange)
                         {
                             EventBus.Publish(new OnAttackCasted
                             {

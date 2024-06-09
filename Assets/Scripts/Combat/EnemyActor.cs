@@ -185,7 +185,7 @@ namespace ProjectMIL.Combat
                         return;
                     }
                     transform.position = Vector3.MoveTowards(transform.position, playerActor.transform.position, moveSpeed * Time.deltaTime);
-                    if (Vector3.Distance(playerActor.transform.position, transform.position) <= attackRange)
+                    if (Mathf.Abs(playerActor.GetBound() - GetBound()) <= attackRange)
                     {
                         aiState = AIState.Attack;
                     }
@@ -198,7 +198,7 @@ namespace ProjectMIL.Combat
                     if (IsPlaying("2_Attack_Normal") && GetNormalizedTime() >= 0.5f)
                     {
                         playerActor = CombatActorContainer.GetCloestActorByCamp(ActorInfo.Camp.Player, transform.position);
-                        if (playerActor != null && Vector3.Distance(playerActor.transform.position, transform.position) <= attackRange)
+                        if (playerActor != null && Mathf.Abs(playerActor.GetBound() - GetBound()) <= attackRange)
                         {
                             EventBus.Publish(new OnAttackCasted
                             {
