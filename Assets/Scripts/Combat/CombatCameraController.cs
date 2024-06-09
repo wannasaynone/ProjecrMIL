@@ -47,7 +47,7 @@ namespace ProjectMIL.Combat
         {
             if (transform.position.x >= 7.34f * (currentMapIndex + 1))
             {
-                switch (currentMapIndex % 2)
+                switch (Mathf.Abs(currentMapIndex % 2))
                 {
                     case 0:
                         background01.position = new Vector3(7.34f * (currentMapIndex + 2), 0, 0);
@@ -57,6 +57,20 @@ namespace ProjectMIL.Combat
                         break;
                 }
                 currentMapIndex++;
+            }
+
+            if (transform.position.x < 7.34f * currentMapIndex)
+            {
+                switch (Mathf.Abs(currentMapIndex % 2))
+                {
+                    case 0:
+                        background02.position = new Vector3(7.34f * (currentMapIndex - 1), 0, 0);
+                        break;
+                    case 1:
+                        background01.position = new Vector3(7.34f * (currentMapIndex - 1), 0, 0);
+                        break;
+                }
+                currentMapIndex--;
             }
 
             CombatActor playerActor = CombatActorContainer.GetAnyActorByCamp(CombatActor.ActorInfo.Camp.Player);

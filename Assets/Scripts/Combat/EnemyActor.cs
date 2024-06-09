@@ -34,10 +34,9 @@ namespace ProjectMIL.Combat
             sortingGroup.sortingOrder += add;
         }
 
-        public void Pause()
+        protected override void OnPaused()
         {
             aiState = AIState.Pause;
-            PauseAnimation();
         }
 
         private void OnAnyActorGotBlocked(OnAnyActorGotBlocked e)
@@ -136,9 +135,9 @@ namespace ProjectMIL.Combat
                 aiState = AIState.Dead;
                 PlayAnimation("4_Death");
             }
-            else if (IsCanMove())
+            else if (IsCanMove()) // may be paused while applying damage
             {
-                PlayAnimation("0_idle", 1f);
+                PlayAnimation("0_idle");
                 aiState = AIState.Idle;
             }
         }

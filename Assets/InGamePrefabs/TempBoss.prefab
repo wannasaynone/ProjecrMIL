@@ -578,7 +578,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 50
   m_SortAtRoot: 0
 --- !u!95 &3261373945891452913
 Animator:
@@ -1065,6 +1065,8 @@ MonoBehaviour:
   characterAnimator: {fileID: 3261373945891452913}
   defaultStateName: 0_idle
   attackRange: 2.7
+  damageNumberObjectPrefab: {fileID: 7556272921773265827, guid: 1c12d525270b00c48843045625881150, type: 3}
+  hitEffectPrefab: {fileID: 6090550120764576271, guid: 45581c8b3fab6aa468aadbd02da5a4e0, type: 3}
 --- !u!1 &3912694579823932759
 GameObject:
   m_ObjectHideFlags: 0

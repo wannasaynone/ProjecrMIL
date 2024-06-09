@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ProjectMIL.Combat
@@ -20,7 +18,7 @@ namespace ProjectMIL.Combat
             clonedBossActor = Object.Instantiate(bossActorPrefab) as BossActor;
             clonedBossActor.Initialize(new CombatActor.ActorInfo(new CombatActor.ActorInfo.Templete
             {
-                maxHP = 100 + 100 * valueDiff,
+                maxHP = 1000 + 1000 * valueDiff,
                 attack = 100 + 100 * valueDiff,
                 defense = 100 + 100 * valueDiff,
                 speed = 0 + 60 * valueDiff,
@@ -28,6 +26,7 @@ namespace ProjectMIL.Combat
                 criticalResistance = 10 * (valueDiff - 1) < 0 ? 0 : 10 * (valueDiff - 1),
                 effectiveness = 10 * (valueDiff - 1) < 0 ? 0 : 10 * (valueDiff - 1),
                 effectivenessResistance = 10 * (valueDiff - 1) < 0 ? 0 : 10 * (valueDiff - 1),
+                camp = CombatActor.ActorInfo.Camp.Enemy
             }));
             clonedBossActor.transform.position = new Vector3(2f, -1f, 0);
         }

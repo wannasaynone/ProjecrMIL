@@ -31,6 +31,7 @@ namespace ProjectMIL.Combat
 
         private bool isAttacked = false;
         private bool isDead = false;
+        private bool isAttackPaused = false;
         private string currentAttackName;
         private string nextAttackName;
         private SpriteRenderer[] spriteRenderers;
@@ -65,7 +66,7 @@ namespace ProjectMIL.Combat
 
         private void OnAttackButtonPressed(OnAttackButtonPressed e)
         {
-            if ((!IsPlaying("Idle") && GetNormalizedTime() < 0.9f) || isDead)
+            if ((!IsPlaying("Idle") && GetNormalizedTime() < 0.9f) || isDead || isAttackPaused)
                 return;
 
             isAttacked = false;
@@ -78,7 +79,7 @@ namespace ProjectMIL.Combat
             }
             else
             {
-                PlayAnimationAndStop(e.attackName, 0f, 2f);
+                PlayAnimation(e.attackName, 2f);
                 StartCoroutine(IEDashToEnemy(enemyActor));
             }
         }
@@ -125,6 +126,14 @@ namespace ProjectMIL.Combat
             isShowingHitEffect = true;
             DOTween.To(() => GetColor(), SetColor, Color.red, 0.15f);
 
+            BossActor bossActor = CombatActorContainer.GetActorByInstanceID(e.attackerActorInstanceID) as BossActor;
+            if (bossActor != null)
+            {
+                isAttackPaused = true;
+                transform.DOMove(transform.position - Vector3.right * Random.Range(1f, 3f), 0.15f);
+                PlayAnimation("IdleTransition");
+            }
+
             EventBus.Publish(new OnAnyActorGotHit
             {
                 attackerActorInstanceID = e.attackerActorInstanceID,
@@ -143,10 +152,18 @@ namespace ProjectMIL.Combat
                 PlayAnimation("Die");
                 isDead = true;
             }
+            else
+            {
+                isShowingHitEffect = false;
+                if (isAttackPaused)
+                {
+                    isAttackPaused = false;
+                    PlayAnimation("Idle");
+                }
+            }
 
             yield return new WaitForSeconds(0.15f);
             DOTween.To(() => GetColor(), SetColor, Color.white, 0.15f);
-            isShowingHitEffect = false;
         }
 
         private void SetColor(Color color)
@@ -175,6 +192,10 @@ namespace ProjectMIL.Combat
 
         private IEnumerator IEDashToEnemy(CombatActor enemyActor)
         {
+            yield return new WaitForEndOfFrame();
+
+            PauseAnimation();
+
             float stopRange = 2f;
             for (int attackInfoIndex = 0; attackInfoIndex < attackInfos.Length; attackInfoIndex++)
             {
@@ -194,7 +215,7 @@ namespace ProjectMIL.Combat
             }
 
             speedLineEffectRoot.SetActive(false);
-            ResumeAnimation();
+            ResumeAnimation(2f);
         }
 
         private void Update()
@@ -236,6 +257,10 @@ namespace ProjectMIL.Combat
         {
             chargeEffectRoot.SetActive(true);
 
+            yield return new WaitForEndOfFrame();
+
+            PauseAnimation();
+
             yield return new WaitForSeconds(1f);
 
             chargeDoneSpriteRenderer.sprite = spriteRenderer.sprite;
@@ -259,7 +284,7 @@ namespace ProjectMIL.Combat
             Destroy(cloneChargeDoneSpriteRenderer.gameObject);
             chargeDoneEffect.SetActive(false);
 
-            ResumeAnimation();
+            ResumeAnimation(2f);
 
             while (GetNormalizedTime() < 0.33f)
             {
@@ -275,7 +300,7 @@ namespace ProjectMIL.Combat
 
             for (int enemyActorIndex = 0; enemyActorIndex < enemyActors.Count; enemyActorIndex++)
             {
-                EnemyActor enemyActor = enemyActors[enemyActorIndex] as EnemyActor;
+                CombatActor enemyActor = enemyActors[enemyActorIndex];
 
                 EventBus.Publish(new OnAttackCasted
                 {
@@ -307,13 +332,13 @@ namespace ProjectMIL.Combat
                     currentAttackName = nextAttackName;
                     nextAttackName = null;
                     isAttacked = false;
-                    PlayAnimationAndStop(currentAttackName, 0.01f, 2f);
+                    PlayAnimation(currentAttackName, 2f);
 
                     List<CombatActor> enemyActors = CombatActorContainer.GetAllActorInRange(ActorInfo.Camp.Enemy, transform.position, float.MaxValue - 1f);
 
                     for (int enemyActorIndex = 0; enemyActorIndex < enemyActors.Count; enemyActorIndex++)
                     {
-                        EnemyActor enemyActor = enemyActors[enemyActorIndex] as EnemyActor;
+                        CombatActor enemyActor = enemyActors[enemyActorIndex];
                         enemyActor.Pause();
                     }
 
@@ -344,6 +369,11 @@ namespace ProjectMIL.Combat
                     break;
                 }
             }
+        }
+
+        protected override void OnPaused()
+        {
+            EventBus.Unsubscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
         }
     }
 }

@@ -69,39 +69,14 @@ namespace ProjectMIL.Combat
             characterAnimator.Play(animationName, 0, 0f);
         }
 
-        protected void PlayAnimationAndStop(string animationName, float stopAtNormalizedTime, float speed = 1f)
-        {
-            characterAnimator.speed = speed;
-            characterAnimator.Play(animationName, 0, 0f);
-            StartCoroutine(IEStopAnimation(animationName, stopAtNormalizedTime));
-        }
-
-        private IEnumerator IEStopAnimation(string animationName, float stopAtNormalizedTime)
-        {
-            while (!IsPlaying(animationName))
-            {
-                yield return null;
-            }
-
-            while (IsPlaying(animationName) && GetNormalizedTime() < stopAtNormalizedTime)
-            {
-                yield return null;
-            }
-
-            PauseAnimation();
-        }
-
         protected void PauseAnimation()
         {
-            orignalSpeed = characterAnimator.speed;
             characterAnimator.speed = 0;
         }
 
-        private float orignalSpeed = 1f;
-
-        protected void ResumeAnimation()
+        protected void ResumeAnimation(float speed = 1f)
         {
-            characterAnimator.speed = orignalSpeed;
+            characterAnimator.speed = speed;
         }
 
         protected bool IsPlaying(string stateName)
@@ -112,6 +87,12 @@ namespace ProjectMIL.Combat
         protected float GetNormalizedTime()
         {
             return characterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        }
+
+        public void Pause()
+        {
+            PauseAnimation();
+            OnPaused();
         }
 
         public void Initialize(ActorInfo actorInfo)
@@ -130,5 +111,6 @@ namespace ProjectMIL.Combat
 
         protected abstract void OnInitialized();
         protected abstract void OnDisposed();
+        protected abstract void OnPaused();
     }
 }
