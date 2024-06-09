@@ -23,18 +23,18 @@ namespace ProjectMIL.Combat
             actors.Remove(actor);
         }
 
-        public static CombatActor GetAnyActorByCamp(CombatActor.ActorInfo.Camp camp)
+        public static CombatActor GetAnyActorByCamp(CombatActor.ActorInfo.Camp camp, bool ingnoreDead)
         {
             foreach (var actor in actors)
             {
-                if (actor.Info.ActorCamp == camp && actor.Info.currentHP > 0)
+                if (actor.Info.ActorCamp == camp && (ingnoreDead || (!ingnoreDead && actor.Info.currentHP > 0)))
                     return actor;
             }
 
             return null;
         }
 
-        public static CombatActor GetCloestUnitByCamp(CombatActor.ActorInfo.Camp camp, UnityEngine.Vector3 position)
+        public static CombatActor GetCloestActorByCamp(CombatActor.ActorInfo.Camp camp, UnityEngine.Vector3 position)
         {
             CombatActor cloestActor = null;
             float minDistance = float.MaxValue;

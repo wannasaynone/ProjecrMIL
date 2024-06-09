@@ -103,8 +103,6 @@ namespace ProjectMIL.Combat
 
             DOTween.To(() => GetColor(), SetColor, Color.red, 0.15f);
 
-            transform.DOMove(transform.position + Vector3.right * Random.Range(1f, 1.5f), 0.15f);
-
             GameObject cloneHitEffect = Instantiate(hitEffectPrefab, e.hitPosition, Quaternion.identity);
             Destroy(cloneHitEffect, 1f);
 
@@ -124,6 +122,11 @@ namespace ProjectMIL.Combat
             if (isBigAttack)
             {
                 PlayAnimation("3_Debuff_Stun", 1.5f);
+                transform.DOMove(transform.position + Vector3.right * Random.Range(3.3f, 3.7f), 0.15f);
+            }
+            else
+            {
+                transform.DOMove(transform.position + Vector3.right * Random.Range(0.3f, 0.7f), 0.15f);
             }
 
             yield return new WaitForSeconds(0.15f);
@@ -150,7 +153,7 @@ namespace ProjectMIL.Combat
 
         private void LateUpdate()
         {
-            CombatActor playerActor = CombatActorContainer.GetAnyActorByCamp(ActorInfo.Camp.Player);
+            CombatActor playerActor = CombatActorContainer.GetAnyActorByCamp(ActorInfo.Camp.Player, false);
             if (playerActor == null)
                 return;
 

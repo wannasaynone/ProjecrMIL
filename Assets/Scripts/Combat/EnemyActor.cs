@@ -163,7 +163,7 @@ namespace ProjectMIL.Combat
             {
                 case AIState.Idle:
 
-                    playerActor = CombatActorContainer.GetCloestUnitByCamp(ActorInfo.Camp.Player, transform.position);
+                    playerActor = CombatActorContainer.GetCloestActorByCamp(ActorInfo.Camp.Player, transform.position);
                     if (playerActor != null)
                     {
                         if (Vector3.Distance(playerActor.transform.position, transform.position) <= attackRange)
@@ -197,7 +197,7 @@ namespace ProjectMIL.Combat
                 case AIState.Attaking:
                     if (IsPlaying("2_Attack_Normal") && GetNormalizedTime() >= 0.5f)
                     {
-                        playerActor = CombatActorContainer.GetCloestUnitByCamp(ActorInfo.Camp.Player, transform.position);
+                        playerActor = CombatActorContainer.GetCloestActorByCamp(ActorInfo.Camp.Player, transform.position);
                         if (playerActor != null && Vector3.Distance(playerActor.transform.position, transform.position) <= attackRange)
                         {
                             EventBus.Publish(new OnAttackCasted

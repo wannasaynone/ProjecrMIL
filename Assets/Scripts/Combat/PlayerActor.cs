@@ -72,7 +72,7 @@ namespace ProjectMIL.Combat
             isAttacked = false;
             currentAttackName = e.attackName;
 
-            CombatActor enemyActor = CombatActorContainer.GetCloestUnitByCamp(ActorInfo.Camp.Enemy, transform.position);
+            CombatActor enemyActor = CombatActorContainer.GetCloestActorByCamp(ActorInfo.Camp.Enemy, transform.position);
             if (enemyActor == null)
             {
                 PlayAnimation(e.attackName, 2f);
@@ -88,7 +88,8 @@ namespace ProjectMIL.Combat
         {
             if (e.targetActorInstanceID == GetInstanceID())
             {
-                if (!IsPlaying("Idle") && GetNormalizedTime() < 1f)
+                AttackInfo attackInfo = System.Array.Find(attackInfos, x => x.attackName == currentAttackName);
+                if (!IsPlaying("Idle") && attackInfo != null && GetNormalizedTime() < attackInfo.attackStartNormalizedTime + 0.15f)
                 {
                     CombatActor enemyActor = CombatActorContainer.GetActorByInstanceID(e.attackerActorInstanceID);
                     GameObject blockEffect = Instantiate(blockEffectPrefab, (enemyActor.transform.position + transform.position) / 2f + new Vector3(Random.Range(-0.3f, 0.3f), 1f + Random.Range(-0.2f, 0.2f), -5f), Quaternion.identity);

@@ -7,6 +7,7 @@ namespace ProjectMIL.Combat
     public class CombatCameraController : MonoBehaviour
     {
         [SerializeField] private Vector3 cameraOffset;
+        [SerializeField] private Transform shakeRoot;
         [SerializeField] private Transform background01;
         [SerializeField] private Transform background02;
 
@@ -29,17 +30,14 @@ namespace ProjectMIL.Combat
 
         private void OnGotHit(OnAnyActorGotHit e)
         {
-            CombatActor playerActor = CombatActorContainer.GetAnyActorByCamp(CombatActor.ActorInfo.Camp.Player);
+            CombatActor playerActor = CombatActorContainer.GetAnyActorByCamp(CombatActor.ActorInfo.Camp.Player, false);
             if (isShaking || (playerActor != null && e.attackerActorInstanceID != playerActor.GetInstanceID()))
                 return;
 
             if (playerActor != null)
             {
                 isShaking = true;
-                transform.DOMove(playerActor.transform.position + cameraOffset, 0.1f).OnComplete(() =>
-                {
-                    transform.DOShakePosition(0.5f, 0.25f, 10, 90f, false, true).OnComplete(() => isShaking = false);
-                });
+                shakeRoot.DOShakePosition(0.5f, 0.25f, 10, 90f, false, true).OnComplete(() => isShaking = false);
             }
         }
 
@@ -73,13 +71,8 @@ namespace ProjectMIL.Combat
                 currentMapIndex--;
             }
 
-            CombatActor playerActor = CombatActorContainer.GetAnyActorByCamp(CombatActor.ActorInfo.Camp.Player);
+            CombatActor playerActor = CombatActorContainer.GetAnyActorByCamp(CombatActor.ActorInfo.Camp.Player, true);
             if (playerActor == null)
-            {
-                return;
-            }
-
-            if (isShaking)
             {
                 return;
             }
