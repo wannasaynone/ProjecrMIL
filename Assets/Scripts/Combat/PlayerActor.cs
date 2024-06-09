@@ -248,7 +248,7 @@ namespace ProjectMIL.Combat
             cloneChargeDoneSpriteRenderer.gameObject.SetActive(true);
             chargeDoneEffect.SetActive(true);
 
-            cloneChargeDoneSpriteRenderer.transform.DOScale(Vector3.one * 3f, 0.15f).SetEase(Ease.Linear);
+            cloneChargeDoneSpriteRenderer.transform.DOScale(Vector3.one * 5f, 0.15f).SetEase(Ease.Linear);
             DOTween.To(GetCloneChargeDoneSpriteRendererAlpha, SetCloneChargeDoneSpriteRendererAlpha, 0f, 0.15f).SetEase(Ease.Linear);
 
             Material orginalMaterial = spriteRenderer.material;

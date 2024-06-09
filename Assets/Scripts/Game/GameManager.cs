@@ -59,7 +59,7 @@ namespace ProjectMIL.Game
                     SaveData clone = player.GetSaveDataClone();
                     EventBus.Publish(new OnCombatStartCalled
                     {
-                        difficulty = 0,
+                        difficulty = clone.level - 1,
                         maxHP = clone.maxHP,
                         attack = clone.attack,
                         defense = clone.defense,

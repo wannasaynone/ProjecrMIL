@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f69e3dede2dbd644848e26f11375fd4, type: 3}
   m_Name: _GameConfig
   m_EditorClassIdentifier: 
-  addStatusValuePerLevel: 100
+  addStatusValuePerLevel: 400

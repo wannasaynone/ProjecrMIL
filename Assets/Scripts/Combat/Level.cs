@@ -49,17 +49,18 @@ namespace ProjectMIL.Combat
 
         private void SpawnEnemy(CombatActor enemyPrefab)
         {
+            int valueDiff = difficulty < 0 ? 0 : difficulty;
             CombatActor clonedEnemyActor = Object.Instantiate(enemyPrefab);
             clonedEnemyActor.Initialize(new CombatActor.ActorInfo(new CombatActor.ActorInfo.Templete
             {
-                maxHP = 100 + 100 * difficulty,
-                attack = 100 + 100 * difficulty,
-                defense = 100 + 100 * difficulty,
-                speed = 100 + 60 * difficulty,
-                critical = 10 * (difficulty - 1),
-                criticalResistance = 10 * (difficulty - 1),
-                effectiveness = 10 * (difficulty - 1),
-                effectivenessResistance = 10 * (difficulty - 1),
+                maxHP = 100 + 50 * valueDiff,
+                attack = 50 + 50 * valueDiff,
+                defense = 50 + 50 * valueDiff,
+                speed = 0 + 10 * valueDiff,
+                critical = 10 * (valueDiff - 1) < 0 ? 0 : 10 * (valueDiff - 1),
+                criticalResistance = 10 * (valueDiff - 1) < 0 ? 0 : 10 * (valueDiff - 1),
+                effectiveness = 10 * (valueDiff - 1) < 0 ? 0 : 10 * (valueDiff - 1),
+                effectivenessResistance = 10 * (valueDiff - 1) < 0 ? 0 : 10 * (valueDiff - 1),
                 camp = CombatActor.ActorInfo.Camp.Enemy
             }));
             clonedEnemyActors.Add(clonedEnemyActor);
