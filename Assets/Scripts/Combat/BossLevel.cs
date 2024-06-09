@@ -18,7 +18,7 @@ namespace ProjectMIL.Combat
             clonedBossActor = Object.Instantiate(bossActorPrefab) as BossActor;
             clonedBossActor.Initialize(new CombatActor.ActorInfo(new CombatActor.ActorInfo.Templete
             {
-                maxHP = 1000 + 1000 * valueDiff,
+                maxHP = 3000 + 3000 * valueDiff,
                 attack = 100 + 100 * valueDiff,
                 defense = 100 + 100 * valueDiff,
                 speed = 0 + 60 * valueDiff,

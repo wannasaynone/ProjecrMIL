@@ -53,6 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 2681512427698602050}
   defaultStateName: Idle
+  width: 1
   spriteRenderer: {fileID: 6307126387568804599}
   waveMaterial: {fileID: 2100000, guid: a4f6c045678d4b84abf2943cae444f69, type: 2}
   speedLineEffectRoot: {fileID: 2188739593708584291}
@@ -67,13 +68,16 @@ MonoBehaviour:
   attackInfos:
   - attackName: ComboAttack01
     attackStartNormalizedTime: 0.6
+    blockEndNormalizedTime: 0.8
     attackRange: 2
   - attackName: ComboAttack02
     attackStartNormalizedTime: 0.5
+    blockEndNormalizedTime: 0.75
     attackRange: 2
   - attackName: ComboAttack03
     attackStartNormalizedTime: 0.1
-    attackRange: 2
+    blockEndNormalizedTime: 0.5
+    attackRange: 1.8
 --- !u!1 &1533993621112148331
 GameObject:
   m_ObjectHideFlags: 0

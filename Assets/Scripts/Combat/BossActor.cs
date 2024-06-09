@@ -47,20 +47,7 @@ namespace ProjectMIL.Combat
         {
             if (e.gotBlockedActorInstanceID == GetInstanceID())
             {
-                transform.DOMove(transform.position + Vector3.right * Random.Range(1f, 1.5f), 0.15f).OnComplete(() =>
-                {
-
-                });
-            }
-        }
-
-        private IEnumerator IEDashToPlayer(CombatActor playerActor)
-        {
-            while (Mathf.Abs(playerActor.GetBound() - GetBound()) > attackRange)
-            {
-                float moveSpeed = 5f * Time.deltaTime;
-                transform.position = Vector3.MoveTowards(transform.position, playerActor.transform.position, moveSpeed);
-                yield return null;
+                transform.DOMove(transform.position + Vector3.right * Random.Range(1f, 1.5f), 0.15f);
             }
         }
 
@@ -164,27 +151,22 @@ namespace ProjectMIL.Combat
                     if (timer <= 0f)
                     {
                         currentState = BossState.PrepareAttack;
-                        PlayAnimation("2_Attack_Normal");
-                        StartCoroutine(IEDashToPlayer(playerActor));
-                        timer = 1f;
+                        PlayAnimation("2_Attack_Normal", 0.1f);
                     }
                     break;
                 case BossState.PrepareAttack:
 
-                    if (IsPlaying("2_Attack_Normal") && GetNormalizedTime() >= 0.31f)
+                    if (IsPlaying("2_Attack_Normal") && GetNormalizedTime() >= 0.31f
+                        && Mathf.Abs(playerActor.GetBound() - GetBound()) <= attackRange)
                     {
-                        PauseAnimation();
+                        currentState = BossState.Attack;
+                        ResumeAnimation(1f);
+                    }
+                    else if (Mathf.Abs(playerActor.GetBound() - GetBound()) > attackRange)
+                    {
+                        transform.position = Vector3.MoveTowards(transform.position, playerActor.transform.position, 5f * Time.deltaTime);
                     }
 
-                    if (timer > 0f || Mathf.Abs(playerActor.GetBound() - GetBound()) > attackRange)
-                    {
-                        timer -= Time.deltaTime;
-                        if (timer <= 0f)
-                        {
-                            currentState = BossState.Attack;
-                            ResumeAnimation();
-                        }
-                    }
                     break;
                 case BossState.Attack:
                     if (GetNormalizedTime() >= 0.64f)

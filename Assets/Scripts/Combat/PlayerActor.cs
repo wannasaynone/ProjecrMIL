@@ -89,7 +89,7 @@ namespace ProjectMIL.Combat
             if (e.targetActorInstanceID == GetInstanceID())
             {
                 AttackInfo attackInfo = System.Array.Find(attackInfos, x => x.attackName == currentAttackName);
-                if (!IsPlaying("Idle") && attackInfo != null && GetNormalizedTime() < attackInfo.attackStartNormalizedTime + 0.15f)
+                if (!IsPlaying("Idle") && attackInfo != null && GetNormalizedTime() <= 0.9f)
                 {
                     CombatActor enemyActor = CombatActorContainer.GetActorByInstanceID(e.attackerActorInstanceID);
                     GameObject blockEffect = Instantiate(blockEffectPrefab, (enemyActor.transform.position + transform.position) / 2f + new Vector3(Random.Range(-0.3f, 0.3f), 1f + Random.Range(-0.2f, 0.2f), -5f), Quaternion.identity);
