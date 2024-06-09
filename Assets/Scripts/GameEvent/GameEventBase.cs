@@ -72,6 +72,7 @@ namespace ProjectMIL.GameEvent
     }
     public class OnCombatStartCalled : GameEventBase
     {
+        public int levelType;
         public int difficulty;
         public int maxHP;
         public int attack;

@@ -51,7 +51,7 @@ namespace ProjectMIL.Game
         private bool test_isInCombat = false;
         private void Update()
         {
-            if (Input.GetKeyUp(KeyCode.Space))
+            if (Input.GetKeyUp(KeyCode.A))
             {
                 if (!test_isInCombat)
                 {
@@ -59,6 +59,35 @@ namespace ProjectMIL.Game
                     SaveData clone = player.GetSaveDataClone();
                     EventBus.Publish(new OnCombatStartCalled
                     {
+                        levelType = 0,
+                        difficulty = clone.level - 1,
+                        maxHP = clone.maxHP,
+                        attack = clone.attack,
+                        defense = clone.defense,
+                        speed = clone.speed,
+                        critical = clone.critical,
+                        criticalResistance = clone.criticalResistance,
+                        effectiveness = clone.effectiveness,
+                        effectivenessResistance = clone.effectivenessResistance
+                    });
+                }
+                else
+                {
+                    test_isInCombat = false;
+                    combatManager.EndCombat();
+                    uiManager.gameObject.SetActive(true);
+                }
+            }
+
+            if (Input.GetKeyUp(KeyCode.S))
+            {
+                if (!test_isInCombat)
+                {
+                    test_isInCombat = true;
+                    SaveData clone = player.GetSaveDataClone();
+                    EventBus.Publish(new OnCombatStartCalled
+                    {
+                        levelType = 1,
                         difficulty = clone.level - 1,
                         maxHP = clone.maxHP,
                         attack = clone.attack,

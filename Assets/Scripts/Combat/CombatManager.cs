@@ -17,8 +17,20 @@ namespace ProjectMIL.Combat
         public void StartCombat(OnCombatStartCalled e)
         {
             combatCameraController.ResetAllCombatStageSetting();
-            // currentLevel = new NormalLevel(e.difficulty, enemyPrefab);
-            currentLevel = new BossLevel(e.difficulty, bossPrefab);
+
+            switch (e.levelType)
+            {
+                case 0:
+                    currentLevel = new NormalLevel(e.difficulty, enemyPrefab);
+                    break;
+                case 1:
+                    currentLevel = new BossLevel(e.difficulty, bossPrefab);
+                    break;
+                default:
+                    Debug.LogError("Invalid level type: " + e.levelType);
+                    return;
+            }
+
             currentLevel.Start(e, playerPrefab);
             gameObject.SetActive(true);
             attackCommandHintPanel.StartListening();
