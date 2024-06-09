@@ -356,8 +356,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 300}
-  m_SizeDelta: {x: 520, y: 170}
+  m_AnchoredPosition: {x: 0, y: -190}
+  m_SizeDelta: {x: 600, y: 115}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8760832058621523428
 CanvasRenderer:
@@ -440,10 +440,13 @@ MonoBehaviour:
   hintImageInfos:
   - command: ComboAttack01
     sprite: {fileID: 21300000, guid: 33800ea627b19439fa59fbd2667c8eda, type: 3}
+    arrowSprite: {fileID: 958450625, guid: 50a7ba54cb6c7fe44804b9981c332ce9, type: 3}
   - command: ComboAttack02
     sprite: {fileID: 21300000, guid: 759b2855009260047833083f190c5d43, type: 3}
+    arrowSprite: {fileID: 190806035, guid: 50a7ba54cb6c7fe44804b9981c332ce9, type: 3}
   - command: ComboAttack03
     sprite: {fileID: 21300000, guid: 6cdadcc1a39954748abf7d3d4351e1e6, type: 3}
+    arrowSprite: {fileID: -1971919359, guid: 50a7ba54cb6c7fe44804b9981c332ce9, type: 3}
 --- !u!1 &1746252016966216332
 GameObject:
   m_ObjectHideFlags: 0

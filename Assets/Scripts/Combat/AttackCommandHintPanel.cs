@@ -15,11 +15,13 @@ namespace ProjectMIL.Combat
         {
             public string command;
             public Sprite sprite;
+            public Sprite arrowSprite;
         }
 
         [SerializeField] private HintImageInfo[] hintImageInfos;
 
         private List<Image> cloneHintImage = new List<Image>();
+        private List<Image> cloneArrowImage = new List<Image>();
 
         public void StartListening()
         {
@@ -47,6 +49,7 @@ namespace ProjectMIL.Combat
             if (e.index < cloneHintImage.Count)
             {
                 cloneHintImage[e.index].color = Color.gray;
+                cloneArrowImage[e.index].color = Color.gray;
             }
         }
 
@@ -62,6 +65,7 @@ namespace ProjectMIL.Combat
                 Destroy(image.gameObject);
             }
             cloneHintImage.Clear();
+            cloneArrowImage.Clear();
 
             foreach (var command in commands)
             {
@@ -71,7 +75,10 @@ namespace ProjectMIL.Combat
 
                 var clone = Instantiate(hintImagePrefab, hintImageRoot);
                 clone.sprite = hintImageInfo.sprite;
+                Image arrow = clone.transform.GetChild(0).GetComponent<Image>();
+                arrow.sprite = hintImageInfo.arrowSprite;
                 cloneHintImage.Add(clone);
+                cloneArrowImage.Add(arrow);
             }
 
             gameObject.SetActive(true);
@@ -82,6 +89,7 @@ namespace ProjectMIL.Combat
             for (int i = 0; i < cloneHintImage.Count; i++)
             {
                 cloneHintImage[i].color = Color.white;
+                cloneArrowImage[i].color = Color.white;
             }
         }
     }
