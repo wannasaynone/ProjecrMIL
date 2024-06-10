@@ -58,6 +58,7 @@ MonoBehaviour:
   waveMaterial: {fileID: 2100000, guid: a4f6c045678d4b84abf2943cae444f69, type: 2}
   speedLineEffectRoot: {fileID: 2188739593708584291}
   blockEffectPrefab: {fileID: 7837464029678272537, guid: e4cdb6c5f07dee6448f56fd19143de60, type: 3}
+  blockFailedEffectPrefab: {fileID: 7681821613543600161, guid: 04e1571cb52fbb64e885ea55be58862c, type: 3}
   blockObjectPrefab: {fileID: 6360946427065655025, guid: 36390d4091de7e147a794dcf072710eb, type: 3}
   damageNumberObjectPrefab: {fileID: 3995567873264244200, guid: 66a2e5d7303593140b6bc3227c6efe71, type: 3}
   blackSpriteRenderer: {fileID: 286135825969481621}
@@ -68,15 +69,12 @@ MonoBehaviour:
   attackInfos:
   - attackName: ComboAttack01
     attackStartNormalizedTime: 0.6
-    blockEndNormalizedTime: 0.8
     attackRange: 2
   - attackName: ComboAttack02
     attackStartNormalizedTime: 0.5
-    blockEndNormalizedTime: 0.75
     attackRange: 2
   - attackName: ComboAttack03
     attackStartNormalizedTime: 0.1
-    blockEndNormalizedTime: 0.5
     attackRange: 1.8
 --- !u!1 &1533993621112148331
 GameObject:

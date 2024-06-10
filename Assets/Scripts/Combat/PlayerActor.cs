@@ -20,6 +20,7 @@ namespace ProjectMIL.Combat
         [SerializeField] private Material waveMaterial;
         [SerializeField] private GameObject speedLineEffectRoot;
         [SerializeField] private GameObject blockEffectPrefab;
+        [SerializeField] private GameObject blockFailedEffectPrefab;
         [SerializeField] private DamageNumberObject blockObjectPrefab;
         [SerializeField] private DamageNumberObject damageNumberObjectPrefab;
         [SerializeField] private SpriteRenderer blackSpriteRenderer;
@@ -88,28 +89,39 @@ namespace ProjectMIL.Combat
         {
             if (e.targetActorInstanceID == GetInstanceID())
             {
+                CombatActor enemyActor = CombatActorContainer.GetActorByInstanceID(e.attackerActorInstanceID);
+
                 AttackInfo attackInfo = System.Array.Find(attackInfos, x => x.attackName == currentAttackName);
                 if (!IsPlaying("Idle") && attackInfo != null && GetNormalizedTime() <= 0.9f)
                 {
-                    CombatActor enemyActor = CombatActorContainer.GetActorByInstanceID(e.attackerActorInstanceID);
-                    GameObject blockEffect = Instantiate(blockEffectPrefab, (enemyActor.transform.position + transform.position) / 2f + new Vector3(Random.Range(-0.3f, 0.3f), 1f + Random.Range(-0.2f, 0.2f), -5f), Quaternion.identity);
-                    Destroy(blockEffect, 1f);
-                    DamageNumberObject blockObject = Instantiate(blockObjectPrefab, blockEffect.transform.position + Vector3.up, Quaternion.identity);
-                    blockObject.SetText("BLOCKED!");
-                    blockObject.ShowAnimation(DamageNumberObject.AnimationType.UpFade);
-                    Destroy(blockObject.gameObject, 1f);
-
-                    EventBus.Publish(new OnAnyActorGotBlocked
+                    if (GetNormalizedTime() <= attackInfo.attackStartNormalizedTime + 0.15f)
                     {
-                        blockCasterActorInstanceID = GetInstanceID(),
-                        gotBlockedActorInstanceID = e.attackerActorInstanceID,
-                        hitPosition = e.hitPosition
-                    });
+                        GameObject blockEffect = Instantiate(blockEffectPrefab, (enemyActor.transform.position + transform.position) / 2f + new Vector3(Random.Range(-0.3f, 0.3f), 1f + Random.Range(-0.2f, 0.2f), -5f), Quaternion.identity);
+                        Destroy(blockEffect, 1f);
+                        DamageNumberObject blockObject = Instantiate(blockObjectPrefab, blockEffect.transform.position + Vector3.up, Quaternion.identity);
+                        blockObject.SetText("BLOCKED!");
+                        blockObject.ShowAnimation(DamageNumberObject.AnimationType.UpFade);
+                        Destroy(blockObject.gameObject, 1f);
 
-                    return;
+                        EventBus.Publish(new OnAnyActorGotBlocked
+                        {
+                            blockCasterActorInstanceID = GetInstanceID(),
+                            gotBlockedActorInstanceID = e.attackerActorInstanceID,
+                            hitPosition = e.hitPosition
+                        });
+                    }
+                    else
+                    {
+                        GameObject blockEffect = Instantiate(blockFailedEffectPrefab, (enemyActor.transform.position + transform.position) / 2f + new Vector3(Random.Range(-0.3f, 0.3f), 1f + Random.Range(-0.2f, 0.2f), -5f), Quaternion.identity);
+                        Destroy(blockEffect, 1f);
+
+                        StartCoroutine(IEApplyDamage(e, BlockType.Failed));
+                    }
                 }
-
-                StartCoroutine(IEApplyDamage(e));
+                else
+                {
+                    StartCoroutine(IEApplyDamage(e, BlockType.None));
+                }
             }
         }
 
@@ -118,8 +130,15 @@ namespace ProjectMIL.Combat
             nextAttackName = e.returnAttackName;
         }
 
+        private enum BlockType
+        {
+            None,
+            Perfect,
+            Failed
+        }
+
         private bool isShowingHitEffect = false;
-        private IEnumerator IEApplyDamage(OnDamageCalculated e)
+        private IEnumerator IEApplyDamage(OnDamageCalculated e, BlockType blockType)
         {
             if (isShowingHitEffect || isDead)
                 yield break;
@@ -131,9 +150,14 @@ namespace ProjectMIL.Combat
             if (bossActor != null)
             {
                 isAttackPaused = true;
+                Vector3 knockBackDistance = Vector3.right * Random.Range(1f, 3f);
+                if (blockType == BlockType.Failed) knockBackDistance /= 2f;
                 transform.DOMove(transform.position - Vector3.right * Random.Range(1f, 3f), 0.15f);
-                PlayAnimation("IdleTransition");
+                if (blockType == BlockType.None) PlayAnimation("IdleTransition");
             }
+
+            if (blockType == BlockType.Failed)
+                e.damage /= 2;
 
             EventBus.Publish(new OnAnyActorGotHit
             {
@@ -148,6 +172,8 @@ namespace ProjectMIL.Combat
             damageNumberObject.SetDamage(e.damage);
             damageNumberObject.ShowAnimation(DamageNumberObject.AnimationType.Fall);
 
+            yield return new WaitForSeconds(0.15f);
+
             if (Info.currentHP <= 0)
             {
                 PlayAnimation("Die");
@@ -156,9 +182,9 @@ namespace ProjectMIL.Combat
             else
             {
                 isShowingHitEffect = false;
-                if (isAttackPaused)
+                if (isAttackPaused) isAttackPaused = false;
+                if (blockType == BlockType.None)
                 {
-                    isAttackPaused = false;
                     PlayAnimation("Idle");
                 }
             }
