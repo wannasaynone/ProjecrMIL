@@ -134,7 +134,7 @@ namespace ProjectMIL.Combat
             {
                 yield return new WaitForSecondsRealtime(0.1f);
                 Time.timeScale = 0.01f;
-                yield return new WaitForSecondsRealtime(0.5f);
+                yield return new WaitForSecondsRealtime(0.3f);
                 Time.timeScale = 1f;
             }
         }
