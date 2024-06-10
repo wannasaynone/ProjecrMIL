@@ -36,8 +36,17 @@ namespace ProjectMIL.Combat
 
             if (playerActor != null)
             {
+                CombatActor attackerActor = CombatActorContainer.GetActorByInstanceID(e.attackerActorInstanceID);
+                if (attackerActor is BossActor)
+                {
+                    shakeRoot.DOShakePosition(0.5f, 0.75f, 10, 90f, false, true).OnComplete(() => isShaking = false);
+                }
+                else
+                {
+                    shakeRoot.DOShakePosition(0.5f, 0.25f, 10, 90f, false, true).OnComplete(() => isShaking = false);
+                }
+
                 isShaking = true;
-                shakeRoot.DOShakePosition(0.5f, 0.25f, 10, 90f, false, true).OnComplete(() => isShaking = false);
             }
         }
 

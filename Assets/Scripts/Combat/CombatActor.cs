@@ -8,6 +8,10 @@ namespace ProjectMIL.Combat
         [SerializeField] private Animator characterAnimator;
         [SerializeField] private string defaultStateName = "Idle";
         [SerializeField] private float width = 1f;
+        [SerializeField] private float height = 1f;
+
+        public float Width { get { return width; } }
+        public float Height { get { return height; } }
 
         public float GetBound()
         {

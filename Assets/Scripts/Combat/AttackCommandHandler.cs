@@ -11,6 +11,7 @@ namespace ProjectMIL.Combat
 
         private List<string> commandList;
         private int matchedTimes = 0;
+        private bool isInCooldown = false;
 
         public AttackCommandHandler(string[] attackNames, string returnAttackName)
         {
@@ -34,6 +35,9 @@ namespace ProjectMIL.Combat
 
         private void OnAttackButtonPressed(OnAttackButtonPressed e)
         {
+            if (isInCooldown)
+                return;
+
             if (commandList == null || commandList.Count == 0)
             {
                 if (Random.Range(0f, 100f) <= 30f)
@@ -68,6 +72,8 @@ namespace ProjectMIL.Combat
 
                     if (matchedTimes == commandList.Count)
                     {
+                        isInCooldown = true;
+                        StartResetCooldown();
                         EventBus.Publish(new OnAttackCommandAllMatched
                         {
                             returnAttackName = returnAttackName
@@ -81,6 +87,12 @@ namespace ProjectMIL.Combat
                     matchedTimes = 0;
                 }
             }
+        }
+
+        private async void StartResetCooldown()
+        {
+            await System.Threading.Tasks.Task.Delay(10000);
+            isInCooldown = false;
         }
     }
 }

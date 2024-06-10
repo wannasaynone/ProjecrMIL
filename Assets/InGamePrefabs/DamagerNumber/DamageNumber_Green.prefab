@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6660398198809257088}
   - component: {fileID: 6360946427065655025}
   m_Layer: 0
-  m_Name: DamageNumber_Blue
+  m_Name: DamageNumber_Green
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -10,6 +10,7 @@ namespace ProjectMIL.Combat
         [SerializeField] private float attackRange = 2f;
         [SerializeField] private DamageNumberObject damageNumberObjectPrefab;
         [SerializeField] private GameObject hitEffectPrefab;
+        [SerializeField] private ParticleSystem attackHint;
 
         private SpriteRenderer[] spriteRenderers;
 
@@ -18,10 +19,9 @@ namespace ProjectMIL.Combat
             Idle,
             GotHit,
             PrepareAttack,
+            WaitAttackHint,
             Attack,
             Attacked,
-            PrepareSkill,
-            SkillCasted,
             Dead,
             Pause
         }
@@ -87,6 +87,11 @@ namespace ProjectMIL.Combat
         private IEnumerator IEApplyDamage(OnDamageCalculated e)
         {
             bool isBigAttack = currentState == BossState.Pause;
+
+            if (isBigAttack)
+            {
+                e.damage *= 10;
+            }
 
             DOTween.To(() => GetColor(), SetColor, Color.red, 0.15f);
 
@@ -159,14 +164,24 @@ namespace ProjectMIL.Combat
                     if (IsPlaying("2_Attack_Normal") && GetNormalizedTime() >= 0.31f
                         && Mathf.Abs(playerActor.GetBound() - GetBound()) <= attackRange)
                     {
-                        currentState = BossState.Attack;
-                        ResumeAnimation(1f);
+                        timer = 0.35f;
+                        attackHint.Play();
+                        PauseAnimation();
+                        currentState = BossState.WaitAttackHint;
                     }
                     else if (Mathf.Abs(playerActor.GetBound() - GetBound()) > attackRange)
                     {
                         transform.position = Vector3.MoveTowards(transform.position, playerActor.transform.position, 5f * Time.deltaTime);
                     }
 
+                    break;
+                case BossState.WaitAttackHint:
+                    timer -= Time.deltaTime;
+                    if (timer <= 0f)
+                    {
+                        currentState = BossState.Attack;
+                        ResumeAnimation(2f);
+                    }
                     break;
                 case BossState.Attack:
                     if (GetNormalizedTime() >= 0.64f)
@@ -181,7 +196,7 @@ namespace ProjectMIL.Combat
                             {
                                 attackerActorInstanceID = GetInstanceID(),
                                 targetActorInstanceID = playerActor.GetInstanceID(),
-                                hitPosition = (playerActor.transform.position + transform.position) / 2f + new Vector3(Random.Range(-0.3f, 0.3f), 1f + Random.Range(-0.2f, 0.2f), -5f)
+                                hitPosition = playerActor.transform.position + Vector3.right * playerActor.Width / 2f + Vector3.up * playerActor.Height / 2f
                             });
                         }
                     }
@@ -201,10 +216,6 @@ namespace ProjectMIL.Combat
                             ResumeAnimation();
                         }
                     }
-                    break;
-                case BossState.PrepareSkill:
-                    break;
-                case BossState.SkillCasted:
                     break;
                 case BossState.Dead:
                     break;
