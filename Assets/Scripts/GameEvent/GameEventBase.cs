@@ -87,6 +87,7 @@ namespace ProjectMIL.GameEvent
     {
         public int attackerActorInstanceID;
         public int targetActorInstanceID;
+        public float multiplier;
         public Vector3 hitPosition;
     }
     public class OnDamageCalculated : GameEventBase

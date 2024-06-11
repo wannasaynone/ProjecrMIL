@@ -45,7 +45,7 @@ namespace ProjectMIL.Combat
             if (attacker == null || target == null || attacker.Info.ActorCamp == target.Info.ActorCamp)
                 return;
 
-            float rawDamage = (float)attacker.Info.Attack * 1f; // TODO: handle multipliers
+            float rawDamage = (float)attacker.Info.Attack * cast.multiplier;
             float damage = rawDamage * ((float)attacker.Info.Attack / (float)(attacker.Info.Attack + target.Info.Defense));
 
             float criticalChance = 100f * ((float)attacker.Info.Critical / (float)(attacker.Info.Critical + target.Info.CriticalResistance));

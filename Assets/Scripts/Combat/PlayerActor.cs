@@ -132,7 +132,7 @@ namespace ProjectMIL.Combat
 
             if (enemyActor is BossActor)
             {
-                yield return new WaitForSecondsRealtime(0.1f);
+                yield return new WaitForSecondsRealtime(0.05f);
                 Time.timeScale = 0.01f;
                 yield return new WaitForSecondsRealtime(0.3f);
                 Time.timeScale = 1f;
@@ -350,7 +350,8 @@ namespace ProjectMIL.Combat
                 {
                     attackerActorInstanceID = GetInstanceID(),
                     targetActorInstanceID = enemyActor.GetInstanceID(),
-                    hitPosition = enemyActor.transform.position - Vector3.right * 0.2f
+                    hitPosition = enemyActor.transform.position - Vector3.right * 0.2f,
+                    multiplier = 10f
                 });
             }
 
@@ -402,12 +403,27 @@ namespace ProjectMIL.Combat
                     {
                         CombatActor enemyActor = enemyActors[enemyActorIndex];
 
-                        EventBus.Publish(new OnAttackCasted
+                        OnAttackCasted onAttackCasted = new OnAttackCasted
                         {
                             attackerActorInstanceID = GetInstanceID(),
                             targetActorInstanceID = enemyActor.GetInstanceID(),
-                            hitPosition = enemyActor.transform.position - Vector3.right * enemyActor.Width / 2f + Vector3.up * enemyActor.Height / 2f
-                        });
+                            hitPosition = enemyActor.transform.position - Vector3.right * 0.2f
+                        };
+
+                        switch (currentAttackName)
+                        {
+                            case "ComboAttack01":
+                                onAttackCasted.multiplier = 1.25f;
+                                break;
+                            case "ComboAttack02":
+                                onAttackCasted.multiplier = 1f;
+                                break;
+                            case "ComboAttack03":
+                                onAttackCasted.multiplier = 0.75f;
+                                break;
+                        }
+
+                        EventBus.Publish(onAttackCasted);
                     }
                     isAttacked = true;
                     break;

@@ -102,11 +102,6 @@ namespace ProjectMIL.Combat
 
             bool isBigAttack = aiState == AIState.Pause;
 
-            if (isBigAttack)
-            {
-                e.damage *= 10;
-            }
-
             aiState = AIState.GotHit;
 
             DOTween.To(() => GetColor(), SetColor, Color.red, 0.15f);
@@ -211,7 +206,8 @@ namespace ProjectMIL.Combat
                             {
                                 attackerActorInstanceID = GetInstanceID(),
                                 targetActorInstanceID = playerActor.GetInstanceID(),
-                                hitPosition = playerActor.transform.position + Vector3.right * playerActor.Width / 2f + Vector3.up * playerActor.Height / 2f
+                                hitPosition = playerActor.transform.position + Vector3.right * playerActor.Width / 2f + Vector3.up * playerActor.Height / 2f,
+                                multiplier = 1f
                             });
                         }
                         aiState = AIState.Attacked;

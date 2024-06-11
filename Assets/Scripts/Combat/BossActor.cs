@@ -88,11 +88,6 @@ namespace ProjectMIL.Combat
         {
             bool isBigAttack = currentState == BossState.Pause;
 
-            if (isBigAttack)
-            {
-                e.damage *= 10;
-            }
-
             DOTween.To(() => GetColor(), SetColor, Color.red, 0.15f);
 
             GameObject cloneHitEffect = Instantiate(hitEffectPrefab, e.hitPosition, Quaternion.identity);
@@ -196,7 +191,8 @@ namespace ProjectMIL.Combat
                             {
                                 attackerActorInstanceID = GetInstanceID(),
                                 targetActorInstanceID = playerActor.GetInstanceID(),
-                                hitPosition = playerActor.transform.position + Vector3.right * playerActor.Width / 2f + Vector3.up * playerActor.Height / 2f
+                                hitPosition = playerActor.transform.position + Vector3.right * playerActor.Width / 2f + Vector3.up * playerActor.Height / 2f,
+                                multiplier = 1f
                             });
                         }
                     }
