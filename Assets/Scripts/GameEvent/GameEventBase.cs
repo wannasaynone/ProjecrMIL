@@ -24,6 +24,10 @@ namespace ProjectMIL.GameEvent
         public string description;
         public int addGold;
     }
+    public class OnAdventureEventCreated_EncounterEnemy : GameEventBase
+    {
+        public int difficulty;
+    }
     public class OnPlayerValueUpdated : GameEventBase
     {
         public int level;

@@ -1,3 +1,5 @@
+using System;
+
 namespace ProjectMIL.Adventure
 {
     public class AdventureManager
@@ -44,14 +46,23 @@ namespace ProjectMIL.Adventure
 
         private void OnAdventureButtonPressed(GameEvent.OnAdventureButtonPressed eventToPublish)
         {
-            if (UnityEngine.Random.Range(0, 100) < 50)
+            Action[] actions = new Action[]
             {
-                CreateGoldEvent();
-            }
-            else
+                CreateEncounterEnemy,
+                CreateExpEvent,
+                CreateGoldEvent
+            };
+
+            int index = UnityEngine.Random.Range(0, actions.Length);
+            actions[index]();
+        }
+
+        private void CreateEncounterEnemy()
+        {
+            GameEvent.EventBus.Publish(new GameEvent.OnAdventureEventCreated_EncounterEnemy()
             {
-                CreateExpEvent();
-            }
+                difficulty = 1 // TODO: 要存最後打倒的難度
+            });
         }
 
         private void CreateExpEvent()

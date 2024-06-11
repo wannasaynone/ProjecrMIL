@@ -18,8 +18,12 @@ namespace ProjectMIL.UI
         [SerializeField] private Image characterImage;
         [SerializeField] private Image predictImage;
         [SerializeField] private GameObject chargeVisualRoot;
+        [SerializeField] private RectTransform enemyRoot;
 
         private int referenceValue;
+        private float currentProgressBarWidth = 0f;
+        private float randomAdventureProgressBarFillSpeed;
+        private float randomStartPredictAnimationTime;
 
         private RectTransform adventureProgressBarFillRectTransform;
         private Material adventureProgressBarFillMaterialClone;
@@ -28,20 +32,28 @@ namespace ProjectMIL.UI
         {
             EventBus.Subscribe<OnAdventureEventCreated_Exp>(OnAdventureEventCreated_Exp);
             EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated_Gold);
+            EventBus.Subscribe<OnAdventureEventCreated_EncounterEnemy>(OnAdventureEventCreated_EncounterEnemy);
+        }
+
+        private void OnAdventureEventCreated_EncounterEnemy(OnAdventureEventCreated_EncounterEnemy created)
+        {
+            referenceValue = created.difficulty;
+            adventureRoot.SetActive(true);
+            KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress_EncounterEnemy());
         }
 
         private void OnAdventureEventCreated_Gold(OnAdventureEventCreated_Gold created)
         {
             referenceValue = created.addGold;
             adventureRoot.SetActive(true);
-            KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress());
+            KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress_Normal());
         }
 
         private void OnAdventureEventCreated_Exp(OnAdventureEventCreated_Exp created)
         {
             referenceValue = created.addExp;
             adventureRoot.SetActive(true);
-            KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress());
+            KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress_Normal());
         }
 
         private Color GetPredictImageColor()
@@ -54,7 +66,7 @@ namespace ProjectMIL.UI
             predictImage.color = color;
         }
 
-        private System.Collections.IEnumerator IEShowAdventureProgress()
+        private System.Collections.IEnumerator InitializeAdventureProgressPanel()
         {
             if (adventureProgressBarFillMaterialClone == null)
             {
@@ -68,8 +80,10 @@ namespace ProjectMIL.UI
                 adventureProgressBarFillRectTransform = adventureProgressBarFillImage.GetComponent<RectTransform>();
             }
 
-            float currentWidth = 0f;
-            adventureProgressBarFillRectTransform.sizeDelta = new Vector2(currentWidth, adventureProgressBarFillRectTransform.sizeDelta.y);
+            enemyRoot.gameObject.SetActive(false);
+            enemyRoot.anchoredPosition = new Vector3(325f, -7.5f, 0f);
+            currentProgressBarWidth = 0f;
+            adventureProgressBarFillRectTransform.sizeDelta = new Vector2(currentProgressBarWidth, adventureProgressBarFillRectTransform.sizeDelta.y);
 
             adventurePanelRoot.transform.localScale = Vector3.zero;
 
@@ -81,38 +95,83 @@ namespace ProjectMIL.UI
 
             yield return new WaitForSeconds(0.1f);
 
-            float randomAdventureProgressBarFillSpeed = Random.Range(adventureProgressBarFillSpeed * 1f, adventureProgressBarFillSpeed * 3f);
-            float randomStartPredictAnimationTime = Random.Range(0f, 0.6f);
+            randomAdventureProgressBarFillSpeed = Random.Range(adventureProgressBarFillSpeed * 1f, adventureProgressBarFillSpeed * 3f);
+            randomStartPredictAnimationTime = Random.Range(0f, 0.6f);
+        }
 
-            bool isPredictAnimationShown = false;
+        private System.Collections.IEnumerator IEShowAdventureProgress_EncounterEnemy()
+        {
+            yield return InitializeAdventureProgressPanel();
+            yield return IERunProgressBar(IEOnReachShowPredictProgressBarWidth_EncounterEnemy());
+            EndAnimation();
+        }
+
+        private System.Collections.IEnumerator IEShowAdventureProgress_Normal()
+        {
+            yield return InitializeAdventureProgressPanel();
+            yield return IERunProgressBar(IEOnReachShowPredictProgressBarWidth_ExpAndGold());
+            EndAnimation();
+        }
+
+        private System.Collections.IEnumerator IEOnReachShowPredictProgressBarWidth_ExpAndGold()
+        {
             bool random = Random.Range(0, 100) <= 5;
 
-            while (currentWidth < fullAdventureProgressBarWidth)
+            if (referenceValue >= 1000)
             {
-                currentWidth += randomAdventureProgressBarFillSpeed * Time.deltaTime;
-                adventureProgressBarFillRectTransform.sizeDelta = new Vector2(currentWidth, adventureProgressBarFillRectTransform.sizeDelta.y);
+                yield return IEShowPredictAnimation_Level2();
+                randomAdventureProgressBarFillSpeed = adventureProgressBarFillSpeed * 10f;
+            }
+            else if ((referenceValue < 1000 && referenceValue >= 500) || random)
+            {
+                yield return IEShowPredictAnimation_Level1();
+                randomAdventureProgressBarFillSpeed = adventureProgressBarFillSpeed * 5f;
+            }
+        }
 
-                if (!isPredictAnimationShown && currentWidth >= fullAdventureProgressBarWidth * randomStartPredictAnimationTime && referenceValue >= 1000)
+        private System.Collections.IEnumerator IEOnReachShowPredictProgressBarWidth_EncounterEnemy()
+        {
+            yield return IEShowPredictAnimation_Level1();
+
+            enemyRoot.gameObject.SetActive(true);
+
+            while (Vector3.Distance(enemyRoot.transform.position, characterImage.transform.position) > 0.1f
+                    || enemyRoot.transform.position.x <= characterImage.transform.position.x)
+            {
+                enemyRoot.transform.position = Vector3.MoveTowards(enemyRoot.transform.position, characterImage.transform.position, Time.deltaTime * 2.5f);
+                yield return null;
+            }
+
+            currentProgressBarWidth = fullAdventureProgressBarWidth;
+        }
+
+        private System.Collections.IEnumerator IERunProgressBar(System.Collections.IEnumerator OnReachShowPredictProgressBarWidth)
+        {
+            bool predictReached = false;
+
+            while (currentProgressBarWidth < fullAdventureProgressBarWidth)
+            {
+                currentProgressBarWidth += randomAdventureProgressBarFillSpeed * Time.deltaTime;
+                adventureProgressBarFillRectTransform.sizeDelta = new Vector2(currentProgressBarWidth, adventureProgressBarFillRectTransform.sizeDelta.y);
+
+                if (currentProgressBarWidth >= fullAdventureProgressBarWidth * randomStartPredictAnimationTime)
                 {
-                    yield return KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowPredictAnimation_Level2());
-                    isPredictAnimationShown = true;
-                    randomAdventureProgressBarFillSpeed = adventureProgressBarFillSpeed * 10f;
-                }
-                else if (!isPredictAnimationShown && currentWidth >= fullAdventureProgressBarWidth * randomStartPredictAnimationTime &&
-                        ((referenceValue < 1000 && referenceValue >= 500) || random))
-                {
-                    yield return KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowPredictAnimation_Level1());
-                    isPredictAnimationShown = true;
-                    randomAdventureProgressBarFillSpeed = adventureProgressBarFillSpeed * 5f;
+                    if (!predictReached)
+                    {
+                        predictReached = true;
+                        yield return OnReachShowPredictProgressBarWidth;
+                    }
                 }
 
                 yield return null;
             }
+        }
 
+        private void EndAnimation()
+        {
             adventureProgressBarFillRectTransform.sizeDelta = new Vector2(fullAdventureProgressBarWidth, adventureProgressBarFillRectTransform.sizeDelta.y);
 
             adventureRoot.SetActive(false);
-
             chargeVisualRoot.SetActive(false);
             characterImage.transform.localScale = Vector3.one;
 
