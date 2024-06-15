@@ -15,11 +15,22 @@ namespace ProjectMIL.UI
         [SerializeField] private TMPro.TextMeshProUGUI levelText;
         [SerializeField] private Transform backLightRoot;
         [SerializeField] private Transform[] starRoots;
-        [SerializeField] private GameObject levelUpRewardRoot;
+        [SerializeField] private CanvasGroup addStatsPanel;
         [SerializeField] private GameObject tapToContinueRoot;
         [SerializeField] private UnityEvent onEnabled; // for workaround with ParticleImage
         [SerializeField] private UnityEvent onParticleCalled; // for workaround with ParticleImage
         [SerializeField] private Button rootButton;
+
+        [System.Serializable]
+        private class AddStatsGroup
+        {
+            public string statsName;
+            public TMPro.TextMeshProUGUI beforeText;
+            public TMPro.TextMeshProUGUI afterText;
+            public GameObject arrowRoot;
+        }
+
+        [SerializeField] private AddStatsGroup[] addStatsGroups;
 
         private OnLevelUpdated tempEvent;
 
@@ -38,13 +49,51 @@ namespace ProjectMIL.UI
             {
                 starRoots[i].gameObject.SetActive(false);
             }
-            levelUpRewardRoot.SetActive(false);
+            addStatsPanel.gameObject.SetActive(false);
             tapToContinueRoot.SetActive(false);
 
             levelText.text = e.oldLevel.ToString();
 
+            for (int i = 0; i < addStatsGroups.Length; i++)
+            {
+                switch (addStatsGroups[i].statsName)
+                {
+                    case "MaxHP":
+                        SetUpAddStatsObject(addStatsGroups[i], e.beforeHP, e.afterHP);
+                        break;
+                    case "Defense":
+                        SetUpAddStatsObject(addStatsGroups[i], e.beforeDefense, e.afterDefense);
+                        break;
+                    case "Attack":
+                        SetUpAddStatsObject(addStatsGroups[i], e.beforeAttack, e.afterAttack);
+                        break;
+                    case "Speed":
+                        SetUpAddStatsObject(addStatsGroups[i], e.beforeSpeed, e.afterSpeed);
+                        break;
+                    case "Critical":
+                        SetUpAddStatsObject(addStatsGroups[i], e.beforeCritical, e.afterCritical);
+                        break;
+                    case "CriticalResistance":
+                        SetUpAddStatsObject(addStatsGroups[i], e.beforeCriticalResistance, e.afterCriticalResistance);
+                        break;
+                    case "Effectiveness":
+                        SetUpAddStatsObject(addStatsGroups[i], e.beforeEffectiveness, e.afterEffectiveness);
+                        break;
+                    case "EffectivenessResistance":
+                        SetUpAddStatsObject(addStatsGroups[i], e.beforeEffectivenessResistance, e.afterEffectivenessResistance);
+                        break;
+                }
+            }
+
             tempEvent = e;
             GeneralCoroutineRunner.Instance.StartCoroutine(IEShowLevelUp());
+        }
+
+        private void SetUpAddStatsObject(AddStatsGroup addStatsGroup, int beforeValue, int afterValue)
+        {
+            addStatsGroup.beforeText.text = beforeValue.ToString();
+            addStatsGroup.afterText.text = afterValue > beforeValue ? afterValue.ToString() : "";
+            addStatsGroup.arrowRoot.SetActive(afterValue > beforeValue);
         }
 
         private IEnumerator IEShowLevelUp()
@@ -87,9 +136,13 @@ namespace ProjectMIL.UI
             GeneralCoroutineRunner.Instance.StartCoroutine(IEDoStarEndlessPositionAnimation());
             levelText.transform.DOScale(Vector3.one, 0.15f);
             levelBadgeRoot.DOScale(Vector3.one, 0.15f);
-            levelUpRewardRoot.transform.localScale = Vector3.zero;
-            levelUpRewardRoot.SetActive(true);
-            levelUpRewardRoot.transform.DOScale(Vector3.one, 0.15f).SetEase(Ease.Linear);
+            addStatsPanel.alpha = 0f;
+            addStatsPanel.gameObject.SetActive(true);
+            addStatsPanel.transform.localPosition = new Vector3(0f, 140f, 0f);
+
+            addStatsPanel.DOFade(1f, 0.1f);
+            addStatsPanel.transform.DOLocalMoveY(-70f, 0.1f).SetEase(Ease.Linear);
+
             tapToContinueRoot.transform.localScale = Vector3.zero;
             tapToContinueRoot.SetActive(true);
             tapToContinueRoot.transform.DOScale(Vector3.one, 0.15f).SetEase(Ease.Linear);

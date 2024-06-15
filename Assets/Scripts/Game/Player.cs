@@ -117,6 +117,17 @@ namespace ProjectMIL.Game
         private void OnTryLevelUpCalled(OnTryLevelUpCalled e)
         {
             int oldLevel = saveData.level;
+            int[] fields =
+{
+                saveData.maxHP,
+                saveData.defense,
+                saveData.attack,
+                saveData.speed,
+                saveData.critical,
+                saveData.criticalResistance,
+                saveData.effectiveness,
+                saveData.effectivenessResistance
+            };
 
             for (int i = 0; i < e.tryAddLevel; i++)
             {
@@ -138,7 +149,23 @@ namespace ProjectMIL.Game
                     oldLevel = oldLevel,
                     currentLevel = saveData.level,
                     currentExp = saveData.exp,
-                    requireExp = GetRequireWithCurrentLevel()
+                    requireExp = GetRequireWithCurrentLevel(),
+                    beforeHP = fields[0],
+                    beforeDefense = fields[1],
+                    beforeAttack = fields[2],
+                    beforeSpeed = fields[3],
+                    beforeCritical = fields[4],
+                    beforeCriticalResistance = fields[5],
+                    beforeEffectiveness = fields[6],
+                    beforeEffectivenessResistance = fields[7],
+                    afterHP = saveData.maxHP,
+                    afterDefense = saveData.defense,
+                    afterAttack = saveData.attack,
+                    afterSpeed = saveData.speed,
+                    afterCritical = saveData.critical,
+                    afterCriticalResistance = saveData.criticalResistance,
+                    afterEffectiveness = saveData.effectiveness,
+                    afterEffectivenessResistance = saveData.effectivenessResistance
                 });
             }
         }

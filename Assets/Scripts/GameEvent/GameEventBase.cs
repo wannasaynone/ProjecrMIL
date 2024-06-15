@@ -69,6 +69,22 @@ namespace ProjectMIL.GameEvent
         public int currentLevel;
         public int currentExp;
         public int requireExp;
+        public int beforeHP;
+        public int beforeAttack;
+        public int beforeDefense;
+        public int beforeSpeed;
+        public int beforeCritical;
+        public int beforeCriticalResistance;
+        public int beforeEffectiveness;
+        public int beforeEffectivenessResistance;
+        public int afterHP;
+        public int afterAttack;
+        public int afterDefense;
+        public int afterSpeed;
+        public int afterCritical;
+        public int afterCriticalResistance;
+        public int afterEffectiveness;
+        public int afterEffectivenessResistance;
     }
     public class OnAttackButtonPressed : GameEventBase
     {
