@@ -19,6 +19,7 @@ namespace ProjectMIL.UI
         [SerializeField] private Image predictImage;
         [SerializeField] private GameObject chargeVisualRoot;
         [SerializeField] private RectTransform enemyRoot;
+        [SerializeField] private ParticleSystem enemyLandingEffect;
 
         private int referenceValue;
         private float currentProgressBarWidth = 0f;
@@ -133,14 +134,31 @@ namespace ProjectMIL.UI
         {
             yield return IEShowPredictAnimation_Level1();
 
+            enemyRoot.transform.localScale = Vector3.zero;
+            enemyRoot.DOLocalMoveY(90f, 0.1f);
+            enemyRoot.DOScale(Vector3.one * 1.2f, 0.1f);
             enemyRoot.gameObject.SetActive(true);
 
-            while (Vector3.Distance(enemyRoot.transform.position, characterImage.transform.position) > 0.1f
-                    || enemyRoot.transform.position.x <= characterImage.transform.position.x)
-            {
-                enemyRoot.transform.position = Vector3.MoveTowards(enemyRoot.transform.position, characterImage.transform.position, Time.deltaTime * 2.5f);
-                yield return null;
-            }
+            yield return new WaitForSeconds(0.1f);
+
+            enemyRoot.DOLocalMoveY(100f, 0.2f);
+
+            yield return new WaitForSeconds(0.2f);
+
+            enemyRoot.transform.DOLocalMoveY(12.5f, 0.1f);
+            enemyRoot.DOScale(Vector3.one, 0.1f);
+
+            yield return new WaitForSeconds(0.1f);
+
+            enemyLandingEffect.Play();
+
+            yield return new WaitForSeconds(0.5f);
+
+            enemyRoot.DOJump((characterImage.transform.position + enemyRoot.position) / 2f, 0.5f, 1, 0.25f).SetEase(Ease.Linear);
+            yield return new WaitForSeconds(0.5f);
+
+            enemyRoot.DOJump(characterImage.transform.position, 1.5f, 1, 0.35f).SetEase(Ease.Linear);
+            yield return new WaitForSeconds(0.35f);
 
             currentProgressBarWidth = fullAdventureProgressBarWidth;
         }

@@ -14,7 +14,7 @@ namespace ProjectMIL.Combat
             this.enemyPrefab = enemyPrefab;
         }
 
-        protected override void OnStarted()
+        protected override void OnCreated()
         {
             int spawnCount = Random.Range(15, 31);
             Vector3 lastSpawnPosition = new Vector3(2f, -1f, 0);
@@ -43,11 +43,46 @@ namespace ProjectMIL.Combat
                 effectivenessResistance = 10 * (valueDiff - 1) < 0 ? 0 : 10 * (valueDiff - 1),
                 camp = CombatActor.ActorInfo.Camp.Enemy
             }));
+            clonedEnemyActor.Pause();
             clonedEnemyActors.Add(clonedEnemyActor);
+        }
+
+        protected override void OnStarted()
+        {
+            EventBus.Subscribe<OnAnyActorDied>(OnAnyActorDied);
+            for (int i = 0; i < clonedEnemyActors.Count; i++)
+            {
+                clonedEnemyActors[i].Resume();
+            }
+        }
+
+        private int diedEnemyCount = 0;
+        private void OnAnyActorDied(OnAnyActorDied e)
+        {
+            if (e.actorInstanceID == ClonedPlayerActor.GetInstanceID())
+            {
+                End();
+            }
+            else
+            {
+                for (int i = 0; i < clonedEnemyActors.Count; i++)
+                {
+                    if (e.actorInstanceID == clonedEnemyActors[i].GetInstanceID())
+                    {
+                        diedEnemyCount++;
+                        break;
+                    }
+                }
+                if (diedEnemyCount == clonedEnemyActors.Count)
+                {
+                    End();
+                }
+            }
         }
 
         protected override void OnStartToEnd()
         {
+            EventBus.Unsubscribe<OnAnyActorDied>(OnAnyActorDied);
             for (int i = 0; i < clonedEnemyActors.Count; i++)
             {
                 clonedEnemyActors[i].Dispose();

@@ -128,6 +128,13 @@ namespace ProjectMIL.Combat
             {
                 currentState = BossState.Dead;
                 PlayAnimation("4_Death");
+
+                yield return new WaitForSeconds(1f);
+
+                EventBus.Publish(new OnAnyActorDied
+                {
+                    actorInstanceID = GetInstanceID()
+                });
             }
             else if (isBigAttack)
             {
@@ -218,9 +225,14 @@ namespace ProjectMIL.Combat
             }
         }
 
-        protected override void OnPaused()
+        public override void Pause()
         {
             currentState = BossState.Pause;
+        }
+
+        public override void Resume()
+        {
+            currentState = BossState.Idle;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using ProjectMIL.GameEvent;
 using UnityEngine;
 
@@ -8,18 +9,19 @@ namespace ProjectMIL.Combat
         protected readonly int difficulty;
 
         private DamageHandler damageHandler;
-        private CombatActor clonedPlayerActor;
+        protected CombatActor ClonedPlayerActor { get; private set; }
+        private Action onEnded;
 
         public LevelBase(int difficulty)
         {
             this.difficulty = difficulty;
         }
 
-        public void Start(OnCombatStartCalled e, CombatActor playerPrefab)
+        public void Create(OnCombatStartCalled e, CombatActor playerPrefab)
         {
-            clonedPlayerActor = Object.Instantiate(playerPrefab);
-            clonedPlayerActor.transform.position = new Vector3(-2f, -1f, 0);
-            clonedPlayerActor.Initialize(new CombatActor.ActorInfo(new CombatActor.ActorInfo.Templete
+            ClonedPlayerActor = UnityEngine.Object.Instantiate(playerPrefab);
+            ClonedPlayerActor.transform.position = new Vector3(-2f, -1f, 0);
+            ClonedPlayerActor.Initialize(new CombatActor.ActorInfo(new CombatActor.ActorInfo.Templete
             {
                 maxHP = e.maxHP,
                 attack = e.attack,
@@ -34,19 +36,28 @@ namespace ProjectMIL.Combat
             }));
             damageHandler = new DamageHandler();
 
+            OnCreated();
+        }
+
+        public void Start(Action onEnded)
+        {
+            this.onEnded = onEnded;
             OnStarted();
         }
 
-        public void End()
+        protected void End()
         {
             OnStartToEnd();
 
-            clonedPlayerActor.Dispose();
+            ClonedPlayerActor.Dispose();
             damageHandler.Dispose();
-            System.GC.SuppressFinalize(damageHandler);
+            GC.SuppressFinalize(damageHandler);
+
+            onEnded?.Invoke();
         }
 
         protected abstract void OnStarted();
+        protected abstract void OnCreated();
         protected abstract void OnStartToEnd();
     }
 }

@@ -1,3 +1,4 @@
+using ProjectMIL.GameEvent;
 using UnityEngine;
 
 namespace ProjectMIL.Combat
@@ -12,7 +13,7 @@ namespace ProjectMIL.Combat
             this.bossActorPrefab = bossActorPrefab;
         }
 
-        protected override void OnStarted()
+        protected override void OnCreated()
         {
             int valueDiff = difficulty < 0 ? 0 : difficulty;
             clonedBossActor = Object.Instantiate(bossActorPrefab) as BossActor;
@@ -29,10 +30,27 @@ namespace ProjectMIL.Combat
                 camp = CombatActor.ActorInfo.Camp.Enemy
             }));
             clonedBossActor.transform.position = new Vector3(2f, -1f, 0);
+            clonedBossActor.Pause();
+        }
+
+        protected override void OnStarted()
+        {
+            EventBus.Subscribe<OnAnyActorDied>(OnAnyActorDied);
+            clonedBossActor.Resume();
+        }
+
+        private void OnAnyActorDied(OnAnyActorDied e)
+        {
+            if (e.actorInstanceID == clonedBossActor.GetInstanceID()
+                || e.actorInstanceID == ClonedPlayerActor.GetInstanceID())
+            {
+                End();
+            }
         }
 
         protected override void OnStartToEnd()
         {
+            EventBus.Unsubscribe<OnAnyActorDied>(OnAnyActorDied);
             clonedBossActor.Dispose();
             clonedBossActor = null;
         }

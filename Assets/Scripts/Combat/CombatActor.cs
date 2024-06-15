@@ -111,11 +111,9 @@ namespace ProjectMIL.Combat
             return characterAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
         }
 
-        public void Pause()
-        {
-            PauseAnimation();
-            OnPaused();
-        }
+        public abstract void Pause();
+
+        public abstract void Resume();
 
         public void Initialize(ActorInfo actorInfo)
         {
@@ -133,6 +131,5 @@ namespace ProjectMIL.Combat
 
         protected abstract void OnInitialized();
         protected abstract void OnDisposed();
-        protected abstract void OnPaused();
     }
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace ProjectMIL.Adventure
 {
     public class AdventureManager
@@ -46,7 +44,7 @@ namespace ProjectMIL.Adventure
 
         private void OnAdventureButtonPressed(GameEvent.OnAdventureButtonPressed eventToPublish)
         {
-            Action[] actions = new Action[]
+            System.Action[] actions = new System.Action[]
             {
                 CreateEncounterEnemy,
                 CreateExpEvent,

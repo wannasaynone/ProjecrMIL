@@ -6,7 +6,7 @@ namespace ProjectMIL.Combat
 {
     public static class CombatActorContainer
     {
-        public static List<CombatActor> actors = new List<CombatActor>();
+        private static List<CombatActor> actors = new List<CombatActor>();
 
         public static void AddActor(CombatActor actor)
         {

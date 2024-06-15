@@ -103,6 +103,7 @@ namespace ProjectMIL.GameEvent
         public int effectiveness;
         public int effectivenessResistance;
     }
+    public class OnCombatEndCalled : GameEventBase { }
     public class OnAttackCasted : GameEventBase
     {
         public int attackerActorInstanceID;
@@ -129,6 +130,10 @@ namespace ProjectMIL.GameEvent
         public int blockCasterActorInstanceID;
         public int gotBlockedActorInstanceID;
         public Vector3 hitPosition;
+    }
+    public class OnAnyActorDied : GameEventBase
+    {
+        public int actorInstanceID;
     }
     public class OnAttackCommandsCreated : GameEventBase
     {

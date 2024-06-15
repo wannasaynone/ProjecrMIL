@@ -188,6 +188,7 @@ namespace ProjectMIL.Combat
             DamageNumberObject damageNumberObject = Instantiate(damageNumberObjectPrefab, transform.position - Vector3.forward * 5f + Vector3.up, Quaternion.identity);
             damageNumberObject.SetDamage(e.damage);
             damageNumberObject.ShowAnimation(DamageNumberObject.AnimationType.Fall);
+            Destroy(damageNumberObject.gameObject, 1f);
 
             yield return new WaitForSeconds(0.15f);
 
@@ -195,6 +196,13 @@ namespace ProjectMIL.Combat
             {
                 PlayAnimation("Die");
                 isDead = true;
+
+                yield return new WaitForSeconds(1f);
+
+                EventBus.Publish(new OnAnyActorDied
+                {
+                    actorInstanceID = GetInstanceID()
+                });
             }
             else
             {
@@ -431,9 +439,14 @@ namespace ProjectMIL.Combat
             }
         }
 
-        protected override void OnPaused()
+        public override void Pause()
         {
             EventBus.Unsubscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
+        }
+
+        public override void Resume()
+        {
+            EventBus.Subscribe<OnAttackButtonPressed>(OnAttackButtonPressed);
         }
     }
 }

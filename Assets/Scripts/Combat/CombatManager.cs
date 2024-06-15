@@ -6,6 +6,7 @@ namespace ProjectMIL.Combat
 {
     public class CombatManager : MonoBehaviour
     {
+        [SerializeField] private GameObject inputButtonRoot;
         [SerializeField] private CombatCameraController combatCameraController;
         [SerializeField] private AttackCommandHintPanel attackCommandHintPanel;
         [SerializeField] private CombatActor playerPrefab;
@@ -14,7 +15,7 @@ namespace ProjectMIL.Combat
 
         private LevelBase currentLevel;
 
-        public void StartCombat(OnCombatStartCalled e)
+        public void CreateLevel(OnCombatStartCalled e)
         {
             combatCameraController.ResetAllCombatStageSetting();
 
@@ -31,17 +32,31 @@ namespace ProjectMIL.Combat
                     return;
             }
 
-            currentLevel.Start(e, playerPrefab);
+            currentLevel.Create(e, playerPrefab);
+            inputButtonRoot.SetActive(false);
             gameObject.SetActive(true);
             attackCommandHintPanel.StartListening();
         }
 
-        public void EndCombat()
+        public void StartCurrentLevel()
         {
-            currentLevel.End();
-            gameObject.SetActive(false);
+            currentLevel.Start(OnLevelEnded);
+            inputButtonRoot.SetActive(true);
+        }
+
+        private void OnLevelEnded()
+        {
+            // TODO: Show result
+            currentLevel = null;
+            inputButtonRoot.SetActive(false);
             attackCommandHintPanel.gameObject.SetActive(false);
             attackCommandHintPanel.StopListening();
+            EventBus.Publish(new OnCombatEndCalled());
+        }
+
+        public void EndCombat()
+        {
+            gameObject.SetActive(false);
         }
     }
 }
