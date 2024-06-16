@@ -10,7 +10,7 @@ namespace ProjectMIL.Combat
 
         private DamageHandler damageHandler;
         protected CombatActor ClonedPlayerActor { get; private set; }
-        private Action onEnded;
+        private Action<bool> onEnded;
 
         public LevelBase(int difficulty)
         {
@@ -39,7 +39,7 @@ namespace ProjectMIL.Combat
             OnCreated();
         }
 
-        public void Start(Action onEnded)
+        public void Start(Action<bool> onEnded)
         {
             this.onEnded = onEnded;
             OnStarted();
@@ -49,11 +49,12 @@ namespace ProjectMIL.Combat
         {
             OnStartToEnd();
 
+            bool isWin = ClonedPlayerActor.Info.currentHP > 0;
             ClonedPlayerActor.Dispose();
             damageHandler.Dispose();
             GC.SuppressFinalize(damageHandler);
 
-            onEnded?.Invoke();
+            onEnded?.Invoke(isWin);
         }
 
         protected abstract void OnStarted();

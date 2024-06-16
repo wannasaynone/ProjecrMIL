@@ -12,6 +12,8 @@ namespace ProjectMIL.Combat
         [SerializeField] private CombatActor playerPrefab;
         [SerializeField] private CombatActor enemyPrefab;
         [SerializeField] private CombatActor bossPrefab;
+        [SerializeField] private CombatResultPanel winPanel;
+        [SerializeField] private CombatResultPanel losePanel;
 
         private LevelBase currentLevel;
 
@@ -44,13 +46,24 @@ namespace ProjectMIL.Combat
             inputButtonRoot.SetActive(true);
         }
 
-        private void OnLevelEnded()
+        private void OnLevelEnded(bool isWin)
         {
-            // TODO: Show result
-            currentLevel = null;
             inputButtonRoot.SetActive(false);
             attackCommandHintPanel.gameObject.SetActive(false);
             attackCommandHintPanel.StopListening();
+            if (isWin)
+            {
+                winPanel.ShowWith(OnPanelClosed);
+            }
+            else
+            {
+                losePanel.ShowWith(OnPanelClosed);
+            }
+        }
+
+        private void OnPanelClosed()
+        {
+            currentLevel = null;
             EventBus.Publish(new OnCombatEndCalled());
         }
 

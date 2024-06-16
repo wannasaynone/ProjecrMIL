@@ -262,11 +262,11 @@ namespace ProjectMIL.Combat
             {
                 float moveSpeed = 25f * Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, enemyActor.transform.position, moveSpeed);
-                speedLineEffectRoot.SetActive(true);
+                // speedLineEffectRoot.SetActive(true);
                 yield return null;
             }
 
-            speedLineEffectRoot.SetActive(false);
+            // speedLineEffectRoot.SetActive(false);
             ResumeAnimation(2f);
         }
 
