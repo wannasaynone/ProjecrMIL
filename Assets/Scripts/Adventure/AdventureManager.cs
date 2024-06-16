@@ -59,7 +59,7 @@ namespace ProjectMIL.Adventure
         {
             GameEvent.EventBus.Publish(new GameEvent.OnAdventureEventCreated_EncounterEnemy()
             {
-                difficulty = 1 // TODO: 要存最後打倒的難度
+                difficulty = 0 // TODO: 要存最後打倒的難度
             });
         }
 
