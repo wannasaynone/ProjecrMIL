@@ -21,7 +21,8 @@ namespace ProjectMIL.Game
 
         private Player player;
 
-        private int difficulty = -1;
+        private OnAdventureEventCreated_EncounterEnemy tempEncounterEnemyEvent = null;
+        private OnAdventureEventCreated_EncounterBoss tempEncounterBossEvent = null;
 
         private void Awake()
         {
@@ -47,19 +48,25 @@ namespace ProjectMIL.Game
             player.Initail();
 
             EventBus.Subscribe<OnAdventureEventCreated_EncounterEnemy>(OnAdventureEventCreated_EncounterEnemy);
+            EventBus.Subscribe<OnAdventureEventCreated_EncounterBoss>(OnAdventureEventCreated_EncounterBoss);
             EventBus.Subscribe<OnAdventureProgressBarAnimationEnded>(OnAdventureProgressBarAnimationEnded);
             EventBus.Subscribe<OnCombatStartCalled>(OnCombatStartCalled);
             EventBus.Subscribe<OnCombatEndCalled>(OnCombatEndCalled);
         }
 
+        private void OnAdventureEventCreated_EncounterBoss(OnAdventureEventCreated_EncounterBoss e)
+        {
+            tempEncounterBossEvent = e;
+        }
+
         private void OnAdventureEventCreated_EncounterEnemy(OnAdventureEventCreated_EncounterEnemy e)
         {
-            difficulty = e.difficulty;
+            tempEncounterEnemyEvent = e;
         }
 
         private void OnAdventureProgressBarAnimationEnded(OnAdventureProgressBarAnimationEnded e)
         {
-            if (difficulty == -1)
+            if (tempEncounterEnemyEvent == null && tempEncounterBossEvent == null)
             {
                 return;
             }
@@ -67,8 +74,8 @@ namespace ProjectMIL.Game
             SaveData saveData = player.GetSaveDataClone();
             EventBus.Publish(new OnCombatStartCalled
             {
-                levelType = 0,
-                difficulty = difficulty,
+                levelType = tempEncounterEnemyEvent != null ? GameEvent.OnCombatStartCalled.LevelType.Normal : GameEvent.OnCombatStartCalled.LevelType.Boss,
+                difficulty = tempEncounterEnemyEvent != null ? tempEncounterEnemyEvent.difficulty : tempEncounterBossEvent.difficulty,
                 maxHP = saveData.maxHP,
                 attack = saveData.attack,
                 defense = saveData.defense,
@@ -79,7 +86,8 @@ namespace ProjectMIL.Game
                 effectivenessResistance = saveData.effectivenessResistance
             });
 
-            difficulty = -1;
+            tempEncounterEnemyEvent = null;
+            tempEncounterBossEvent = null;
         }
 
         private void OnCombatStartCalled(OnCombatStartCalled e)

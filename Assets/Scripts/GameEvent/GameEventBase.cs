@@ -28,6 +28,10 @@ namespace ProjectMIL.GameEvent
     {
         public int difficulty;
     }
+    public class OnAdventureEventCreated_EncounterBoss : GameEventBase
+    {
+        public int difficulty;
+    }
     public class OnPlayerValueUpdated : GameEventBase
     {
         public int level;
@@ -92,7 +96,12 @@ namespace ProjectMIL.GameEvent
     }
     public class OnCombatStartCalled : GameEventBase
     {
-        public int levelType;
+        public enum LevelType
+        {
+            Normal,
+            Boss
+        }
+        public LevelType levelType;
         public int difficulty;
         public int maxHP;
         public int attack;

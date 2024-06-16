@@ -23,14 +23,14 @@ namespace ProjectMIL.Combat
 
             switch (e.levelType)
             {
-                case 0:
+                case OnCombatStartCalled.LevelType.Normal:
                     currentLevel = new NormalLevel(e.difficulty, enemyPrefab);
                     break;
-                case 1:
+                case OnCombatStartCalled.LevelType.Boss:
                     currentLevel = new BossLevel(e.difficulty, bossPrefab);
                     break;
                 default:
-                    Debug.LogError("Invalid level type: " + e.levelType);
+                    Debug.LogError("Invalid level type: " + e.levelType.ToString());
                     return;
             }
 

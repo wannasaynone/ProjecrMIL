@@ -34,6 +34,7 @@ namespace ProjectMIL.UI
             EventBus.Subscribe<OnAdventureEventCreated_Exp>(OnAdventureEventCreated_Exp);
             EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated_Gold);
             EventBus.Subscribe<OnAdventureEventCreated_EncounterEnemy>(OnAdventureEventCreated_EncounterEnemy);
+            EventBus.Subscribe<OnAdventureEventCreated_EncounterBoss>(OnAdventureEventCreated_EncounterBoss);
         }
 
         private void OnAdventureEventCreated_EncounterEnemy(OnAdventureEventCreated_EncounterEnemy created)
@@ -41,6 +42,13 @@ namespace ProjectMIL.UI
             referenceValue = created.difficulty;
             adventureRoot.SetActive(true);
             KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress_EncounterEnemy());
+        }
+
+        private void OnAdventureEventCreated_EncounterBoss(OnAdventureEventCreated_EncounterBoss created)
+        {
+            referenceValue = created.difficulty;
+            adventureRoot.SetActive(true);
+            KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress_EncounterEnemy()); // TODO: Change to EncounterBoss
         }
 
         private void OnAdventureEventCreated_Gold(OnAdventureEventCreated_Gold created)
