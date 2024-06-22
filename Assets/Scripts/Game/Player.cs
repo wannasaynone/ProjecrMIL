@@ -19,7 +19,6 @@ namespace ProjectMIL.Game
             return new SaveData
             {
                 level = saveData.level,
-                exp = saveData.exp,
                 gold = saveData.gold,
                 attack = saveData.attack,
                 defense = saveData.defense,
@@ -40,7 +39,6 @@ namespace ProjectMIL.Game
             saveData = new SaveData
             {
                 level = PlayerPrefs.GetInt("PLYAYER_SAVE_LEVEL", 1), // for now, we will use PlayerPrefs to save the level value
-                exp = PlayerPrefs.GetInt("PLYAYER_SAVE_EXP", 0), // for now, we will use PlayerPrefs to save the exp value
                 gold = PlayerPrefs.GetInt("PLYAYER_SAVE_GOLD", 0), // for now, we will use PlayerPrefs to save the gold value
                 maxHP = PlayerPrefs.GetInt("PLYAYER_SAVE_MAXHP", 100), // for now, we will use PlayerPrefs to save the maxHP value
                 attack = PlayerPrefs.GetInt("PLYAYER_SAVE_ATTACK", 100), // for now, we will use PlayerPrefs to save the attack value
@@ -52,14 +50,12 @@ namespace ProjectMIL.Game
                 effectivenessResistance = PlayerPrefs.GetInt("PLYAYER_SAVE_EFFECTIVENESSRESISTANCE", 0), // for now, we will use PlayerPrefs to save the effectivenessResistance value
             };
 
-            EventBus.Subscribe<OnAdventureEventCreated_Exp>(OnAdventureEventCreated_Exp);
             EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated_Gold);
             EventBus.Subscribe<OnTryLevelUpCalled>(OnTryLevelUpCalled);
 
             EventBus.Publish(new OnPlayerValueUpdated
             {
                 level = saveData.level,
-                exp = saveData.exp,
                 requireExp = GetRequireWithCurrentLevel(),
                 gold = saveData.gold,
                 attack = saveData.attack,
@@ -86,21 +82,6 @@ namespace ProjectMIL.Game
             return 0;
         }
 
-        private void OnAdventureEventCreated_Exp(OnAdventureEventCreated_Exp created)
-        {
-            int oldValue = saveData.exp;
-            saveData.exp += created.addExp;
-            SaveCurrent();
-
-            EventBus.Publish(new OnExpValueUpdated
-            {
-                oldValue = oldValue,
-                addValue = created.addExp,
-                newValue = saveData.exp,
-                level = saveData.level,
-                requireExp = GetRequireWithCurrentLevel()
-            });
-        }
 
         private void OnAdventureEventCreated_Gold(OnAdventureEventCreated_Gold created)
         {
@@ -110,7 +91,9 @@ namespace ProjectMIL.Game
             {
                 oldValue = saveData.gold - created.addGold,
                 addValue = created.addGold,
-                newValue = saveData.gold
+                newValue = saveData.gold,
+                requireExp = GetRequireWithCurrentLevel(),
+                currentLevel = saveData.level
             });
         }
 
@@ -131,9 +114,9 @@ namespace ProjectMIL.Game
 
             for (int i = 0; i < e.tryAddLevel; i++)
             {
-                if (saveData.exp >= GetRequireWithCurrentLevel())
+                if (saveData.gold >= GetRequireWithCurrentLevel())
                 {
-                    saveData.exp -= GetRequireWithCurrentLevel();
+                    saveData.gold -= GetRequireWithCurrentLevel();
                     ForceLevelUp(1);
                 }
                 else
@@ -148,7 +131,7 @@ namespace ProjectMIL.Game
                 {
                     oldLevel = oldLevel,
                     currentLevel = saveData.level,
-                    currentExp = saveData.exp,
+                    currentGold = saveData.gold,
                     requireExp = GetRequireWithCurrentLevel(),
                     beforeHP = fields[0],
                     beforeDefense = fields[1],
@@ -210,7 +193,6 @@ namespace ProjectMIL.Game
             EventBus.Publish(new OnPlayerValueUpdated
             {
                 level = saveData.level,
-                exp = saveData.exp,
                 requireExp = GetRequireWithCurrentLevel(),
                 gold = saveData.gold,
                 attack = saveData.attack,
@@ -227,7 +209,6 @@ namespace ProjectMIL.Game
         private void SaveCurrent()
         {
             PlayerPrefs.SetInt("PLYAYER_SAVE_LEVEL", saveData.level);
-            PlayerPrefs.SetInt("PLYAYER_SAVE_EXP", saveData.exp);
             PlayerPrefs.SetInt("PLYAYER_SAVE_GOLD", saveData.gold);
             PlayerPrefs.SetInt("PLYAYER_SAVE_MAXHP", saveData.maxHP);
             PlayerPrefs.SetInt("PLYAYER_SAVE_ATTACK", saveData.attack);

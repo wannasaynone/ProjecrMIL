@@ -31,7 +31,6 @@ namespace ProjectMIL.UI
 
         public override void Initialize()
         {
-            EventBus.Subscribe<OnAdventureEventCreated_Exp>(OnAdventureEventCreated_Exp);
             EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated_Gold);
             EventBus.Subscribe<OnAdventureEventCreated_EncounterEnemy>(OnAdventureEventCreated_EncounterEnemy);
             EventBus.Subscribe<OnAdventureEventCreated_EncounterBoss>(OnAdventureEventCreated_EncounterBoss);
@@ -54,13 +53,6 @@ namespace ProjectMIL.UI
         private void OnAdventureEventCreated_Gold(OnAdventureEventCreated_Gold created)
         {
             referenceValue = created.addGold;
-            adventureRoot.SetActive(true);
-            KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress_Normal());
-        }
-
-        private void OnAdventureEventCreated_Exp(OnAdventureEventCreated_Exp created)
-        {
-            referenceValue = created.addExp;
             adventureRoot.SetActive(true);
             KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowAdventureProgress_Normal());
         }

@@ -43,46 +43,7 @@ namespace ProjectMIL.Adventure
         }
         public override void Execute()
         {
-            if (Random.value < 0.5f)
-            {
-                CreateExpEvent();
-            }
-            else
-            {
-                CreateGoldEvent();
-            }
-        }
-
-        private void CreateExpEvent()
-        {
-            double mu = 3.79;  // mu 值
-            double sigma = 1.32;  // sigma 值
-            LogNormalDistribution distribution = new LogNormalDistribution(mu, sigma);
-            int addExp = System.Convert.ToInt32(distribution.GenerateRandom());
-
-            totalCount++;
-            if (addExp >= 1000)
-            {
-                jackpotCount++;
-                jackpotRate = 0f;
-            }
-            else if (totalCount >= 2 + jackpotCount * 20 && jackpotCount < 3 && addExp <= 100)
-            {
-                jackpotRate += UnityEngine.Random.value;
-                if (jackpotRate >= jackpotCount + 1)
-                {
-                    addExp += 1000;
-                    jackpotRate = 0f;
-                    jackpotCount++;
-                }
-            }
-
-            GameEvent.EventBus.Publish(new GameEvent.OnAdventureEventCreated_Exp()
-            {
-                addExp = addExp,
-                title = contextHandler.GetContext(10000),
-                description = contextHandler.GetContext(10001)
-            });
+            CreateGoldEvent();
         }
 
         private void CreateGoldEvent()

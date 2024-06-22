@@ -24,15 +24,15 @@ namespace ProjectMIL.UI
         public override void Initialize()
         {
             EventBus.Subscribe<OnPlayerValueUpdated>(OnPlayerValueUpdated);
-            EventBus.Subscribe<OnExpValueUpdated>(OnExpValueUpdated);
+            EventBus.Subscribe<OnGoldValueUpdated>(OnGoldValueUpdated);
             EventBus.Subscribe<OnLevelUpdated>(OnLevelUpdated);
         }
 
         private void OnPlayerValueUpdated(OnPlayerValueUpdated e)
         {
             levelText.text = e.level.ToString();
-            expText.text = e.exp.ToString() + "/" + e.requireExp.ToString();
-            expSlider.value = (float)e.exp / e.requireExp;
+            expText.text = e.gold.ToString() + "/" + e.requireExp.ToString();
+            expSlider.value = (float)e.gold / e.requireExp;
             hpText.text = e.maxHP.ToString();
             defenseText.text = e.defense.ToString();
             attackText.text = e.attack.ToString();
@@ -41,11 +41,11 @@ namespace ProjectMIL.UI
             criticalResistanceText.text = e.criticalResistance.ToString();
             effectivenessText.text = e.effectiveness.ToString();
             effectivenessResistanceText.text = e.effectivenessResistance.ToString();
-            levelUpButtonRoot.SetActive(e.exp >= e.requireExp);
-            levelUpHintRoot.SetActive(e.exp >= e.requireExp);
+            levelUpButtonRoot.SetActive(e.gold >= e.requireExp);
+            levelUpHintRoot.SetActive(e.gold >= e.requireExp);
         }
 
-        private void OnExpValueUpdated(OnExpValueUpdated e)
+        private void OnGoldValueUpdated(OnGoldValueUpdated e)
         {
             expText.text = e.newValue.ToString() + "/" + e.requireExp.ToString();
             expSlider.value = (float)e.newValue / e.requireExp;
@@ -56,10 +56,10 @@ namespace ProjectMIL.UI
         private void OnLevelUpdated(OnLevelUpdated e)
         {
             levelText.text = e.currentLevel.ToString();
-            expSlider.value = (float)e.currentExp / e.requireExp;
-            expText.text = e.currentExp.ToString() + "/" + e.requireExp.ToString();
-            levelUpButtonRoot.SetActive(e.currentExp >= e.requireExp);
-            levelUpHintRoot.SetActive(e.currentExp >= e.requireExp);
+            expSlider.value = (float)e.currentGold / e.requireExp;
+            expText.text = e.currentGold.ToString() + "/" + e.requireExp.ToString();
+            levelUpButtonRoot.SetActive(e.currentGold >= e.requireExp);
+            levelUpHintRoot.SetActive(e.currentGold >= e.requireExp);
         }
 
         public void Button_LevelUp()

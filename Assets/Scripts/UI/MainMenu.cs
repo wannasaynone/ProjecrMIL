@@ -13,7 +13,7 @@ namespace ProjectMIL.UI
         [SerializeField] private Slider expProgressBarFillSlider;
         [SerializeField] private GameObject levelUpHintRoot;
 
-        private OnExpValueUpdated onExpValueUpdatedTemp;
+        private OnGoldValueUpdated onGoldValueUpdatedTemp;
 
         ////////////////////////////////////////// Buttons //////////////////////////////////////////
 
@@ -27,42 +27,42 @@ namespace ProjectMIL.UI
         public override void Initialize()
         {
             EventBus.Subscribe<OnPlayerValueUpdated>(OnPlayerValueUpdated);
-            EventBus.Subscribe<OnExpValueUpdated>(OnExpValueUpdated);
+            EventBus.Subscribe<OnGoldValueUpdated>(OnGoldValueUpdated);
             EventBus.Subscribe<OnAdventureEventResultPanelDisabled>(OnAdventureEventResultPanelDisabled);
             EventBus.Subscribe<OnLevelUpdated>(OnLevelUpdated);
+        }
+
+        private void OnGoldValueUpdated(OnGoldValueUpdated updated)
+        {
+            onGoldValueUpdatedTemp = updated;
         }
 
         private void OnPlayerValueUpdated(OnPlayerValueUpdated initialed)
         {
             levelText.text = initialed.level.ToString();
-            expProgressBarFillSlider.value = (float)initialed.exp / (float)initialed.requireExp;
-            expText.text = initialed.exp + " / " + initialed.requireExp;
-            levelUpHintRoot.SetActive(initialed.exp >= initialed.requireExp);
-        }
-
-        private void OnExpValueUpdated(OnExpValueUpdated updated)
-        {
-            onExpValueUpdatedTemp = updated;
+            expProgressBarFillSlider.value = (float)initialed.gold / (float)initialed.requireExp;
+            expText.text = initialed.gold + " / " + initialed.requireExp;
+            levelUpHintRoot.SetActive(initialed.gold >= initialed.requireExp);
         }
 
         private void OnAdventureEventResultPanelDisabled(OnAdventureEventResultPanelDisabled disabled)
         {
-            if (onExpValueUpdatedTemp != null)
+            if (onGoldValueUpdatedTemp != null)
             {
-                levelText.text = onExpValueUpdatedTemp.level.ToString();
-                expProgressBarFillSlider.value = (float)onExpValueUpdatedTemp.newValue / (float)onExpValueUpdatedTemp.requireExp;
-                expText.text = onExpValueUpdatedTemp.newValue + " / " + onExpValueUpdatedTemp.requireExp;
-                levelUpHintRoot.SetActive(onExpValueUpdatedTemp.newValue >= onExpValueUpdatedTemp.requireExp);
-                onExpValueUpdatedTemp = null;
+                levelText.text = onGoldValueUpdatedTemp.currentLevel.ToString();
+                expProgressBarFillSlider.value = (float)onGoldValueUpdatedTemp.newValue / (float)onGoldValueUpdatedTemp.requireExp;
+                expText.text = onGoldValueUpdatedTemp.newValue + " / " + onGoldValueUpdatedTemp.requireExp;
+                levelUpHintRoot.SetActive(onGoldValueUpdatedTemp.newValue >= onGoldValueUpdatedTemp.requireExp);
+                onGoldValueUpdatedTemp = null;
             }
         }
 
         private void OnLevelUpdated(OnLevelUpdated e)
         {
             levelText.text = e.currentLevel.ToString();
-            expProgressBarFillSlider.value = (float)e.currentExp / e.requireExp;
-            expText.text = e.currentExp.ToString() + "/" + e.requireExp.ToString();
-            levelUpHintRoot.SetActive(e.currentExp >= e.requireExp);
+            expProgressBarFillSlider.value = (float)e.currentGold / e.requireExp;
+            expText.text = e.currentGold.ToString() + "/" + e.requireExp.ToString();
+            levelUpHintRoot.SetActive(e.currentGold >= e.requireExp);
         }
 
         public void Button_GuideToLevelUp()
