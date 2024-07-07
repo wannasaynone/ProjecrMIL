@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour
         EventBus.Subscribe<OnBottomBarButtonPressed>(OnBottomBarButtonPressed);
         for (int i = 0; i < userInterfaces.Length; i++)
         {
-            userInterfaces[i].Initialize();
+            userInterfaces[i].Initialize(contextHandler);
         }
         UserInterfaceContextSetter[] userInterfaceContextSetters = FindObjectsOfType<UserInterfaceContextSetter>(true);
         foreach (UserInterfaceContextSetter userInterfaceContextSetter in userInterfaceContextSetters)

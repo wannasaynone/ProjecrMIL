@@ -14,13 +14,16 @@ namespace ProjectMIL.UI
         [SerializeField] private UnityEvent onEnabled; // for workaround with ParticleImage
         [SerializeField] private UnityEvent onPlayParticleCalled; // for workaround with ParticleImage
 
+        private Utlity.ContextHandler contextHandler;
+
         private OnAdventureEventCreated_Gold nextCreatedAdvEvent;
         private Color megaWinColor = Color.white;
         private float megaWinFontSize = 0f;
         private int curMegaWinNumber = 0;
 
-        public override void Initialize()
+        public override void Initialize(Utlity.ContextHandler contextHandler)
         {
+            this.contextHandler = contextHandler;
             EventBus.Subscribe<OnAdventureProgressBarAnimationEnded>(OnAdventureProgressBarAnimationEnded);
             EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated);
         }
@@ -38,17 +41,7 @@ namespace ProjectMIL.UI
                 return;
             }
 
-            if (string.IsNullOrEmpty(nextCreatedAdvEvent.title))
-            {
-                nextCreatedAdvEvent.title = "MISSING TITLE";
-            }
-
-            if (string.IsNullOrEmpty(nextCreatedAdvEvent.description))
-            {
-                nextCreatedAdvEvent.description = "MISSING DESCRIPTION";
-            }
-
-            titleText.text = nextCreatedAdvEvent.title;
+            titleText.text = contextHandler.GetContext(nextCreatedAdvEvent.titleID);
 
             gameObject.SetActive(true);
             infoPopupRoot.SetActive(false);
@@ -59,22 +52,22 @@ namespace ProjectMIL.UI
             if (nextCreatedAdvEvent.addGold < 100)
             {
                 KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level1());
-                descText.text = string.Format(nextCreatedAdvEvent.description, nextCreatedAdvEvent.addGold);
+                descText.text = string.Format(contextHandler.GetContext(nextCreatedAdvEvent.descriptionID), nextCreatedAdvEvent.addGold);
             }
             else if (nextCreatedAdvEvent.addGold >= 100 && nextCreatedAdvEvent.addGold < 500)
             {
                 KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level2());
-                descText.text = string.Format(nextCreatedAdvEvent.description, "<size=" + descText.fontSize * 1.5f + ">" + nextCreatedAdvEvent.addGold + "</size>");
+                descText.text = string.Format(contextHandler.GetContext(nextCreatedAdvEvent.descriptionID), "<size=" + descText.fontSize * 1.5f + ">" + nextCreatedAdvEvent.addGold + "</size>");
             }
             else if (nextCreatedAdvEvent.addGold >= 500 && nextCreatedAdvEvent.addGold < 1000)
             {
                 KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level3());
-                descText.text = string.Format(nextCreatedAdvEvent.description, nextCreatedAdvEvent.addGold);
+                descText.text = string.Format(contextHandler.GetContext(nextCreatedAdvEvent.descriptionID), nextCreatedAdvEvent.addGold);
             }
             else
             {
                 KahaGameCore.Common.GeneralCoroutineRunner.Instance.StartCoroutine(IEShowInfoPopup_Level4());
-                descText.text = string.Format(nextCreatedAdvEvent.description, nextCreatedAdvEvent.addGold);
+                descText.text = string.Format(contextHandler.GetContext(nextCreatedAdvEvent.descriptionID), nextCreatedAdvEvent.addGold);
             }
         }
 
@@ -137,7 +130,7 @@ namespace ProjectMIL.UI
             curMegaWinNumber = 0;
             DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextCreatedAdvEvent.addGold, 1f).OnUpdate(() =>
             {
-                descText.text = string.Format(nextCreatedAdvEvent.description, "<size=" + megaWinFontSize + ">" + curMegaWinNumber + "</size>");
+                descText.text = string.Format(contextHandler.GetContext(nextCreatedAdvEvent.descriptionID), "<size=" + megaWinFontSize + ">" + curMegaWinNumber + "</size>");
             });
 
             yield return new WaitForSeconds(1f);
@@ -169,7 +162,7 @@ namespace ProjectMIL.UI
             curMegaWinNumber = 0;
             DOTween.To(() => GetCurrentMegaWinNumber(), x => SetCurrentMegaWinNumber(x), nextCreatedAdvEvent.addGold, 1.5f).OnUpdate(() =>
             {
-                descText.text = string.Format(nextCreatedAdvEvent.description, "<size=" + megaWinFontSize + "><color=#" + ColorUtility.ToHtmlStringRGB(megaWinColor) + ">" + curMegaWinNumber + "</size></color>");
+                descText.text = string.Format(contextHandler.GetContext(nextCreatedAdvEvent.descriptionID), "<size=" + megaWinFontSize + "><color=#" + ColorUtility.ToHtmlStringRGB(megaWinColor) + ">" + curMegaWinNumber + "</size></color>");
             });
 
             yield return new WaitForSeconds(1.5f);

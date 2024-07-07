@@ -7,12 +7,12 @@ namespace ProjectMIL.Adventure
     {
         private List<AdventureEventBase> events = new List<AdventureEventBase>();
 
-        public void Initialize(Utlity.ContextHandler contextHandler)
+        public void Initialize()
         {
             // TODO: handle event save/load
             for (int i = 0; i < 26; i++)
             {
-                events.Add(new AdventureEvent_ExpAndGold(contextHandler));
+                events.Add(new AdventureEvent_ExpAndGold());
             }
 
             SuffuleEvents();

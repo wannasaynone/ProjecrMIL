@@ -15,7 +15,7 @@ namespace ProjectMIL.UI
         [SerializeField] private UnityEvent onPlayParticleCalled; // for workaround with ParticleImage
 
 
-        public override void Initialize()
+        public override void Initialize(Utlity.ContextHandler contextHandler)
         {
             EventBus.Subscribe<OnAdventureProgressBarAnimationEnded>(OnAdventureProgressBarAnimationEnded);
         }

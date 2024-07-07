@@ -6,6 +6,7 @@ using DG.Tweening;
 using UnityEngine.Events;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using JetBrains.Annotations;
 
 namespace ProjectMIL.UI
 {
@@ -34,7 +35,7 @@ namespace ProjectMIL.UI
 
         private OnLevelUpdated tempEvent;
 
-        public override void Initialize()
+        public override void Initialize(Utlity.ContextHandler contextHandler)
         {
             EventBus.Subscribe<OnLevelUpdated>(OnLevelUpdated);
         }

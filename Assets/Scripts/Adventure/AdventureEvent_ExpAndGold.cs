@@ -1,17 +1,13 @@
-using UnityEngine;
-
 namespace ProjectMIL.Adventure
 {
     public class AdventureEvent_ExpAndGold : AdventureEventBase
     {
-        private readonly Utlity.ContextHandler contextHandler;
         private static int totalCount = 0; // TODO: handle save and load
         private static int jackpotCount = 0; // TODO: handle save and load
         private static float jackpotRate = 0f; // TODO: handle save and load
 
-        public AdventureEvent_ExpAndGold(Utlity.ContextHandler contextHandler)
+        public AdventureEvent_ExpAndGold()
         {
-            this.contextHandler = contextHandler;
         }
 
         private class LogNormalDistribution
@@ -73,8 +69,8 @@ namespace ProjectMIL.Adventure
             GameEvent.EventBus.Publish(new GameEvent.OnAdventureEventCreated_Gold()
             {
                 addGold = addGold,
-                title = contextHandler.GetContext(10002),
-                description = contextHandler.GetContext(10003)
+                titleID = 10002,
+                descriptionID = 10003
             });
         }
     }

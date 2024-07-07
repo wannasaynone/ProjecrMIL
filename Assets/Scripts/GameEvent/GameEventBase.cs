@@ -14,8 +14,8 @@ namespace ProjectMIL.GameEvent
     public class OnAdventureButtonPressed : GameEventBase { }
     public class OnAdventureEventCreated_Gold : GameEventBase
     {
-        public string title;
-        public string description;
+        public int titleID;
+        public int descriptionID;
         public int addGold;
     }
     public class OnAdventureEventCreated_EncounterEnemy : GameEventBase

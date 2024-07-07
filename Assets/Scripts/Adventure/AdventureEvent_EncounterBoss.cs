@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace ProjectMIL.Adventure
 {
     public class AdventureEvent_EncounterBoss : AdventureEventBase

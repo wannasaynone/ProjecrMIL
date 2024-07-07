@@ -29,7 +29,7 @@ namespace ProjectMIL.UI
         private RectTransform adventureProgressBarFillRectTransform;
         private Material adventureProgressBarFillMaterialClone;
 
-        public override void Initialize()
+        public override void Initialize(Utlity.ContextHandler contextHandler)
         {
             EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated_Gold);
             EventBus.Subscribe<OnAdventureEventCreated_EncounterEnemy>(OnAdventureEventCreated_EncounterEnemy);

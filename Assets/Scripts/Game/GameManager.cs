@@ -34,7 +34,7 @@ namespace ProjectMIL.Game
             contextHandler = new Utlity.ContextHandler(gameStaticDataManager);
 
             adventureManager = new Adventure.AdventureManager();
-            adventureManager.Initialize(contextHandler);
+            adventureManager.Initialize();
 
             uiManager.Initialize(contextHandler);
 

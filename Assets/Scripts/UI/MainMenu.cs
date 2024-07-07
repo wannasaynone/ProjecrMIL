@@ -24,7 +24,7 @@ namespace ProjectMIL.UI
 
         ////////////////////////////////////////// Buttons //////////////////////////////////////////
 
-        public override void Initialize()
+        public override void Initialize(Utlity.ContextHandler contextHandler)
         {
             EventBus.Subscribe<OnPlayerValueUpdated>(OnPlayerValueUpdated);
             EventBus.Subscribe<OnGoldValueUpdated>(OnGoldValueUpdated);

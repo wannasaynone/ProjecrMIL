@@ -21,7 +21,7 @@ namespace ProjectMIL.UI
         [SerializeField] private TMPro.TextMeshProUGUI effectivenessText;
         [SerializeField] private TMPro.TextMeshProUGUI effectivenessResistanceText;
 
-        public override void Initialize()
+        public override void Initialize(Utlity.ContextHandler contextHandler)
         {
             EventBus.Subscribe<OnPlayerValueUpdated>(OnPlayerValueUpdated);
             EventBus.Subscribe<OnGoldValueUpdated>(OnGoldValueUpdated);

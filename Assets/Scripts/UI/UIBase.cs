@@ -4,6 +4,6 @@ namespace ProjectMIL.UI
 {
     public abstract class UIBase : MonoBehaviour
     {
-        public abstract void Initialize();
+        public abstract void Initialize(Utlity.ContextHandler contextHandler);
     }
 }
