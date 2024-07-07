@@ -5,7 +5,7 @@
         "ProjectMIL.Data",
         "ProjectMIL.Utlity",
         "KahaGameCore.GameData",
-        "ProjectMIL.Element"
+        "ProjectMIL.UI"
     ],
     "includePlatforms": [
         "Editor"

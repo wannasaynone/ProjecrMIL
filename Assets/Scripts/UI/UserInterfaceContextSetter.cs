@@ -1,7 +1,7 @@
 using ProjectMIL.Utlity;
 using UnityEngine;
 
-namespace ProjectMIL.Game.Element
+namespace ProjectMIL.UI
 {
     public class UserInterfaceContextSetter : MonoBehaviour
     {

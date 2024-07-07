@@ -8,12 +8,17 @@ public class UIManager : MonoBehaviour
     [SerializeField] private UIBase[] userInterfaces;
     [SerializeField] private RectTransform mainUIGridRoot;
 
-    public void Initialize()
+    public void Initialize(ProjectMIL.Utlity.ContextHandler contextHandler)
     {
         EventBus.Subscribe<OnBottomBarButtonPressed>(OnBottomBarButtonPressed);
         for (int i = 0; i < userInterfaces.Length; i++)
         {
             userInterfaces[i].Initialize();
+        }
+        UserInterfaceContextSetter[] userInterfaceContextSetters = FindObjectsOfType<UserInterfaceContextSetter>(true);
+        foreach (UserInterfaceContextSetter userInterfaceContextSetter in userInterfaceContextSetters)
+        {
+            userInterfaceContextSetter.SetUp(contextHandler);
         }
     }
 
