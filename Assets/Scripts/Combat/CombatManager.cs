@@ -14,6 +14,7 @@ namespace ProjectMIL.Combat
         [SerializeField] private CombatActor bossPrefab;
         [SerializeField] private CombatResultPanel winPanel;
         [SerializeField] private CombatResultPanel losePanel;
+        [SerializeField] private SelectRuneMenu selectRuneMenu;
 
         private LevelBase currentLevel;
 
@@ -64,6 +65,11 @@ namespace ProjectMIL.Combat
         private void OnPanelClosed()
         {
             currentLevel = null;
+            selectRuneMenu.StartSelect(OnRuneSelected);
+        }
+
+        private void OnRuneSelected(int index)
+        {
             EventBus.Publish(new OnCombatEndCalled());
         }
 
