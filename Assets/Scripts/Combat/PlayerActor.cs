@@ -75,16 +75,16 @@ namespace ProjectMIL.Combat
             CombatActor enemyActor = CombatActorContainer.GetCloestActorByCamp(ActorInfo.Camp.Enemy, transform.position);
             if (enemyActor == null)
             {
-                PlayAnimation(e.attackName, 2f, OnAttackAnmationTick);
+                PlayAnimation(e.attackName, 2f, OnAttackAnimationTick);
             }
             else
             {
-                PlayAnimation(e.attackName, 2f, OnAttackAnmationTick);
+                PlayAnimation(e.attackName, 2f, OnAttackAnimationTick);
                 StartCoroutine(IEDashToEnemy(enemyActor));
             }
         }
 
-        private void OnAttackAnmationTick(float normalizedTime)
+        private void OnAttackAnimationTick(float normalizedTime)
         {
             for (int attackInfoIndex = 0; attackInfoIndex < attackInfos.Length; attackInfoIndex++)
             {
