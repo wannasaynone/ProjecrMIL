@@ -31,7 +31,6 @@ namespace ProjectMIL.Combat
         [SerializeField] private ParticleSystem attack04Effect;
         [SerializeField] private AttackInfo[] attackInfos;
 
-        private bool isAttacked = false;
         private bool isDead = false;
         private bool isAttackPaused = false;
         private string currentAttackName;
@@ -71,18 +70,77 @@ namespace ProjectMIL.Combat
             if ((!IsPlaying("Idle") && GetNormalizedTime() < 0.9f) || isDead || isAttackPaused || IsPlaying("ComboAttack04"))
                 return;
 
-            isAttacked = false;
             currentAttackName = e.attackName;
 
             CombatActor enemyActor = CombatActorContainer.GetCloestActorByCamp(ActorInfo.Camp.Enemy, transform.position);
             if (enemyActor == null)
             {
-                PlayAnimation(e.attackName, 2f);
+                PlayAnimation(e.attackName, 2f, OnAttackAnmationTick);
             }
             else
             {
-                PlayAnimation(e.attackName, 2f);
+                PlayAnimation(e.attackName, 2f, OnAttackAnmationTick);
                 StartCoroutine(IEDashToEnemy(enemyActor));
+            }
+        }
+
+        private void OnAttackAnmationTick(float normalizedTime)
+        {
+            for (int attackInfoIndex = 0; attackInfoIndex < attackInfos.Length; attackInfoIndex++)
+            {
+                if (currentAttackName == attackInfos[attackInfoIndex].attackName && normalizedTime >= attackInfos[attackInfoIndex].attackStartNormalizedTime)
+                {
+                    List<CombatActor> enemyActors = CombatActorContainer.GetAllActorInRange(ActorInfo.Camp.Enemy, new Vector3(GetBound(), transform.position.y, 0f), attackInfos[attackInfoIndex].attackRange);
+
+                    for (int enemyActorIndex = 0; enemyActorIndex < enemyActors.Count; enemyActorIndex++)
+                    {
+                        CombatActor enemyActor = enemyActors[enemyActorIndex];
+
+                        OnAttackCasted onAttackCasted = new OnAttackCasted
+                        {
+                            attackerActorInstanceID = GetInstanceID(),
+                            targetActorInstanceID = enemyActor.GetInstanceID(),
+                            hitPosition = enemyActor.transform.position - Vector3.right * 0.2f
+                        };
+
+                        switch (currentAttackName)
+                        {
+                            case "ComboAttack01":
+                                onAttackCasted.multiplier = 1.25f;
+                                break;
+                            case "ComboAttack02":
+                                onAttackCasted.multiplier = 1f;
+                                break;
+                            case "ComboAttack03":
+                                onAttackCasted.multiplier = 0.75f;
+                                break;
+                        }
+
+                        EventBus.Publish(onAttackCasted);
+                    }
+                    break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(nextAttackName) && GetNormalizedTime() >= 0.9f)
+            {
+                blackSpriteRenderer.color = new Color(0f, 0f, 0f, 0f);
+                blackSpriteRenderer.gameObject.SetActive(true);
+                DOTween.To(GetBlackSpriteAlpha, SetBlackSpriteAlpha, 0.8f, 0.2f);
+                currentAttackName = nextAttackName;
+                nextAttackName = null;
+
+                PlayAnimation(currentAttackName, 2f);
+
+                List<CombatActor> enemyActors = CombatActorContainer.GetAllActorInRange(ActorInfo.Camp.Enemy, transform.position, float.MaxValue - 1f);
+
+                for (int enemyActorIndex = 0; enemyActorIndex < enemyActors.Count; enemyActorIndex++)
+                {
+                    CombatActor enemyActor = enemyActors[enemyActorIndex];
+                    enemyActor.Pause();
+                }
+
+                StartCoroutine(IECastAttack04());
             }
         }
 
@@ -343,8 +401,6 @@ namespace ProjectMIL.Combat
                 yield return null;
             }
 
-            isAttacked = true;
-
             attack04Effect.Play();
             chargeEffectRoot.SetActive(false);
 
@@ -368,75 +424,6 @@ namespace ProjectMIL.Combat
             yield return new WaitForSecondsRealtime(1f);
 
             Time.timeScale = 1f;
-        }
-
-        private void LateUpdate() // for detecting animation time
-        {
-            if (IsPlaying("Idle") || isDead)
-                return;
-
-            if (isAttacked)
-            {
-                if (!string.IsNullOrEmpty(nextAttackName) && GetNormalizedTime() >= 0.9f)
-                {
-                    blackSpriteRenderer.color = new Color(0f, 0f, 0f, 0f);
-                    blackSpriteRenderer.gameObject.SetActive(true);
-                    DOTween.To(GetBlackSpriteAlpha, SetBlackSpriteAlpha, 0.8f, 0.2f);
-                    currentAttackName = nextAttackName;
-                    nextAttackName = null;
-                    isAttacked = false;
-                    PlayAnimation(currentAttackName, 2f);
-
-                    List<CombatActor> enemyActors = CombatActorContainer.GetAllActorInRange(ActorInfo.Camp.Enemy, transform.position, float.MaxValue - 1f);
-
-                    for (int enemyActorIndex = 0; enemyActorIndex < enemyActors.Count; enemyActorIndex++)
-                    {
-                        CombatActor enemyActor = enemyActors[enemyActorIndex];
-                        enemyActor.Pause();
-                    }
-
-                    StartCoroutine(IECastAttack04());
-                }
-
-                return;
-            }
-
-            for (int attackInfoIndex = 0; attackInfoIndex < attackInfos.Length; attackInfoIndex++)
-            {
-                if (currentAttackName == attackInfos[attackInfoIndex].attackName && GetNormalizedTime() >= attackInfos[attackInfoIndex].attackStartNormalizedTime)
-                {
-                    List<CombatActor> enemyActors = CombatActorContainer.GetAllActorInRange(ActorInfo.Camp.Enemy, new Vector3(GetBound(), transform.position.y, 0f), attackInfos[attackInfoIndex].attackRange);
-
-                    for (int enemyActorIndex = 0; enemyActorIndex < enemyActors.Count; enemyActorIndex++)
-                    {
-                        CombatActor enemyActor = enemyActors[enemyActorIndex];
-
-                        OnAttackCasted onAttackCasted = new OnAttackCasted
-                        {
-                            attackerActorInstanceID = GetInstanceID(),
-                            targetActorInstanceID = enemyActor.GetInstanceID(),
-                            hitPosition = enemyActor.transform.position - Vector3.right * 0.2f
-                        };
-
-                        switch (currentAttackName)
-                        {
-                            case "ComboAttack01":
-                                onAttackCasted.multiplier = 1.25f;
-                                break;
-                            case "ComboAttack02":
-                                onAttackCasted.multiplier = 1f;
-                                break;
-                            case "ComboAttack03":
-                                onAttackCasted.multiplier = 0.75f;
-                                break;
-                        }
-
-                        EventBus.Publish(onAttackCasted);
-                    }
-                    isAttacked = true;
-                    break;
-                }
-            }
         }
 
         public override void Pause()

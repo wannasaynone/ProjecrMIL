@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -85,10 +86,25 @@ namespace ProjectMIL.Combat
             return characterAnimator.transform;
         }
 
-        protected void PlayAnimation(string animationName, float speed = 1f)
+        private Action<float> onAnimationLateUpdated;
+
+        protected void PlayAnimation(string animationName, float speed = 1f, Action<float> onTick = null)
         {
             characterAnimator.speed = speed;
             characterAnimator.Play(animationName, 0, 0f);
+            onAnimationLateUpdated = onTick;
+        }
+
+        private void LateUpdate() // Unity Engine calls this function after Update() function
+        {
+            if (onAnimationLateUpdated != null)
+            {
+                onAnimationLateUpdated(GetNormalizedTime());
+                if (GetNormalizedTime() >= 1f)
+                {
+                    onAnimationLateUpdated = null;
+                }
+            }
         }
 
         protected void PauseAnimation()
