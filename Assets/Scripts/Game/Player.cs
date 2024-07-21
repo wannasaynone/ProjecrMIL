@@ -34,21 +34,34 @@ namespace ProjectMIL.Game
         private readonly ExpData[] expDatas;
         private readonly GameConfig gameConfig;
 
+        private KahaGameCore.GameData.Implemented.JsonSaveDataHandler jsonSaveDataHandler;
+
         public void Initail()
         {
-            saveData = new SaveData
+            jsonSaveDataHandler = new KahaGameCore.GameData.Implemented.JsonSaveDataHandler
+                    (
+                        new KahaGameCore.GameData.Implemented.GameStaticDataSerializer(),
+                        new KahaGameCore.GameData.Implemented.GameStaticDataDeserializer()
+                    );
+
+            saveData = jsonSaveDataHandler.LoadSave<SaveData>();
+            if (saveData == default)
             {
-                level = PlayerPrefs.GetInt("PLYAYER_SAVE_LEVEL", 1), // for now, we will use PlayerPrefs to save the level value
-                gold = PlayerPrefs.GetInt("PLYAYER_SAVE_GOLD", 0), // for now, we will use PlayerPrefs to save the gold value
-                maxHP = PlayerPrefs.GetInt("PLYAYER_SAVE_MAXHP", 100), // for now, we will use PlayerPrefs to save the maxHP value
-                attack = PlayerPrefs.GetInt("PLYAYER_SAVE_ATTACK", 100), // for now, we will use PlayerPrefs to save the attack value
-                defense = PlayerPrefs.GetInt("PLYAYER_SAVE_DEFENSE", 100), // for now, we will use PlayerPrefs to save the defense value
-                speed = PlayerPrefs.GetInt("PLYAYER_SAVE_SPEED", 100), // for now, we will use PlayerPrefs to save the speed value
-                critical = PlayerPrefs.GetInt("PLYAYER_SAVE_CRITICAL", 0), // for now, we will use PlayerPrefs to save the critical value
-                criticalResistance = PlayerPrefs.GetInt("PLYAYER_SAVE_CRITICALRESISTANCE", 0), // for now, we will use PlayerPrefs to save the criticalResistance value
-                effectiveness = PlayerPrefs.GetInt("PLYAYER_SAVE_EFFECTIVENESS", 0), // for now, we will use PlayerPrefs to save the effectiveness value
-                effectivenessResistance = PlayerPrefs.GetInt("PLYAYER_SAVE_EFFECTIVENESSRESISTANCE", 0), // for now, we will use PlayerPrefs to save the effectivenessResistance value
-            };
+                saveData = new SaveData
+                {
+                    level = 1,
+                    gold = 0,
+                    maxHP = 100,
+                    attack = 100,
+                    defense = 100,
+                    speed = 100,
+                    critical = 0,
+                    criticalResistance = 0,
+                    effectiveness = 0,
+                    effectivenessResistance = 0
+                };
+                jsonSaveDataHandler.Save(saveData);
+            }
 
             EventBus.Subscribe<OnAdventureEventCreated_Gold>(OnAdventureEventCreated_Gold);
             EventBus.Subscribe<OnTryLevelUpCalled>(OnTryLevelUpCalled);
@@ -208,17 +221,7 @@ namespace ProjectMIL.Game
 
         private void SaveCurrent()
         {
-            PlayerPrefs.SetInt("PLYAYER_SAVE_LEVEL", saveData.level);
-            PlayerPrefs.SetInt("PLYAYER_SAVE_GOLD", saveData.gold);
-            PlayerPrefs.SetInt("PLYAYER_SAVE_MAXHP", saveData.maxHP);
-            PlayerPrefs.SetInt("PLYAYER_SAVE_ATTACK", saveData.attack);
-            PlayerPrefs.SetInt("PLYAYER_SAVE_DEFENSE", saveData.defense);
-            PlayerPrefs.SetInt("PLYAYER_SAVE_SPEED", saveData.speed);
-            PlayerPrefs.SetInt("PLYAYER_SAVE_CRITICAL", saveData.critical);
-            PlayerPrefs.SetInt("PLYAYER_SAVE_CRITICALRESISTANCE", saveData.criticalResistance);
-            PlayerPrefs.SetInt("PLYAYER_SAVE_EFFECTIVENESS", saveData.effectiveness);
-            PlayerPrefs.SetInt("PLYAYER_SAVE_EFFECTIVENESSRESISTANCE", saveData.effectivenessResistance);
-            PlayerPrefs.Save();
+            jsonSaveDataHandler.Save(saveData);
         }
 
         private void AddStatus(ref int remainingAddStatusPoint, ref int targetValueField) // return remaining point

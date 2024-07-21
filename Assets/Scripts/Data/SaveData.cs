@@ -15,5 +15,7 @@ namespace ProjectMIL.Data
         public int criticalResistance;
         public int effectiveness;
         public int effectivenessResistance;
+
+
     }
 }
