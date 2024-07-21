@@ -49,9 +49,7 @@ namespace ProjectMIL.Combat
 
         private void OnLevelEnded(bool isWin)
         {
-            inputButtonRoot.SetActive(false);
-            attackCommandHintPanel.gameObject.SetActive(false);
-            attackCommandHintPanel.StopListening();
+            DisableCombatInput();
             if (isWin)
             {
                 winPanel.ShowWith(OnPanelClosed);
@@ -60,6 +58,13 @@ namespace ProjectMIL.Combat
             {
                 losePanel.ShowWith(OnPanelClosed);
             }
+        }
+
+        private void DisableCombatInput()
+        {
+            inputButtonRoot.SetActive(false);
+            attackCommandHintPanel.gameObject.SetActive(false);
+            attackCommandHintPanel.StopListening();
         }
 
         private void OnPanelClosed()
@@ -75,6 +80,13 @@ namespace ProjectMIL.Combat
 
         public void EndCombat()
         {
+            if (currentLevel != null)
+            {
+                currentLevel.ForceEnd();
+                DisableCombatInput();
+                currentLevel = null;
+            }
+
             gameObject.SetActive(false);
         }
     }

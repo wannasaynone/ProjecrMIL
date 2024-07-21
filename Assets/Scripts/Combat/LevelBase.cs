@@ -45,14 +45,18 @@ namespace ProjectMIL.Combat
             OnStarted();
         }
 
-        protected void End()
+        public void ForceEnd()
         {
             OnStartToEnd();
-
-            bool isWin = ClonedPlayerActor.Info.currentHP > 0;
             ClonedPlayerActor.Dispose();
             damageHandler.Dispose();
             GC.SuppressFinalize(damageHandler);
+        }
+
+        protected void End()
+        {
+            bool isWin = ClonedPlayerActor.Info.currentHP > 0;
+            ForceEnd();
 
             onEnded?.Invoke(isWin);
         }
